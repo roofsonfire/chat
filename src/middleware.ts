@@ -6,27 +6,60 @@ import { Redis } from "@upstash/redis";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
 
+/** Rate limit: 5 requests per 10 seconds per IP */
+const RATE_LIMIT_REQUESTS = 5;
+const RATE_LIMIT_WINDOW = "10 s";
+
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "10 s"),
+  limiter: Ratelimit.slidingWindow(RATE_LIMIT_REQUESTS, RATE_LIMIT_WINDOW),
   analytics: true,
+  prefix: "chat-app-ratelimit",
 });
 
 /**
  * Middleware for authentication and rate limiting.
  * Protects all routes except public assets and auth endpoints.
+ *
+ * Rate Limiting:
+ * - Applies to all requests (including API routes)
+ * - Uses IP-based identification
+ * - Sliding window: 5 requests per 10 seconds
+ *
+ * Authentication:
+ * - Redirects unauthenticated users to /login
+ * - Allows access to /api/auth/* for NextAuth
+ * - Redirects authenticated users away from /login
  */
 export async function middleware(req: NextRequest) {
   try {
     // Rate limiting
     const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
-    const { success } = await ratelimit.limit(ip);
+    const { success, remaining, reset } = await ratelimit.limit(ip);
 
     if (!success) {
-      logger.warn("Rate limit exceeded", { ip, path: req.nextUrl.pathname });
-      return new NextResponse("Too many requests. Please try again later.", {
-        status: 429,
+      logger.warn("Rate limit exceeded", {
+        ip,
+        path: req.nextUrl.pathname,
+        reset: new Date(reset).toISOString(),
       });
+
+      return new NextResponse(
+        JSON.stringify({
+          error: "Too many requests. Please try again later.",
+          retryAfter: Math.ceil((reset - Date.now()) / 1000),
+        }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "X-RateLimit-Limit": RATE_LIMIT_REQUESTS.toString(),
+            "X-RateLimit-Remaining": remaining.toString(),
+            "X-RateLimit-Reset": reset.toString(),
+            "Retry-After": Math.ceil((reset - Date.now()) / 1000).toString(),
+          },
+        }
+      );
     }
 
     // Authentication check
@@ -50,9 +83,16 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
-    return NextResponse.next();
+    // Add rate limit headers to successful responses
+    const response = NextResponse.next();
+    response.headers.set("X-RateLimit-Limit", RATE_LIMIT_REQUESTS.toString());
+    response.headers.set("X-RateLimit-Remaining", remaining.toString());
+    response.headers.set("X-RateLimit-Reset", reset.toString());
+
+    return response;
   } catch (error) {
     logger.error("Middleware error", { error, path: req.nextUrl.pathname });
+    // Allow request to proceed on middleware errors to avoid breaking the app
     return NextResponse.next();
   }
 }
