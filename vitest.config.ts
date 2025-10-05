@@ -24,9 +24,30 @@ export default defineConfig({
       NODE_ENV: "development",
     },
     projects: [
+      // Unit tests project
       {
-        extends: true,
+        plugins: [react()],
+        resolve: {
+          alias: {
+            "@": path.resolve(dirname, "./src"),
+          },
+        },
+        test: {
+          name: "unit",
+          globals: true,
+          environment: "jsdom",
+          setupFiles: ["./tests/setup.ts"],
+          include: ["tests/unit/**/*.test.ts", "tests/unit/**/*.test.tsx"],
+          exclude: ["**/node_modules/**", "**/dist/**"],
+          env: {
+            NODE_ENV: "development",
+          },
+        },
+      },
+      // Storybook tests project
+      {
         plugins: [
+          react(),
           // The plugin will run tests for the stories defined in your Storybook config
           // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
           storybookTest({
@@ -34,6 +55,7 @@ export default defineConfig({
           }),
         ],
         test: {
+          globals: true,
           name: "storybook",
           browser: {
             enabled: true,
@@ -46,6 +68,7 @@ export default defineConfig({
             ],
           },
           setupFiles: [".storybook/vitest.setup.ts"],
+          exclude: ["**/node_modules/**", "**/dist/**"],
         },
       },
     ],
