@@ -1,7 +1,7 @@
-import bcrypt from "bcrypt";
 import { env } from "@/lib/env";
 import type { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { validateCredentials } from "./provider";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -15,28 +15,7 @@ export const authOptions: AuthOptions = {
         if (!credentials) {
           return null;
         }
-
-        const { email, password } = credentials;
-        const isAuthorized = email === env.AUTH_USER_EMAIL;
-
-        if (!isAuthorized) {
-          return null;
-        }
-
-        const isPasswordValid = await bcrypt.compare(
-          password,
-          env.AUTH_USER_PASSWORD_HASH
-        );
-
-        if (!isPasswordValid) {
-          return null;
-        }
-
-        return {
-          id: "1",
-          email: env.AUTH_USER_EMAIL,
-          name: "Admin",
-        };
+        return validateCredentials(credentials);
       },
     }),
   ],

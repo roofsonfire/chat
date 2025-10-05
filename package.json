@@ -29,7 +29,8 @@
     "@google-cloud/vertexai": "^1.10.0",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
-    "@types/bcrypt": "^6.0.0",
+    "@upstash/ratelimit": "^2.0.6",
+    "@upstash/redis": "^1.35.4",
     "ai": "^5.0.60",
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
@@ -45,6 +46,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^20.19.19",
     "@types/react": "^19",
     "@types/react-dom": "^19",
