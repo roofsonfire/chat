@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ChatService } from "@/lib/services/chat-service";
 import { chatRequestSchema } from "@/lib/validation/chat-schema";
 import { toReadableStream } from "@/lib/streaming/stream-utils";
+import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error in chat API:", error);
+    logger.error("Error in chat API", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
