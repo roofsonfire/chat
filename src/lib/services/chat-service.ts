@@ -36,9 +36,13 @@ export class ChatService {
       if (message.image) {
         const imageParts = message.image.split(",");
         if (imageParts.length > 1 && imageParts[1]) {
+          // Extract MIME type from data URL (e.g., "data:image/jpeg;base64")
+          const mimeTypeMatch = imageParts[0]?.match(/data:([^;]+)/);
+          const mimeType = mimeTypeMatch?.[1] || "image/jpeg";
+
           parts.push({
             inlineData: {
-              mimeType: "image/jpeg",
+              mimeType,
               data: imageParts[1],
             },
           });
