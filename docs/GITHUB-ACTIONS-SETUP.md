@@ -38,21 +38,7 @@ To enable all features of the CI/CD pipeline, configure these secrets in your Gi
 
 **Note**: If not configured, coverage upload will be skipped (this is fine for most projects).
 
-##### 2. UPSTASH_REDIS_REST_URL (Required for E2E tests)
-
-**Purpose**: Redis connection for rate limiting in E2E tests  
-**Where to get it**:
-
-1. Sign up at https://console.upstash.com
-2. Create a Redis database
-3. Copy the REST URL from the database details
-
-##### 3. UPSTASH_REDIS_REST_TOKEN (Required for E2E tests)
-
-**Purpose**: Redis authentication token  
-**Where to get it**: Same place as UPSTASH_REDIS_REST_URL
-
-##### 4. GOOGLE_PROJECT_ID (Required for E2E tests)
+##### 2. GOOGLE_PROJECT_ID (Required for E2E tests)
 
 **Purpose**: Google Cloud project for Vertex AI  
 **Where to get it**:
@@ -79,12 +65,13 @@ To enable all features of the CI/CD pipeline, configure these secrets in your Gi
 - ⚠️ Coverage reports not uploaded to Codecov
 - ✅ Build succeeds
 
-### Without Upstash/Google Secrets
+### Without Google Cloud Secrets
 
 - ✅ Lint and type check pass
 - ✅ Unit tests pass (mocked services)
 - ⚠️ E2E tests will fail if they require API calls
 - ✅ Build check uses dummy values and passes
+- ✅ Rate limiting uses in-memory storage (no Redis needed!)
 
 ## Local Development
 
@@ -97,11 +84,11 @@ cp .env.example .env.local
 # Then fill in your actual values:
 NEXTAUTH_SECRET=your-secret-here
 NEXTAUTH_URL=http://localhost:3000
-UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
-UPSTASH_REDIS_REST_TOKEN=your-token-here
 GOOGLE_PROJECT_ID=your-project-id
 GOOGLE_LOCATION=us-central1
 GOOGLE_VERTEX_AI_MODEL_ID=gemini-1.5-flash-002
+
+# Note: Rate limiting now uses in-memory storage (no Redis config needed!)
 ```
 
 **Never commit `.env.local` to git!** (It's already in `.gitignore`)
@@ -135,8 +122,9 @@ npm run build
 
 ### E2E Tests Failing
 
-**Problem**: E2E tests fail with authentication errors  
-**Solution**: Configure UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN, and Google Cloud secrets  
+**Problem**: E2E tests fail with API errors  
+**Solution**: Configure Google Cloud secrets (GOOGLE_PROJECT_ID, GOOGLE_LOCATION, GOOGLE_VERTEX_AI_MODEL_ID)  
+**Note**: Rate limiting now uses in-memory storage - no Redis configuration needed!  
 **Workaround**: Skip E2E tests temporarily by adding `if: false` to the e2e-tests job
 
 ### Coverage Upload Failing
@@ -229,8 +217,9 @@ The warnings you see are informational and indicate secrets that should be confi
 
 **Priority**:
 
-- 🔴 High: UPSTASH and GOOGLE secrets (for E2E tests)
+- 🔴 High: GOOGLE secrets (for E2E tests with real AI API)
 - 🟡 Medium: CODECOV_TOKEN (for coverage tracking)
 - 🟢 Low: All jobs run locally without issues
+- ✅ Bonus: Rate limiting works out-of-the-box (no Redis needed!)
 
 Configure secrets when ready, and your CI/CD pipeline will have full functionality! 🚀

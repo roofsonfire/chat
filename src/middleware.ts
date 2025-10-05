@@ -1,20 +1,23 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+import { RateLimiterMemory } from "rate-limiter-flexible";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
 
 /** Rate limit: 5 requests per 10 seconds per IP */
 const RATE_LIMIT_REQUESTS = 5;
-const RATE_LIMIT_WINDOW = "10 s";
+const RATE_LIMIT_WINDOW_SECONDS = 10;
 
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(RATE_LIMIT_REQUESTS, RATE_LIMIT_WINDOW),
-  analytics: true,
-  prefix: "chat-app-ratelimit",
+/**
+ * In-memory rate limiter
+ * Note: This resets when the server restarts and doesn't work across multiple instances.
+ * For production with multiple servers, consider using Upstash Redis or another distributed store.
+ */
+const rateLimiter = new RateLimiterMemory({
+  points: RATE_LIMIT_REQUESTS, // Number of requests
+  duration: RATE_LIMIT_WINDOW_SECONDS, // Per 10 seconds
+  blockDuration: 0, // Do not block, just reject
 });
 
 /**
@@ -120,66 +123,84 @@ export async function middleware(req: NextRequest) {
         }
       }
     }
-    // Rate limiting
+
+    // Rate limiting with in-memory store
     const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
-    const { success, remaining, reset } = await ratelimit.limit(ip);
 
-    if (!success) {
-      logger.warn("Rate limit exceeded", {
-        ip,
-        path: req.nextUrl.pathname,
-        reset: new Date(reset).toISOString(),
-      });
+    try {
+      const rateLimitResult = await rateLimiter.consume(ip);
 
-      return new NextResponse(
-        JSON.stringify({
-          error: "Too many requests. Please try again later.",
-          retryAfter: Math.ceil((reset - Date.now()) / 1000),
-        }),
-        {
-          status: 429,
-          headers: {
-            "Content-Type": "application/json",
-            "X-RateLimit-Limit": RATE_LIMIT_REQUESTS.toString(),
-            "X-RateLimit-Remaining": remaining.toString(),
-            "X-RateLimit-Reset": reset.toString(),
-            "Retry-After": Math.ceil((reset - Date.now()) / 1000).toString(),
-          },
-        }
-      );
+      // Add rate limit headers to show remaining quota
+      const remaining = rateLimitResult.remainingPoints;
+      const reset = Date.now() + rateLimitResult.msBeforeNext;
+
+      // Continue with authentication check
+      const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
+      const { pathname } = req.nextUrl;
+
+      // Allow requests for next-auth session and provider fetching
+      if (pathname.startsWith("/api/auth")) {
+        return NextResponse.next();
+      }
+
+      // Redirect to login if no token and not on the login page
+      if (!token && pathname !== "/login") {
+        const loginUrl = new URL("/login", req.url);
+        loginUrl.searchParams.set("from", pathname);
+        return NextResponse.redirect(loginUrl);
+      }
+
+      // If the user is authenticated and tries to access the login page, redirect to home
+      if (token && pathname === "/login") {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
+
+      // Create response and add security headers
+      const response = NextResponse.next();
+
+      // Add rate limit headers
+      response.headers.set("X-RateLimit-Limit", RATE_LIMIT_REQUESTS.toString());
+      response.headers.set("X-RateLimit-Remaining", remaining.toString());
+      response.headers.set("X-RateLimit-Reset", reset.toString());
+
+      // Add security headers
+      return addSecurityHeaders(response);
+    } catch (rateLimitError) {
+      // Rate limit exceeded - rateLimiter.consume() throws when limit is reached
+      if (
+        rateLimitError &&
+        typeof rateLimitError === "object" &&
+        "msBeforeNext" in rateLimitError
+      ) {
+        const rejectedResult = rateLimitError as { msBeforeNext: number };
+        const retryAfterSeconds = Math.ceil(rejectedResult.msBeforeNext / 1000);
+
+        logger.warn("Rate limit exceeded", {
+          ip,
+          path: req.nextUrl.pathname,
+          retryAfter: retryAfterSeconds,
+        });
+
+        return new NextResponse(
+          JSON.stringify({
+            error: "Too many requests. Please try again later.",
+            retryAfter: retryAfterSeconds,
+          }),
+          {
+            status: 429,
+            headers: {
+              "Content-Type": "application/json",
+              "X-RateLimit-Limit": RATE_LIMIT_REQUESTS.toString(),
+              "X-RateLimit-Remaining": "0",
+              "Retry-After": retryAfterSeconds.toString(),
+            },
+          }
+        );
+      }
+
+      // Other errors - re-throw to outer catch
+      throw rateLimitError;
     }
-
-    // Authentication check
-    const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
-    const { pathname } = req.nextUrl;
-
-    // Allow requests for next-auth session and provider fetching
-    if (pathname.startsWith("/api/auth")) {
-      return NextResponse.next();
-    }
-
-    // Redirect to login if no token and not on the login page
-    if (!token && pathname !== "/login") {
-      const loginUrl = new URL("/login", req.url);
-      loginUrl.searchParams.set("from", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-
-    // If the user is authenticated and tries to access the login page, redirect to home
-    if (token && pathname === "/login") {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
-
-    // Create response and add security headers
-    const response = NextResponse.next();
-
-    // Add rate limit headers
-    response.headers.set("X-RateLimit-Limit", RATE_LIMIT_REQUESTS.toString());
-    response.headers.set("X-RateLimit-Remaining", remaining.toString());
-    response.headers.set("X-RateLimit-Reset", reset.toString());
-
-    // Add security headers
-    return addSecurityHeaders(response);
   } catch (error) {
     logger.error("Middleware error", { error, path: req.nextUrl.pathname });
     // Allow request to proceed on middleware errors to avoid breaking the app

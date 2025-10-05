@@ -8,7 +8,6 @@ This guide provides detailed information for developers working on this project.
 - **npm** 9.x or higher
 - **Git** 2.x or higher
 - **Google Cloud Platform** account with Vertex AI API enabled
-- **Upstash** account for Redis (rate limiting)
 
 ## Initial Setup
 
@@ -78,15 +77,15 @@ GOOGLE_LOCATION=us-central1
 GOOGLE_VERTEX_AI_MODEL_ID=gemini-1.5-flash-002
 ```
 
-#### Upstash Redis
+#### Rate Limiting (In-Memory)
 
-1. Create a Redis database at https://console.upstash.com/
-2. Copy the REST URL and token
+The application now uses **in-memory rate limiting** via `rate-limiter-flexible`. No additional configuration is needed!
 
-```
-UPSTASH_REDIS_REST_URL=https://your-redis-url.upstash.io
-UPSTASH_REDIS_REST_TOKEN=your-token
-```
+- **Rate Limit**: 5 requests per 10 seconds per IP address
+- **Persistence**: Rate limits reset when the server restarts
+- **Scaling**: For production with multiple servers, consider migrating to Upstash Redis or another distributed store
+
+No environment variables needed for rate limiting! 🎉
 
 ### 3. Google Cloud Authentication
 
@@ -396,9 +395,12 @@ npm run type-check
 
 ### Rate Limiting Issues
 
-1. Verify Upstash Redis credentials
-2. Check Redis connection in Upstash dashboard
-3. Adjust rate limits in `src/middleware.ts` if needed
+**In-Memory Rate Limiting**: The app now uses `rate-limiter-flexible` with in-memory storage.
+
+1. Rate limits reset on server restart (expected behavior)
+2. Adjust limits in `src/middleware.ts` (RATE_LIMIT_REQUESTS and RATE_LIMIT_WINDOW_SECONDS)
+3. For production, consider upgrading to a distributed store (Redis, etc.)
+4. Check middleware logs for rate limit violations
 
 ## Git Workflow
 

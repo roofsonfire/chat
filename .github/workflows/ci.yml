@@ -75,8 +75,7 @@ jobs:
       NEXTAUTH_SECRET: test-secret-key-for-ci-only
       NEXTAUTH_URL: http://localhost:3000
       # Dummy values for CI - configure secrets/vars in repo settings for real API tests
-      UPSTASH_REDIS_REST_URL: https://dummy-redis.upstash.io
-      UPSTASH_REDIS_REST_TOKEN: dummy-token-placeholder
+      # Note: Rate limiting now uses in-memory storage (no Redis needed!)
       GOOGLE_PROJECT_ID: dummy-project-id
       GOOGLE_LOCATION: us-central1
       GOOGLE_VERTEX_AI_MODEL_ID: gemini-1.5-flash-002

@@ -7,30 +7,22 @@ vi.mock("next-auth/jwt", () => ({
   getToken: vi.fn(),
 }));
 
-vi.mock("@upstash/ratelimit", () => {
-  const mockLimit = vi.fn().mockResolvedValue({
-    success: true,
-    remaining: 4,
-    reset: Date.now() + 10000,
+vi.mock("rate-limiter-flexible", () => {
+  const mockConsume = vi.fn().mockResolvedValue({
+    remainingPoints: 4,
+    msBeforeNext: 10000,
+    consumedPoints: 1,
+    isFirstInDuration: false,
   });
 
-  class MockRatelimit {
-    limit = mockLimit;
-    static slidingWindow() {
-      return {};
-    }
+  class MockRateLimiterMemory {
+    consume = mockConsume;
   }
 
   return {
-    Ratelimit: MockRatelimit,
+    RateLimiterMemory: MockRateLimiterMemory,
   };
 });
-
-vi.mock("@upstash/redis", () => ({
-  Redis: {
-    fromEnv: vi.fn(),
-  },
-}));
 
 vi.mock("@/lib/env", () => ({
   env: {
@@ -41,8 +33,6 @@ vi.mock("@/lib/env", () => ({
     GOOGLE_PROJECT_ID: "test-project",
     GOOGLE_LOCATION: "us-central1",
     GOOGLE_VERTEX_AI_MODEL_ID: "gemini-1.5-flash",
-    UPSTASH_REDIS_REST_URL: "http://localhost",
-    UPSTASH_REDIS_REST_TOKEN: "test-token",
   },
 }));
 
