@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Message } from "@/lib/types";
+import { logger } from "../logger";
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -57,7 +58,7 @@ export function useChat() {
         });
       }
     } catch (error) {
-      console.error("Error fetching chat response:", error);
+      logger.error("Error fetching chat response", { error });
     } finally {
       setIsLoading(false);
     }

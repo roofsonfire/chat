@@ -1,7 +1,13 @@
 import { VertexAI, GenerateContentRequest, Part } from "@google-cloud/vertexai";
 import { Message } from "@/lib/types";
 import { env } from "@/lib/env";
+import { VertexAIError } from "../errors";
+import { logger } from "../logger";
 
+/**
+ * Service class for handling chat interactions with Google Vertex AI.
+ * Provides streaming responses for multimodal conversations.
+ */
 export class ChatService {
   private vertexAI: VertexAI;
 
@@ -12,9 +18,17 @@ export class ChatService {
     });
   }
 
+  /**
+   * Streams responses from the AI model for a given conversation.
+   * Supports both text and image inputs.
+   *
+   * @param messages - Array of conversation messages with roles and content
+   * @returns AsyncGenerator for streaming text responses
+   * @throws {VertexAIError} When the AI service fails to respond
+   */
   async stream(messages: Message[]) {
     const generativeModel = this.vertexAI.getGenerativeModel({
-      model: "gemini-1.5-flash-001",
+      model: env.GOOGLE_VERTEX_AI_MODEL_ID,
     });
 
     const contents = messages.map((message) => {
@@ -40,7 +54,12 @@ export class ChatService {
       contents,
     };
 
-    const streamingResp = await generativeModel.generateContentStream(req);
-    return streamingResp.stream;
+    try {
+      const streamingResp = await generativeModel.generateContentStream(req);
+      return streamingResp.stream;
+    } catch (error) {
+      logger.error("Error streaming from Vertex AI", { error });
+      throw new VertexAIError();
+    }
   }
 }

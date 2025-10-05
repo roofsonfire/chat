@@ -7,19 +7,20 @@ interface ChatMessageProps {
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
+  const isUser = message.role === "user";
+
   return (
     <div
-      className={cn(
-        "flex items-start space-x-4",
-        message.role === "user" ? "justify-end" : ""
-      )}
+      className={cn("flex items-start space-x-4", isUser ? "justify-end" : "")}
+      role="article"
+      aria-label={`${isUser ? "User" : "Assistant"} message`}
     >
       <div
         className={cn(
-          "rounded-lg px-4 py-2",
-          message.role === "user"
-            ? "bg-blue-500 text-white"
-            : "bg-gray-200 text-gray-900"
+          "max-w-[80%] rounded-lg px-4 py-2",
+          isUser
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted text-muted-foreground"
         )}
       >
         {message.image && (
@@ -31,7 +32,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
             className="mb-2 rounded-lg"
           />
         )}
-        <p>{message.content}</p>
+        <p className="break-words whitespace-pre-wrap">{message.content}</p>
       </div>
     </div>
   );

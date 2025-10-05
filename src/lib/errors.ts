@@ -7,3 +7,12 @@ export class AppError extends Error {
     Object.setPrototypeOf(this, AppError.prototype);
   }
 }
+
+export class VertexAIError extends AppError {
+  constructor(
+    message = "An unexpected error occurred with the Vertex AI service."
+  ) {
+    super(message, 500);
+    Object.setPrototypeOf(this, VertexAIError.prototype);
+  }
+}

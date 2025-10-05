@@ -15,8 +15,10 @@ export function Chat() {
   } = useChat();
 
   return (
-    <main className="flex-1 overflow-y-auto">
-      <ChatHistory messages={messages} />
+    <div className="flex h-full w-full flex-col">
+      <div className="flex-1 overflow-y-auto">
+        <ChatHistory messages={messages} isLoading={isLoading} />
+      </div>
       <MessageInput
         input={input}
         handleInputChange={handleInputChange}
@@ -24,6 +26,6 @@ export function Chat() {
         isLoading={isLoading}
         setImage={setImage}
       />
-    </main>
+    </div>
   );
 }
