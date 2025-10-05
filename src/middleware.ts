@@ -18,8 +18,62 @@ const ratelimit = new Ratelimit({
 });
 
 /**
- * Middleware for authentication and rate limiting.
+ * Add security headers to responses
+ * Implements defense-in-depth security practices
+ */
+function addSecurityHeaders(response: NextResponse): NextResponse {
+  // Prevent clickjacking attacks
+  response.headers.set("X-Frame-Options", "DENY");
+
+  // Enable browser XSS protection
+  response.headers.set("X-Content-Type-Options", "nosniff");
+
+  // Prevent MIME type sniffing
+  response.headers.set("X-XSS-Protection", "1; mode=block");
+
+  // Enforce HTTPS in production
+  if (process.env.NODE_ENV === "production") {
+    response.headers.set(
+      "Strict-Transport-Security",
+      "max-age=31536000; includeSubDomains"
+    );
+  }
+
+  // Referrer policy - balance privacy and functionality
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+
+  // Permissions policy - restrict potentially dangerous features
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=()"
+  );
+
+  // Content Security Policy
+  response.headers.set(
+    "Content-Security-Policy",
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // Next.js requires unsafe-eval and unsafe-inline
+      "style-src 'self' 'unsafe-inline'", // Styled components require unsafe-inline
+      "img-src 'self' data: blob:", // Allow data URIs for base64 images
+      "font-src 'self'",
+      "connect-src 'self'",
+      "frame-ancestors 'none'",
+    ].join("; ")
+  );
+
+  return response;
+}
+
+/**
+ * Middleware for authentication, rate limiting, and security.
  * Protects all routes except public assets and auth endpoints.
+ *
+ * Security Features:
+ * - CSRF protection via origin validation
+ * - Security headers (CSP, HSTS, etc.)
+ * - Rate limiting with IP-based identification
+ * - Authentication enforcement
  *
  * Rate Limiting:
  * - Applies to all requests (including API routes)
@@ -33,6 +87,39 @@ const ratelimit = new Ratelimit({
  */
 export async function middleware(req: NextRequest) {
   try {
+    // CSRF Protection: Origin validation for state-changing requests
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      const origin = req.headers.get("origin");
+      const host = req.headers.get("host");
+
+      // Allow requests with no origin (e.g., Postman, cURL) in development
+      if (origin && host) {
+        const originUrl = new URL(origin);
+        const expectedOrigin = originUrl.hostname;
+        const actualHost = host.split(":")[0]; // Remove port if present
+
+        if (expectedOrigin !== actualHost && expectedOrigin !== "localhost") {
+          logger.warn("CSRF protection: Origin mismatch", {
+            origin: expectedOrigin,
+            host: actualHost,
+            method: req.method,
+            path: req.nextUrl.pathname,
+          });
+
+          return new NextResponse(
+            JSON.stringify({
+              error: "Invalid origin",
+            }),
+            {
+              status: 403,
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        }
+      }
+    }
     // Rate limiting
     const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
     const { success, remaining, reset } = await ratelimit.limit(ip);
@@ -83,13 +170,16 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
-    // Add rate limit headers to successful responses
+    // Create response and add security headers
     const response = NextResponse.next();
+
+    // Add rate limit headers
     response.headers.set("X-RateLimit-Limit", RATE_LIMIT_REQUESTS.toString());
     response.headers.set("X-RateLimit-Remaining", remaining.toString());
     response.headers.set("X-RateLimit-Reset", reset.toString());
 
-    return response;
+    // Add security headers
+    return addSecurityHeaders(response);
   } catch (error) {
     logger.error("Middleware error", { error, path: req.nextUrl.pathname });
     // Allow request to proceed on middleware errors to avoid breaking the app
