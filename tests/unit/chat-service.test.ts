@@ -50,8 +50,8 @@ describe("ChatService", () => {
       () =>
         ({
           getGenerativeModel: mockGetModel,
-        }) as any
-    ); // eslint-disable-line @typescript-eslint/no-explicit-any
+        }) as unknown as VertexAI
+    );
 
     const chatService = new ChatService();
     const messages = [{ role: "user" as const, content: "Hello" }];
@@ -72,8 +72,8 @@ describe("ChatService", () => {
       () =>
         ({
           getGenerativeModel: mockGetModel,
-        }) as any
-    ); // eslint-disable-line @typescript-eslint/no-explicit-any
+        }) as unknown as VertexAI
+    );
 
     const chatService = new ChatService();
     const messages = [{ role: "user" as const, content: "Hello" }];
@@ -82,7 +82,9 @@ describe("ChatService", () => {
   });
 
   it("should format messages with text content", async () => {
-    let capturedRequest: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    let capturedRequest: {
+      contents?: Array<{ role: string; parts: Array<{ text: string }> }>;
+    } = {};
 
     const mockGetModel = vi.fn().mockReturnValue({
       generateContentStream: vi.fn().mockImplementation((req) => {
@@ -97,8 +99,8 @@ describe("ChatService", () => {
       () =>
         ({
           getGenerativeModel: mockGetModel,
-        }) as any
-    ); // eslint-disable-line @typescript-eslint/no-explicit-any
+        }) as unknown as VertexAI
+    );
 
     const chatService = new ChatService();
     const messages = [
@@ -110,14 +112,21 @@ describe("ChatService", () => {
     await chatService.stream(messages);
 
     expect(capturedRequest.contents).toHaveLength(3);
-    expect(capturedRequest.contents[0]).toEqual({
+    expect(capturedRequest.contents![0]).toEqual({
       role: "user",
       parts: [{ text: "First message" }],
     });
   });
 
   it("should include image data in message parts", async () => {
-    let capturedRequest: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    let capturedRequest: {
+      contents?: Array<{
+        role: string;
+        parts: Array<
+          { text: string } | { inlineData: { mimeType: string; data: string } }
+        >;
+      }>;
+    } = {};
 
     const mockGetModel = vi.fn().mockReturnValue({
       generateContentStream: vi.fn().mockImplementation((req) => {
@@ -132,8 +141,8 @@ describe("ChatService", () => {
       () =>
         ({
           getGenerativeModel: mockGetModel,
-        }) as any
-    ); // eslint-disable-line @typescript-eslint/no-explicit-any
+        }) as unknown as VertexAI
+    );
 
     const chatService = new ChatService();
     const messages = [
@@ -146,11 +155,11 @@ describe("ChatService", () => {
 
     await chatService.stream(messages);
 
-    expect(capturedRequest.contents[0].parts).toHaveLength(2);
-    expect(capturedRequest.contents[0].parts[0]).toEqual({
+    expect(capturedRequest.contents![0]!.parts).toHaveLength(2);
+    expect(capturedRequest.contents![0]!.parts[0]).toEqual({
       text: "What's this?",
     });
-    expect(capturedRequest.contents[0].parts[1]).toEqual({
+    expect(capturedRequest.contents![0]!.parts[1]).toEqual({
       inlineData: {
         mimeType: "image/jpeg",
         data: "/9j/4AAQSkZJRg==",
