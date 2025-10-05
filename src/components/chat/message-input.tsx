@@ -65,20 +65,28 @@ export function MessageInput({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-background border-t p-4">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-background border-t p-4"
+      data-testid="message-input-form"
+    >
       {imageError && (
-        <div className="bg-destructive/10 text-destructive mb-2 rounded-md p-2 text-sm">
+        <div
+          className="bg-destructive/10 text-destructive mb-2 rounded-md p-2 text-sm"
+          data-testid="image-error"
+        >
           {imageError}
         </div>
       )}
       {imagePreview && (
-        <div className="relative mb-4">
+        <div className="relative mb-4" data-testid="image-preview-container">
           <Image
             src={imagePreview}
             alt="Image preview"
             width={80}
             height={80}
             className="rounded-lg"
+            data-testid="image-preview"
           />
           <Button
             type="button"
@@ -87,6 +95,7 @@ export function MessageInput({
             className="absolute top-0 right-0"
             onClick={handleRemoveImage}
             aria-label="Remove image"
+            data-testid="remove-image-button"
           >
             <CloseIcon className="h-6 w-6" />
           </Button>
@@ -101,6 +110,7 @@ export function MessageInput({
           className="hidden"
           id="image-upload"
           aria-label="Upload image"
+          data-testid="image-upload-input"
         />
         <label htmlFor="image-upload">
           <Button
@@ -109,6 +119,7 @@ export function MessageInput({
             variant="ghost"
             asChild
             aria-label="Attach image"
+            data-testid="attach-image-button"
           >
             <span className="cursor-pointer">
               <ImageIcon className="h-6 w-6" />
@@ -122,6 +133,7 @@ export function MessageInput({
           className="pr-12 pl-12"
           disabled={isLoading}
           aria-label="Message input"
+          data-testid="message-input"
         />
         <Button
           type="submit"
@@ -129,6 +141,7 @@ export function MessageInput({
           className="absolute top-1/2 right-2 -translate-y-1/2"
           disabled={isLoading}
           aria-label="Send message"
+          data-testid="send-message-button"
         >
           <SendIcon className="h-6 w-6" />
         </Button>

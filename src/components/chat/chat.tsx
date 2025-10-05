@@ -15,8 +15,11 @@ export function Chat() {
   } = useChat();
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <div className="flex-1 overflow-y-auto">
+    <div className="flex h-full w-full flex-col" data-testid="chat-container">
+      <div
+        className="flex-1 overflow-y-auto"
+        data-testid="chat-history-container"
+      >
         <ChatHistory messages={messages} isLoading={isLoading} />
       </div>
       <MessageInput

@@ -19,7 +19,10 @@ export function ChatHistory({ messages, isLoading = false }: ChatHistoryProps) {
 
   if (messages.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center p-4">
+      <div
+        className="flex h-full items-center justify-center p-4"
+        data-testid="empty-chat"
+      >
         <p className="text-muted-foreground text-center">
           Start a conversation by typing a message below.
         </p>
@@ -28,12 +31,15 @@ export function ChatHistory({ messages, isLoading = false }: ChatHistoryProps) {
   }
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-4 p-4" data-testid="chat-messages">
       {messages.map((message, index) => (
         <ChatMessage key={index} message={message} />
       ))}
       {isLoading && (
-        <div className="flex items-start space-x-4">
+        <div
+          className="flex items-start space-x-4"
+          data-testid="loading-indicator"
+        >
           <div className="bg-muted text-muted-foreground rounded-lg px-4 py-2">
             <Spinner size="sm" />
           </div>

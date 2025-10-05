@@ -14,6 +14,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       className={cn("flex items-start space-x-4", isUser ? "justify-end" : "")}
       role="article"
       aria-label={`${isUser ? "User" : "Assistant"} message`}
+      data-testid={`message-${isUser ? "user" : "assistant"}`}
     >
       <div
         className={cn(
@@ -22,6 +23,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
             ? "bg-primary text-primary-foreground"
             : "bg-muted text-muted-foreground"
         )}
+        data-testid="message-content"
       >
         {message.image && (
           <Image
@@ -30,9 +32,15 @@ export function ChatMessage({ message }: ChatMessageProps) {
             width={200}
             height={200}
             className="mb-2 rounded-lg"
+            data-testid="message-image"
           />
         )}
-        <p className="break-words whitespace-pre-wrap">{message.content}</p>
+        <p
+          className="break-words whitespace-pre-wrap"
+          data-testid="message-text"
+        >
+          {message.content}
+        </p>
       </div>
     </div>
   );
