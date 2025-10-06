@@ -51,10 +51,12 @@ TTL: 3600
 
 ### 4. Verify Domain (If Not Done)
 
-1. Go to [Google Cloud Console - Domain Verification](https://console.cloud.google.com/run/domains/verify)
-2. Add `daza.ar`
-3. Follow verification steps (TXT record or HTML file)
-4. Wait for verification (5-10 minutes)
+1. Go to [Google Cloud Run - Custom Domains](https://console.cloud.google.com/run/domains)
+2. Click "Add Mapping" button
+3. Enter domain: `staging.chat.daza.ar`
+4. If domain not verified, you'll be redirected to Google Search Console
+5. Add TXT record shown to your DNS provider
+6. Wait for verification (5-10 minutes)
 
 ## 📝 Manual Deployment (Alternative)
 

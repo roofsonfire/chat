@@ -16,14 +16,16 @@ This will ask for:
 - **Email**: Your login email
 - **Password**: Your login password (will be hashed)
 
-### 2. Verify Domain
+### 2. Verify Domain Ownership
 
-Before deploying, verify domain ownership:
+Before deploying, verify your domain in Google Cloud Console:
 
-1. Go to: https://console.cloud.google.com/run/domains/verify
-2. Add domain: `daza.ar`
-3. Follow verification steps (add TXT record to DNS)
-4. Wait for verification (~5-10 minutes)
+1. Go to: https://console.cloud.google.com/run/domains
+2. Click "Add Mapping" button
+3. Enter domain: `staging.chat.daza.ar`
+4. If not verified, you'll be redirected to verify via Google Search Console
+5. Add the TXT record shown to your DNS
+6. Wait for verification to complete (5-10 minutes)
 
 ### 3. Deploy
 
