@@ -135,8 +135,6 @@ jobs:
           # Provide dummy values for build
           NEXTAUTH_SECRET: build-secret
           NEXTAUTH_URL: http://localhost:3000
-          UPSTASH_REDIS_REST_URL: https://dummy-redis.upstash.io
-          UPSTASH_REDIS_REST_TOKEN: dummy-token
           GOOGLE_PROJECT_ID: dummy-project
           GOOGLE_LOCATION: us-central1
           GOOGLE_VERTEX_AI_MODEL_ID: gemini-1.5-flash-002
