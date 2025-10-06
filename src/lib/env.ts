@@ -8,8 +8,6 @@ const envSchema = z.object({
   GOOGLE_PROJECT_ID: z.string().min(1),
   GOOGLE_LOCATION: z.string().min(1),
   GOOGLE_VERTEX_AI_MODEL_ID: z.string().min(1),
-  UPSTASH_REDIS_REST_URL: z.string().url(),
-  UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
 });
 
 /**

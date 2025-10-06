@@ -40,8 +40,6 @@ Configure these in GitHub repository settings (`Settings > Secrets and variables
 
 ### Required for E2E Tests:
 
-- `UPSTASH_REDIS_REST_URL`: Redis URL for rate limiting
-- `UPSTASH_REDIS_REST_TOKEN`: Redis authentication token
 - `GOOGLE_PROJECT_ID`: Google Cloud project ID
 - `GOOGLE_LOCATION`: Vertex AI location (e.g., `us-central1`)
 - `GOOGLE_VERTEX_AI_MODEL_ID`: Model name (e.g., `gemini-1.5-flash-002`)

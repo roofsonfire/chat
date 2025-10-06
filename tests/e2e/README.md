@@ -54,16 +54,12 @@ GOOGLE_PROJECT_ID=your-project-id
 GOOGLE_LOCATION=us-central1
 GOOGLE_VERTEX_AI_MODEL_ID=gemini-1.5-flash-002
 
-# Upstash Redis (use your actual values)
-UPSTASH_REDIS_REST_URL=https://your-instance.upstash.io
-UPSTASH_REDIS_REST_TOKEN=your-token-here
-
 # Test credentials (must match AUTH_USER_EMAIL)
 NEXT_PUBLIC_TEST_EMAIL=test@example.com
 NEXT_PUBLIC_TEST_PASSWORD=test123
 ```
 
-**Note**: The `NEXT_PUBLIC_TEST_EMAIL` should match `AUTH_USER_EMAIL`, and `NEXT_PUBLIC_TEST_PASSWORD` should be the unhashed version of `AUTH_USER_PASSWORD_HASH`.
+**Note**: The `NEXT_PUBLIC_TEST_EMAIL` should match `AUTH_USER_EMAIL`, and `NEXT_PUBLIC_TEST_PASSWORD` should be the unhashed version of `AUTH_USER_PASSWORD_HASH`. Rate limiting is now handled in-memory, so no external service configuration is needed.
 
 ### Run all E2E tests
 
