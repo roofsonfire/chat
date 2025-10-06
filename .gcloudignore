@@ -1,0 +1,63 @@
+# Ignore Git files
+.git
+.gitignore
+.github
+
+# Ignore Node modules (will be installed during build)
+node_modules
+
+# Ignore Next.js build artifacts (will be rebuilt)
+.next
+out
+
+# Ignore local environment files
+.env.local
+.env*.local
+
+# Ignore test files and directories
+test-*.mjs
+test-*.png
+tests/
+coverage/
+.storybook/
+playwright-report/
+test-results/
+
+# Ignore documentation
+docs/
+README.md
+*.md
+!package.json
+
+# Ignore IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore development scripts
+diagnose-*.sh
+deploy-*.sh
+
+# Ignore TypeScript build info
+tsconfig.tsbuildinfo
+
+# Ignore Playwright
+playwright.config.ts
+
+# Ignore Vitest
+vitest.config.ts
+vitest.shims.d.ts
+
+# Ignore Storybook
+src/stories/
+
+# Ignore config files not needed in production
+.eslintrc*
+.prettierrc*
+prettier.config.js
+eslint.config.mjs

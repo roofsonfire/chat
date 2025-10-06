@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
 
+  // Output standalone for Cloud Run containerization
+  output: "standalone",
+
   // Security headers
   async headers() {
     return [
