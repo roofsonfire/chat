@@ -10,7 +10,7 @@ vi.mock("@/lib/env", () => ({
   env: {
     GOOGLE_PROJECT_ID: "test-project",
     GOOGLE_LOCATION: "us-central1",
-    GOOGLE_VERTEX_AI_MODEL_ID: "gemini-1.5-flash-002",
+    GOOGLE_VERTEX_AI_MODEL_ID: "gemini-2.5-flash",
   },
 }));
 
@@ -59,7 +59,7 @@ describe("ChatService", () => {
     await chatService.stream(messages);
 
     expect(mockGetModel).toHaveBeenCalledWith({
-      model: "gemini-1.5-flash-002",
+      model: "gemini-2.5-flash",
     });
   });
 
@@ -164,6 +164,58 @@ describe("ChatService", () => {
         mimeType: "image/jpeg",
         data: "/9j/4AAQSkZJRg==",
       },
+    });
+  });
+
+  it("should use custom model ID when provided", async () => {
+    const mockGetModel = vi.fn().mockReturnValue({
+      generateContentStream: vi.fn().mockResolvedValue({
+        stream: async function* () {
+          yield { text: () => "test" };
+        },
+      }),
+    });
+
+    vi.mocked(VertexAI).mockImplementation(
+      () =>
+        ({
+          getGenerativeModel: mockGetModel,
+        }) as unknown as VertexAI
+    );
+
+    const chatService = new ChatService();
+    const messages = [{ role: "user" as const, content: "Hello" }];
+
+    await chatService.stream(messages, "gemini-1.5-pro-002");
+
+    expect(mockGetModel).toHaveBeenCalledWith({
+      model: "gemini-1.5-pro-002",
+    });
+  });
+
+  it("should fall back to default model ID when not provided", async () => {
+    const mockGetModel = vi.fn().mockReturnValue({
+      generateContentStream: vi.fn().mockResolvedValue({
+        stream: async function* () {
+          yield { text: () => "test" };
+        },
+      }),
+    });
+
+    vi.mocked(VertexAI).mockImplementation(
+      () =>
+        ({
+          getGenerativeModel: mockGetModel,
+        }) as unknown as VertexAI
+    );
+
+    const chatService = new ChatService();
+    const messages = [{ role: "user" as const, content: "Hello" }];
+
+    await chatService.stream(messages);
+
+    expect(mockGetModel).toHaveBeenCalledWith({
+      model: "gemini-2.5-flash",
     });
   });
 });

@@ -1,4 +1,16 @@
 /**
+ * Represents a generated image from the AI model
+ */
+export interface GeneratedImage {
+  /** MIME type of the generated image */
+  mimeType: string;
+  /** Base64-encoded image data */
+  data: string;
+  /** Aspect ratio of the generated image */
+  aspectRatio?: string;
+}
+
+/**
  * Represents a message in the chat conversation.
  */
 export interface Message {
@@ -6,8 +18,10 @@ export interface Message {
   role: "user" | "assistant";
   /** The text content of the message */
   content: string;
-  /** Optional base64-encoded image data URL */
+  /** Optional base64-encoded image data URL (for user uploads) */
   image?: string;
+  /** Optional array of AI-generated images (for assistant responses) */
+  generatedImages?: GeneratedImage[];
 }
 
 /**
