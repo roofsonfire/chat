@@ -117,7 +117,7 @@ jobs:
           CLOUD_RUN_URL="${{ steps.deploy.outputs.url }}"
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${CLOUD_RUN_URL}")
           
-          if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 302 ] || [ "$HTTP_STATUS" -eq 401 ]; then
+          if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 302 ] || [ "$HTTP_STATUS" -eq 307 ] || [ "$HTTP_STATUS" -eq 401 ]; then
             echo "✅ Service is responding (HTTP $HTTP_STATUS)"
           else
             echo "⚠️ Service returned HTTP $HTTP_STATUS"

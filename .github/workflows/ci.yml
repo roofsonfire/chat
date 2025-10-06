@@ -74,6 +74,8 @@ jobs:
       # Test environment variables
       NEXTAUTH_SECRET: test-secret-key-for-ci-only
       NEXTAUTH_URL: http://localhost:3000
+      AUTH_USER_EMAIL: test@example.com
+      AUTH_USER_PASSWORD_HASH: $2b$10$dummyHashForCITestingOnly1234567890
       # Dummy values for CI - configure secrets/vars in repo settings for real API tests
       # Note: Rate limiting now uses in-memory storage (no Redis needed!)
       GOOGLE_PROJECT_ID: dummy-project-id
