@@ -18,4 +18,8 @@ export const chatRequestSchema = z.object({
     )
     .min(1, "At least one message is required")
     .max(100, "Too many messages in conversation"),
+  modelId: z
+    .string()
+    .regex(/^gemini-[\w.-]+$/, "Invalid model ID format")
+    .optional(),
 });

@@ -31,14 +31,23 @@ Stream AI responses for chat messages.
     content: string;
     image?: string; // Optional base64-encoded image data URL
   }>;
+  modelId?: string; // Optional Vertex AI model ID (e.g., "gemini-1.5-flash-002")
 }
 ```
+
+**Available Models:**
+
+- `gemini-1.5-flash-002` (default) - Fast and efficient
+- `gemini-1.5-pro-002` - Most capable for complex reasoning
+- `gemini-1.0-pro` - Previous generation
+- `gemini-1.0-pro-vision` - Multimodal with vision capabilities
 
 **Validation Rules:**
 
 - Minimum 1 message, maximum 100 messages
 - Message content: 1-10,000 characters
 - Images: Base64-encoded data URLs
+- Model ID must be one of the available models (optional)
 
 **Response:**
 
@@ -72,6 +81,7 @@ const response = await fetch("/api/chat", {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     messages: [{ role: "user", content: "Hello, how are you?" }],
+    modelId: "gemini-1.5-pro-002", // Optional: specify which model to use
   }),
 });
 

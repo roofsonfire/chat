@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { middleware } from "@/middleware";
 
@@ -32,7 +32,7 @@ vi.mock("@/lib/env", () => ({
     AUTH_USER_PASSWORD_HASH: "test-hash",
     GOOGLE_PROJECT_ID: "test-project",
     GOOGLE_LOCATION: "us-central1",
-    GOOGLE_VERTEX_AI_MODEL_ID: "gemini-1.5-flash",
+    GOOGLE_VERTEX_AI_MODEL_ID: "gemini-2.5-flash",
   },
 }));
 

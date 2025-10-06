@@ -7,6 +7,7 @@ A modern, production-grade chat application built with Next.js 15, TypeScript, a
 - **Next.js 15** with App Router and Turbopack
 - **TypeScript** with strict mode enabled
 - **Vertex AI Integration** for multimodal chat capabilities
+- **Dynamic Model Selection** - Automatically fetches and displays available Gemini models from Vertex AI API
 - **Authentication** with NextAuth.js
 - **Modern UI** built with shadcn/ui and Tailwind CSS
 - **E2E Testing** with Playwright

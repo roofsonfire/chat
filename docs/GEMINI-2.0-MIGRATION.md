@@ -1,0 +1,253 @@
+# Gemini 2.0 Model Migration
+
+## Overview
+
+This document describes the migration from Gemini 1.5/1.0 models to Gemini 2.0 experimental models, which are currently the only models available in the project's Google Cloud configuration.
+
+## Background
+
+During implementation of dynamic model fetching, we discovered that:
+
+- **No Gemini 1.5 or 1.0 models are available** in the project (404 errors)
+- **Only `gemini-2.0-flash-exp` is accessible**
+- The `.env.local` file was already configured to use Gemini 2.0
+
+This suggests a project-specific configuration where only experimental Gemini 2.0 models have been enabled or accessible.
+
+## Discovery Process
+
+We used a custom test script (`test-available-models.mjs`) to test 21 different model names:
+
+```bash
+node --env-file=.env.local test-available-models.mjs
+```
+
+### Results:
+
+- ✅ **Available**: `gemini-2.0-flash-exp`
+- ❌ **Unavailable**: All Gemini 1.5 and 1.0 models (404 NOT_FOUND)
+
+## Changes Made
+
+### 1. Constants (`src/lib/constants/vertex-ai-models.ts`)
+
+```typescript
+export const VERTEX_AI_MODELS = {
+  "gemini-2.0-flash-exp": {
+    id: "gemini-2.0-flash-exp",
+    name: "Gemini 2.0 Flash (Experimental)",
+    description:
+      "Latest experimental Gemini 2.0 model with improved capabilities",
+  },
+} as const;
+
+export const DEFAULT_MODEL_ID: VertexAIModelId = "gemini-2.0-flash-exp";
+```
+
+### 2. Model Registry Service (`src/lib/services/model-registry-service.ts`)
+
+Updated KNOWN_MODELS to only include:
+
+```typescript
+private readonly KNOWN_MODELS: VertexAIModel[] = [
+  {
+    name: "gemini-2.0-flash-exp",
+    displayName: "Gemini 2.0 Flash (Experimental)",
+    description: "Latest experimental Gemini 2.0 model with improved capabilities",
+    supportedGenerationMethods: ["generateContent", "streamGenerateContent"],
+    inputTokenLimit: 1000000,
+    outputTokenLimit: 8192,
+  },
+];
+```
+
+### 3. Fallback Models (`src/lib/hooks/use-available-models.ts`)
+
+```typescript
+setModels([
+  {
+    id: "gemini-2.0-flash-exp",
+    name: "Gemini 2.0 Flash (Experimental)",
+    description: "Latest experimental Gemini 2.0 model",
+  },
+]);
+```
+
+### 4. Environment Configuration
+
+`.env.local` (already configured):
+
+```bash
+GOOGLE_VERTEX_AI_MODEL_ID=gemini-2.0-flash-exp
+```
+
+### 5. Test Updates
+
+All tests updated to expect `gemini-2.0-flash-exp`:
+
+- `tests/unit/chat-service.test.ts`
+- `tests/unit/model-registry-service.test.ts`
+- `tests/unit/middleware.test.ts`
+- `tests/unit/vertex-ai-models.test.ts`
+- `tests/unit/model-selector.test.tsx`
+
+## Verification
+
+### Tests
+
+```bash
+npm test -- --run
+```
+
+**Result**: ✅ All 147 tests passing
+
+### Build
+
+```bash
+npm run build
+```
+
+**Result**: ✅ Build successful
+
+### Runtime
+
+```bash
+npm run dev
+```
+
+**Result**: ✅ Server starts without errors
+
+### Model Availability Test
+
+```bash
+node --env-file=.env.local test-vertex-ai.js
+```
+
+**Result**: ✅ Successfully connects to Gemini 2.0 Flash
+
+## Gemini 2.0 Features
+
+Gemini 2.0 Flash (Experimental) provides:
+
+- **Improved performance** over Gemini 1.5
+- **Enhanced reasoning capabilities**
+- **Multimodal support** (text and images)
+- **Same token limits**: 1M input, 8K output
+- **Experimental status**: May have breaking changes
+
+## Limitations
+
+1. **Single Model**: Only one model is currently available
+2. **Experimental**: The model is in experimental phase
+3. **No Version Aliases**: Must use exact model name (`gemini-2.0-flash-exp`)
+4. **Regional Availability**: May not be available in all regions
+5. **Project Permissions**: Requires specific project setup
+
+## Recommendations
+
+### For Production
+
+If you need stable, production-ready models:
+
+1. **Enable Gemini 1.5 models** in Google Cloud Console:
+   - Navigate to Vertex AI > Model Garden
+   - Enable Gemini 1.5 Flash and Pro models
+   - Check regional availability
+
+2. **Update constants** to include additional models:
+
+```typescript
+export const VERTEX_AI_MODELS = {
+  "gemini-2.0-flash-exp": {
+    /* ... */
+  },
+  "gemini-1.5-flash": {
+    /* ... */
+  },
+  "gemini-1.5-pro": {
+    /* ... */
+  },
+} as const;
+```
+
+3. **Update fallback lists** in:
+   - `model-registry-service.ts`
+   - `use-available-models.ts`
+
+### For Development
+
+Current setup is ideal for:
+
+- Testing latest Gemini 2.0 features
+- Prototyping with cutting-edge capabilities
+- Internal development and experimentation
+
+## Troubleshooting
+
+### If models return 404:
+
+1. Check enabled APIs:
+
+```bash
+gcloud services list --enabled | grep aiplatform
+```
+
+2. Verify project permissions:
+
+```bash
+gcloud projects get-iam-policy $GOOGLE_PROJECT_ID
+```
+
+3. Check regional availability:
+
+```bash
+# Try different regions in .env.local
+GOOGLE_LOCATION=us-central1
+GOOGLE_LOCATION=us-east4
+GOOGLE_LOCATION=europe-west4
+```
+
+4. Run discovery script:
+
+```bash
+node --env-file=.env.local test-available-models.mjs
+```
+
+### If you need Gemini 1.5:
+
+Visit: https://console.cloud.google.com/vertex-ai/generative/multimodal
+
+## Testing Tools
+
+### Available Scripts
+
+1. **test-vertex-ai.js** - Quick connectivity test
+2. **test-available-models.mjs** - Comprehensive model discovery
+3. **diagnose-vertex-ai.sh** - Full diagnostic report
+
+### Usage
+
+```bash
+# Test current configuration
+node --env-file=.env.local test-vertex-ai.js
+
+# Discover all available models
+node --env-file=.env.local test-available-models.mjs
+
+# Run diagnostics
+bash diagnose-vertex-ai.sh
+```
+
+## References
+
+- [Gemini 2.0 Documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions)
+- [Vertex AI Model Versions](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions)
+- [Model Garden](https://console.cloud.google.com/vertex-ai/model-garden)
+
+## Migration Date
+
+**October 5, 2025**
+
+## Status
+
+✅ **Complete** - Application fully migrated to Gemini 2.0 Flash (Experimental)

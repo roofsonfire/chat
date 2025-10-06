@@ -1,6 +1,10 @@
+"use client";
+
 import { Message } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ChatMessageProps {
   message: Message;
@@ -25,6 +29,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         )}
         data-testid="message-content"
       >
+        {/* User uploaded image (input) */}
         {message.image && (
           <Image
             src={message.image}
@@ -35,12 +40,48 @@ export function ChatMessage({ message }: ChatMessageProps) {
             data-testid="message-image"
           />
         )}
-        <p
-          className="break-words whitespace-pre-wrap"
-          data-testid="message-text"
-        >
-          {message.content}
-        </p>
+
+        {/* Message text */}
+        {message.content && (
+          <p
+            className="break-words whitespace-pre-wrap"
+            data-testid="message-text"
+          >
+            {message.content}
+          </p>
+        )}
+
+        {/* AI-generated images (output) */}
+        {message.generatedImages && message.generatedImages.length > 0 && (
+          <div className="mt-2 space-y-2" data-testid="generated-images">
+            {message.generatedImages.map((img, idx) => (
+              <div key={idx} className="group relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`data:${img.mimeType};base64,${img.data}`}
+                  alt={`Generated image ${idx + 1}`}
+                  className="h-auto max-w-full rounded-lg"
+                  style={{ maxWidth: "400px" }}
+                  data-testid={`generated-image-${idx}`}
+                />
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100"
+                  onClick={() => {
+                    const link = document.createElement("a");
+                    link.href = `data:${img.mimeType};base64,${img.data}`;
+                    link.download = `generated-image-${Date.now()}.${img.mimeType.split("/")[1]}`;
+                    link.click();
+                  }}
+                  data-testid={`download-image-${idx}`}
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
