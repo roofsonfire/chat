@@ -10,11 +10,20 @@ const envSchema = z.object({
   GOOGLE_VERTEX_AI_MODEL_ID: z.string().min(1),
 });
 
+type EnvType = z.infer<typeof envSchema>;
+
+let cachedEnv: EnvType | null = null;
+
 /**
  * Validates and parses environment variables with user-friendly error messages.
+ * Uses lazy evaluation to defer validation until runtime.
  * @throws {Error} With detailed information about missing or invalid environment variables
  */
-function parseEnv() {
+function parseEnv(): EnvType {
+  if (cachedEnv) {
+    return cachedEnv;
+  }
+
   const result = envSchema.safeParse(process.env);
 
   if (!result.success) {
@@ -30,7 +39,14 @@ function parseEnv() {
     );
   }
 
+  cachedEnv = result.data;
   return result.data;
 }
 
-export const env = parseEnv();
+// Export a Proxy that validates only when accessed
+export const env = new Proxy({} as EnvType, {
+  get(_target, prop: string) {
+    const validated = parseEnv();
+    return validated[prop as keyof EnvType];
+  },
+});
