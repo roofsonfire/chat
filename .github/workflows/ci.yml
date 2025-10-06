@@ -137,6 +137,8 @@ jobs:
           # Provide dummy values for build
           NEXTAUTH_SECRET: build-secret
           NEXTAUTH_URL: http://localhost:3000
+          AUTH_USER_EMAIL: test@example.com
+          AUTH_USER_PASSWORD_HASH: $2b$10$dummyHashForCITestingOnly1234567890
           GOOGLE_PROJECT_ID: dummy-project
           GOOGLE_LOCATION: us-central1
           GOOGLE_VERTEX_AI_MODEL_ID: gemini-1.5-flash-002
