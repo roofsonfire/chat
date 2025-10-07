@@ -88,7 +88,9 @@ async function testImageGeneration() {
             textChunks++;
           } else if (chunk.type === "image") {
             imageChunks++;
-            console.log(`📸 Image chunk: ${chunk.mimeType}, ${chunk.data.length} chars`);
+            console.log(
+              `📸 Image chunk: ${chunk.mimeType}, ${chunk.data.length} chars`
+            );
           }
         } catch {
           console.log("⚠️  Failed to parse chunk:", line.substring(0, 100));
@@ -96,7 +98,9 @@ async function testImageGeneration() {
       }
     }
 
-    console.log(`📊 Results: ${textChunks} text chunks, ${imageChunks} image chunks`);
+    console.log(
+      `📊 Results: ${textChunks} text chunks, ${imageChunks} image chunks`
+    );
     if (imageChunks > 0) {
       console.log("✅ Image generation successful!\n");
     } else {
@@ -120,7 +124,8 @@ async function testImageGeneration() {
           {
             role: "user",
             content: "", // Empty content with image should be allowed now
-            image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", // 1x1 pixel
+            image:
+              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", // 1x1 pixel
           },
         ],
         modelId: "gemini-2.5-flash-image",
