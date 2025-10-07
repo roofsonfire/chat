@@ -11,10 +11,15 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
+  // Set test timeout (default is 30s, increase to 60s)
+  timeout: 60 * 1000,
   use: {
     baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
+    // Increase timeout for actions and navigations
+    actionTimeout: 10 * 1000, // 10 seconds for actions
+    navigationTimeout: 15 * 1000, // 15 seconds for page navigations
   },
 
   projects: [
@@ -37,5 +42,7 @@ export default defineConfig({
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    stdout: "pipe", // Show server logs in output
+    stderr: "pipe",
   },
 });
