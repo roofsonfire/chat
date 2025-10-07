@@ -14,6 +14,10 @@ export const TEST_USER = {
  */
 export async function login(page: Page) {
   await page.goto("/login");
+
+  // Wait for login form to be visible
+  await page.waitForSelector('input[type="email"]', { timeout: 10000 });
+
   await page.getByPlaceholder(/email/i).fill(TEST_USER.email);
   await page.getByPlaceholder(/password/i).fill(TEST_USER.password);
   await page.getByRole("button", { name: /sign in/i }).click();
