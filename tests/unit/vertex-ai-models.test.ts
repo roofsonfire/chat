@@ -42,13 +42,17 @@ describe("Vertex AI Models Constants", () => {
     });
   });
 
-  it("should include Gemini 2.5 Flash as default", () => {
-    expect(DEFAULT_MODEL_ID).toBe("gemini-2.5-flash");
+  it("should include Gemini 2.5 Flash (Image Gen) as default", () => {
+    expect(DEFAULT_MODEL_ID).toBe("gemini-2.5-flash-image");
   });
 
-  it("should include Gemini 2.5 and 2.0 models", () => {
-    expect(VERTEX_AI_MODELS["gemini-2.5-flash"]).toBeDefined();
-    expect(VERTEX_AI_MODELS["gemini-2.5-flash"].name).toContain("Gemini 2.5");
-    expect(VERTEX_AI_MODELS["gemini-2.0-flash-exp"]).toBeDefined();
+  it("should include Gemini 2.5 Flash (Image Gen) model", () => {
+    expect(VERTEX_AI_MODELS["gemini-2.5-flash-image"]).toBeDefined();
+    expect(VERTEX_AI_MODELS["gemini-2.5-flash-image"].name).toContain(
+      "Gemini 2.5"
+    );
+    expect(VERTEX_AI_MODELS["gemini-2.5-flash-image"].capabilities).toContain(
+      "image-output"
+    );
   });
 });

@@ -49,7 +49,7 @@ describe("ModelSelector", () => {
     expect(AVAILABLE_MODELS.length).toBeGreaterThan(0);
     expect(AVAILABLE_MODELS).toContainEqual(
       expect.objectContaining({
-        id: "gemini-2.5-flash",
+        id: "gemini-2.5-flash-image",
         name: expect.any(String),
         description: expect.any(String),
       })
