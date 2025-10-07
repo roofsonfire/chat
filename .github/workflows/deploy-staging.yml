@@ -1,7 +1,11 @@
 name: Deploy to Cloud Run (Staging)
 
 on:
-  push:
+  # Deploy when CI workflow completes successfully
+  workflow_run:
+    workflows: ["CI/CD Pipeline"]
+    types:
+      - completed
     branches:
       - main
   workflow_dispatch: # Permite ejecutar manualmente desde GitHub UI
@@ -16,17 +20,29 @@ jobs:
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
-    
-    # Requiere que el CI pase primero
-    needs: []
+    # Only run if CI workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     
     permissions:
       contents: read
       id-token: write # Required for Workload Identity Federation
 
     steps:
+      - name: Check deployment trigger
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "🎯 Deployment triggered by successful CI workflow"
+            echo "CI Run: ${{ github.event.workflow_run.html_url }}"
+            echo "Commit: ${{ github.event.workflow_run.head_sha }}"
+          else
+            echo "🎯 Deployment triggered manually"
+            echo "Commit: ${{ github.sha }}"
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Authenticate to Google Cloud
         id: auth
