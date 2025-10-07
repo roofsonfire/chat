@@ -18,4 +18,9 @@ export type VertexAIModelId = keyof typeof VERTEX_AI_MODELS;
 
 export const DEFAULT_MODEL_ID: VertexAIModelId = "gemini-2.5-flash-image";
 
+// Internal mapping to actual Vertex AI model names
+export const VERTEX_AI_MODEL_MAPPING: Record<VertexAIModelId, string> = {
+  "gemini-2.5-flash-image": "gemini-2.5-flash-image",
+};
+
 export const AVAILABLE_MODELS = Object.values(VERTEX_AI_MODELS);

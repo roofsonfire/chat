@@ -1,0 +1,101 @@
+name: 📚 Documentation
+description: Report an issue with documentation or suggest improvements
+title: "📚 [Docs]: "
+labels: ["documentation", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve our documentation! Please let us know about any issues, missing information, or suggestions for improvement.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation issue is this?
+      options:
+        - Missing documentation
+        - Incorrect/outdated information
+        - Unclear instructions
+        - Broken links
+        - Typos/grammar
+        - Improvement suggestion
+        - New documentation request
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Documentation Location
+      description: Where is the documentation issue located?
+      placeholder: |
+        Please provide the file path, URL, or section name:
+        - File: docs/DEVELOPMENT.md, line 45
+        - README section: "Getting Started"
+        - URL: https://github.com/roofsonfire/chat/blob/main/docs/API.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue-description
+    attributes:
+      label: Issue Description
+      description: Describe the documentation issue in detail
+      placeholder: |
+        What specifically is wrong, missing, or unclear?
+        - Current text says: "..."
+        - The issue is: "..."
+        - Expected behavior: "..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: Suggested Fix
+      description: How do you think this should be fixed or improved?
+      placeholder: |
+        Suggested changes:
+        - Replace "..." with "..."
+        - Add section about "..."
+        - Update example to show "..."
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context that might be helpful
+      placeholder: |
+        - Were you following a specific tutorial or guide?
+        - What were you trying to accomplish?
+        - Did you find the information elsewhere?
+
+  - type: checkboxes
+    id: doc-areas
+    attributes:
+      label: Related Documentation Areas
+      description: Check all areas that might be affected by this change
+      options:
+        - label: README.md
+        - label: Getting Started Guide
+        - label: API Documentation
+        - label: Development Guide
+        - label: Deployment Documentation
+        - label: Contributing Guidelines
+        - label: GitHub Copilot Instructions
+        - label: Code Comments
+        - label: Other
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm the following before submitting
+      options:
+        - label: I have searched existing issues to ensure this documentation issue hasn't been reported before
+          required: true
+        - label: I have provided specific location information for the documentation issue
+          required: true

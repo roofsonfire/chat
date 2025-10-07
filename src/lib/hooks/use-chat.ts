@@ -3,6 +3,7 @@ import { Message, GeneratedImage } from "@/lib/types";
 import { logger } from "../logger";
 import { DEFAULT_MODEL_ID } from "@/lib/constants/vertex-ai-models";
 import type { StreamChunk } from "@/lib/streaming/stream-utils";
+import { retryWithBackoff } from "@/lib/utils/retry-utils";
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -30,14 +31,38 @@ export function useChat() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [...messages, userMessage],
-          modelId: selectedModel,
-        }),
-      });
+      const response = await retryWithBackoff(
+        async () => {
+          const res = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              messages: [...messages, userMessage],
+              modelId: selectedModel,
+            }),
+          });
+
+          // Check for rate limit and throw error to trigger retry
+          if (res.status === 429) {
+            const errorData = await res.json();
+            throw new Error(`Rate limit exceeded: ${errorData.error}`);
+          }
+
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(
+              `HTTP ${res.status}: ${errorData.error || "Unknown error"}`
+            );
+          }
+
+          return res;
+        },
+        {
+          maxRetries: 2,
+          baseDelay: 2000, // Start with 2 seconds for rate limits
+          maxDelay: 8000, // Max 8 seconds
+        }
+      );
 
       if (!response.body) {
         throw new Error("No response body");
@@ -91,7 +116,11 @@ export function useChat() {
           if (lastMessage && lastMessage.role === "assistant") {
             const updatedMessage = {
               ...lastMessage,
-              content: assistantText,
+              content:
+                assistantText ||
+                (generatedImages.length > 0
+                  ? "I've generated an image for you."
+                  : ""),
               generatedImages:
                 generatedImages.length > 0 ? [...generatedImages] : undefined,
             };
@@ -99,7 +128,11 @@ export function useChat() {
           }
           const newMessage: Message = {
             role: "assistant" as const,
-            content: assistantText,
+            content:
+              assistantText ||
+              (generatedImages.length > 0
+                ? "I've generated an image for you."
+                : ""),
             generatedImages:
               generatedImages.length > 0 ? [...generatedImages] : undefined,
           };
@@ -119,7 +152,11 @@ export function useChat() {
             ...prev.slice(0, -1),
             {
               ...lastMessage,
-              content: assistantText,
+              content:
+                assistantText ||
+                (generatedImages.length > 0
+                  ? "I've generated an image for you."
+                  : ""),
               generatedImages:
                 generatedImages.length > 0 ? [...generatedImages] : undefined,
             },
@@ -129,6 +166,15 @@ export function useChat() {
       });
     } catch (error) {
       logger.error("Error fetching chat response", { error });
+
+      // Add error message to chat for user feedback
+      const errorMessage: Message = {
+        role: "assistant",
+        content:
+          "Sorry, I encountered an error processing your request. Please try again.",
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }

@@ -5,18 +5,31 @@ import { RateLimiterMemory } from "rate-limiter-flexible";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
 
-/** Rate limit: 5 requests per 10 seconds per IP */
-const RATE_LIMIT_REQUESTS = 5;
-const RATE_LIMIT_WINDOW_SECONDS = 10;
+/** Rate limit: 10 requests per 15 seconds per IP (more lenient for image generation) */
+const RATE_LIMIT_REQUESTS = 10;
+const RATE_LIMIT_WINDOW_SECONDS = 15;
+
+/** Separate, more lenient rate limit for chat API (image generation is resource-intensive) */
+const CHAT_API_RATE_LIMIT_REQUESTS = 3;
+const CHAT_API_RATE_LIMIT_WINDOW_SECONDS = 30;
 
 /**
- * In-memory rate limiter
+ * In-memory rate limiter for general requests
  * Note: This resets when the server restarts and doesn't work across multiple instances.
  * For production with multiple servers, consider using Upstash Redis or another distributed store.
  */
 const rateLimiter = new RateLimiterMemory({
   points: RATE_LIMIT_REQUESTS, // Number of requests
-  duration: RATE_LIMIT_WINDOW_SECONDS, // Per 10 seconds
+  duration: RATE_LIMIT_WINDOW_SECONDS, // Per 15 seconds
+  blockDuration: 0, // Do not block, just reject
+});
+
+/**
+ * Separate rate limiter for chat API endpoints (image generation)
+ */
+const chatAPIRateLimiter = new RateLimiterMemory({
+  points: CHAT_API_RATE_LIMIT_REQUESTS, // 3 requests
+  duration: CHAT_API_RATE_LIMIT_WINDOW_SECONDS, // Per 30 seconds
   blockDuration: 0, // Do not block, just reject
 });
 
@@ -152,9 +165,17 @@ export async function middleware(req: NextRequest) {
 
     // Rate limiting with in-memory store
     const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { pathname } = req.nextUrl;
+
+    // Use separate rate limiter for chat API (image generation)
+    const isChatAPI = pathname.startsWith("/api/chat");
+    const selectedRateLimiter = isChatAPI ? chatAPIRateLimiter : rateLimiter;
+    const currentLimit = isChatAPI
+      ? CHAT_API_RATE_LIMIT_REQUESTS
+      : RATE_LIMIT_REQUESTS;
 
     try {
-      const rateLimitResult = await rateLimiter.consume(ip);
+      const rateLimitResult = await selectedRateLimiter.consume(ip);
 
       // Add rate limit headers to show remaining quota
       const remaining = rateLimitResult.remainingPoints;
@@ -185,7 +206,7 @@ export async function middleware(req: NextRequest) {
       const response = NextResponse.next();
 
       // Add rate limit headers
-      response.headers.set("X-RateLimit-Limit", RATE_LIMIT_REQUESTS.toString());
+      response.headers.set("X-RateLimit-Limit", currentLimit.toString());
       response.headers.set("X-RateLimit-Remaining", remaining.toString());
       response.headers.set("X-RateLimit-Reset", reset.toString());
 
@@ -200,11 +221,15 @@ export async function middleware(req: NextRequest) {
       ) {
         const rejectedResult = rateLimitError as { msBeforeNext: number };
         const retryAfterSeconds = Math.ceil(rejectedResult.msBeforeNext / 1000);
+        const effectiveLimit = isChatAPI
+          ? CHAT_API_RATE_LIMIT_REQUESTS
+          : RATE_LIMIT_REQUESTS;
 
         logger.warn("Rate limit exceeded", {
           ip,
           path: req.nextUrl.pathname,
           retryAfter: retryAfterSeconds,
+          rateLimiter: isChatAPI ? "chat-api" : "general",
         });
 
         return new NextResponse(
@@ -216,7 +241,7 @@ export async function middleware(req: NextRequest) {
             status: 429,
             headers: {
               "Content-Type": "application/json",
-              "X-RateLimit-Limit": RATE_LIMIT_REQUESTS.toString(),
+              "X-RateLimit-Limit": effectiveLimit.toString(),
               "X-RateLimit-Remaining": "0",
               "Retry-After": retryAfterSeconds.toString(),
             },
