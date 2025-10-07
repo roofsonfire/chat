@@ -49,23 +49,12 @@ export default defineConfig({
 
   webServer: {
     // Environment variables are loaded via playwright-env-setup.ts
-    // Build once, then start the standalone server
-    command: "npm run build && node .next/standalone/server.js",
+    // Use dev server locally, production build in CI (Next.js best practice)
+    command: process.env.CI ? "npm run build && npm run start" : "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000, // 2 minutes to start
     stdout: "pipe",
     stderr: "pipe",
-    // Pass environment variables to the server process
-    env: {
-      NODE_ENV: "test",
-      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET!,
-      NEXTAUTH_URL: process.env.NEXTAUTH_URL!,
-      AUTH_USER_EMAIL: process.env.AUTH_USER_EMAIL!,
-      AUTH_USER_PASSWORD_HASH: process.env.AUTH_USER_PASSWORD_HASH!,
-      GOOGLE_PROJECT_ID: process.env.GOOGLE_PROJECT_ID!,
-      GOOGLE_LOCATION: process.env.GOOGLE_LOCATION!,
-      GOOGLE_VERTEX_AI_MODEL_ID: process.env.GOOGLE_VERTEX_AI_MODEL_ID!,
-    },
   },
 });

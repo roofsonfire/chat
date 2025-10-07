@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/roofsonfire/chat/discussions
+    about: Ask questions, share ideas, or start general discussions about the project
+  - name: 🛡️ Security Issues
+    url: https://github.com/roofsonfire/chat/security/advisories/new
+    about: Report security vulnerabilities privately
+  - name: 📖 Documentation
+    url: https://github.com/roofsonfire/chat/tree/main/docs
+    about: Browse the comprehensive project documentation

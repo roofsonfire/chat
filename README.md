@@ -55,14 +55,31 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 📜 Available Scripts
 
+### 🔨 Development
+
 - `npm run dev` - Start development server with Turbopack
 - `npm run build` - Build for production
 - `npm run start` - Start production server
+- `npm run type-check` - Run TypeScript type checking
+
+### 🎨 Code Quality
+
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Fix ESLint errors automatically
 - `npm run format` - Format code with Prettier
 - `npm run format:check` - Check code formatting
-- `npm run type-check` - Run TypeScript type checking
+
+### 🧪 Testing
+
+- `npm run test` - Run unit tests with Vitest
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run test:e2e` - Run end-to-end tests with Playwright
+- `npm run test:e2e:ui` - Run E2E tests with UI mode
+
+### 🛠️ Utilities
+
+- `npm run hash-password` - Generate bcrypt password hash
+- `npm run storybook` - Start Storybook component documentation
 
 ## 🏗️ Project Structure
 
@@ -128,6 +145,53 @@ The application integrates with Google Vertex AI for multimodal chat capabilitie
 - **Code Quality**: ESLint, Prettier, Husky
 
 ## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Quick Contribution Steps
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes following our [code standards](.github/copilot-instructions.md)
+4. Run tests (`npm run test` and `npm run test:e2e`)
+5. Submit a pull request using our [PR template](.github/PULL_REQUEST_TEMPLATE.md)
+
+## 📚 Documentation
+
+- **📖 [Complete Documentation](docs/README.md)** - Comprehensive documentation index
+- **🚀 [Development Guide](docs/DEVELOPMENT.md)** - Detailed setup and development workflow
+- **📡 [API Documentation](docs/API.md)** - REST API reference
+- **🧪 [Testing Guide](docs/testing/E2E-TESTING-GUIDE.md)** - Testing strategies and setup
+- **🚀 [Deployment Guide](docs/deployment/DEPLOY.md)** - Production deployment instructions
+- **🤖 [GitHub Copilot Instructions](.github/copilot-instructions.md)** - AI pair programming context
+
+## 🛡️ Security
+
+Security is a top priority. Please review our [Security Policy](SECURITY.md) for:
+
+- Vulnerability reporting procedures
+- Security measures already in place
+- Security best practices
+
+## 🆘 Support & Community
+
+- **🐛 [Report Issues](https://github.com/roofsonfire/chat/issues/new/choose)** - Use our issue templates
+- **💬 [Discussions](https://github.com/roofsonfire/chat/discussions)** - Ask questions and share ideas
+- **📚 [Documentation](docs/README.md)** - Comprehensive guides and references
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+**Built with ❤️ using Next.js, TypeScript, and Google Vertex AI**
+
+[🏠 Home](https://github.com/roofsonfire/chat) • [📚 Docs](docs/README.md) • [🐛 Issues](https://github.com/roofsonfire/chat/issues) • [💬 Discussions](https://github.com/roofsonfire/chat/discussions)
+
+</div>
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 

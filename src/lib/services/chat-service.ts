@@ -97,7 +97,30 @@ export class ChatService {
         error,
         modelId: selectedModelId,
         messageCount: messages.length,
+        hasImages: messages.some((m) => m.image),
       });
+
+      // Provide more specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes("403")) {
+          throw new VertexAIError(
+            "Access denied. Please check your API permissions for the selected model."
+          );
+        } else if (error.message.includes("404")) {
+          throw new VertexAIError(
+            `Model '${selectedModelId}' not found. Please verify the model name.`
+          );
+        } else if (error.message.includes("400")) {
+          throw new VertexAIError(
+            "Invalid request. Please check your input format."
+          );
+        } else if (error.message.includes("429")) {
+          throw new VertexAIError(
+            "Rate limit exceeded. Please wait a moment before trying again."
+          );
+        }
+      }
+
       throw new VertexAIError();
     }
   }
@@ -290,7 +313,30 @@ export class ChatService {
         error,
         modelId: selectedModelId,
         messageCount: messages.length,
+        hasImages: messages.some((m) => m.image),
       });
+
+      // Provide more specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes("403")) {
+          throw new VertexAIError(
+            "Access denied. Please check your API permissions for the selected model."
+          );
+        } else if (error.message.includes("404")) {
+          throw new VertexAIError(
+            `Model '${selectedModelId}' not found. Please verify the model name.`
+          );
+        } else if (error.message.includes("400")) {
+          throw new VertexAIError(
+            "Invalid request. Please check your input format."
+          );
+        } else if (error.message.includes("429")) {
+          throw new VertexAIError(
+            "Rate limit exceeded. Please wait a moment before trying again."
+          );
+        }
+      }
+
       throw new VertexAIError();
     }
   }
