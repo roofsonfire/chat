@@ -5,8 +5,8 @@ import { RateLimiterMemory } from "rate-limiter-flexible";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
 
-/** Rate limit: 5 requests per 10 seconds per IP */
-const RATE_LIMIT_REQUESTS = 5;
+/** Rate limit: 5 requests per 10 seconds per IP (or 100/10s in test mode) */
+const RATE_LIMIT_REQUESTS = process.env.NODE_ENV === "test" ? 100 : 5;
 const RATE_LIMIT_WINDOW_SECONDS = 10;
 
 /**
@@ -202,7 +202,13 @@ export async function middleware(req: NextRequest) {
       throw rateLimitError;
     }
   } catch (error) {
-    logger.error("Middleware error", { error, path: req.nextUrl.pathname });
+    logger.error("Middleware error", {
+      error:
+        error instanceof Error
+          ? { message: error.message, stack: error.stack, name: error.name }
+          : error,
+      path: req.nextUrl.pathname,
+    });
     // Allow request to proceed on middleware errors to avoid breaking the app
     return NextResponse.next();
   }
