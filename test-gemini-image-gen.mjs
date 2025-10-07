@@ -60,7 +60,7 @@ for (const MODEL_ID of MODEL_OPTIONS) {
     };
 
     const response = await model.generateContent(request);
-    
+
     console.log("✅ Response received!");
 
     // Check for parts
@@ -72,18 +72,18 @@ for (const MODEL_ID of MODEL_OPTIONS) {
 
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
-      
+
       if (part.text) {
         textParts++;
         console.log(`📝 Text part ${i + 1}: ${part.text.substring(0, 100)}...`);
       }
-      
+
       if (part.inlineData) {
         imageParts++;
         console.log(`🖼️  Image part ${i + 1}:`);
         console.log(`   MIME: ${part.inlineData.mimeType}`);
         console.log(`   Size: ${part.inlineData.data?.length || 0} chars`);
-        
+
         if (part.inlineData.data) {
           const filename = `test-${MODEL_ID}-${Date.now()}.png`;
           const buffer = Buffer.from(part.inlineData.data, "base64");
@@ -94,14 +94,13 @@ for (const MODEL_ID of MODEL_OPTIONS) {
     }
 
     console.log(`\n📊 Summary: ${textParts} text, ${imageParts} images`);
-    
+
     if (imageParts > 0) {
       console.log(`\n✅ SUCCESS! Model ${MODEL_ID} can generate images!`);
       break; // Found working model, stop testing
     } else {
       console.log(`⚠️  Model only returned text, no images`);
     }
-
   } catch (error) {
     console.error(`❌ Error: ${error.message}`);
     if (error.message.includes("404") || error.message.includes("NOT_FOUND")) {
