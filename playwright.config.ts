@@ -39,7 +39,15 @@ export default defineConfig({
 
   webServer: {
     command:
-      "NODE_ENV=test npm run build && NODE_ENV=test node .next/standalone/server.js",
+      "NODE_ENV=test npm run build && " +
+      'NEXTAUTH_SECRET="test-secret-for-e2e-tests-only-not-for-production" ' +
+      'NEXTAUTH_URL="http://localhost:3000" ' +
+      'AUTH_USER_EMAIL="test@example.com" ' +
+      'AUTH_USER_PASSWORD_HASH="$2b$10$K7L/8qO/LqWqvA/vRxQgP.9j5lqZ9vXK9/fP5vE4QmK5G7h4F8H3a" ' +
+      'GOOGLE_PROJECT_ID="test-project-id" ' +
+      'GOOGLE_LOCATION="us-central1" ' +
+      'GOOGLE_VERTEX_AI_MODEL_ID="gemini-2.5-flash-image" ' +
+      "NODE_ENV=test node .next/standalone/server.js",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
