@@ -9,7 +9,7 @@ vi.mock("next-auth/jwt", () => ({
 
 vi.mock("rate-limiter-flexible", () => {
   const mockConsume = vi.fn().mockResolvedValue({
-    remainingPoints: 4,
+    remainingPoints: 9,
     msBeforeNext: 10000,
     consumedPoints: 1,
     isFirstInDuration: false,
@@ -190,8 +190,8 @@ describe("Middleware", () => {
 
       const response = await middleware(req);
 
-      expect(response.headers.get("X-RateLimit-Limit")).toBe("5");
-      expect(response.headers.get("X-RateLimit-Remaining")).toBe("4");
+      expect(response.headers.get("X-RateLimit-Limit")).toBe("10");
+      expect(response.headers.get("X-RateLimit-Remaining")).toBe("9");
       expect(response.headers.get("X-RateLimit-Reset")).toBeTruthy();
     });
   });
@@ -281,7 +281,10 @@ describe("Middleware", () => {
       expect(logger.error).toHaveBeenCalledWith(
         "Middleware error",
         expect.objectContaining({
-          error: expect.any(Error),
+          error: expect.objectContaining({
+            message: "Token validation failed",
+            name: "Error",
+          }),
           path: "/",
         })
       );
