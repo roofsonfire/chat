@@ -1,25 +1,33 @@
 import { defineConfig, devices } from "@playwright/test";
+import "./tests/playwright-env-setup";
 
 /**
  * Playwright configuration for E2E testing.
- * See https://playwright.dev/docs/test-configuration
+ * Optimized for production-grade testing with Next.js standalone mode.
+ * See: https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
   testDir: "./tests/e2e",
-  fullyParallel: true,
+  // Disable fullyParallel to prevent test isolation issues with shared server
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Limit workers: 1 in CI, 2 locally (safe with shared webServer)
+  workers: process.env.CI ? 1 : 2,
   reporter: "html",
-  // Set test timeout (default is 30s, increase to 60s)
-  timeout: 60 * 1000,
+  // Global timeout for entire test run (prevents runaway tests)
+  globalTimeout: process.env.CI ? 15 * 60 * 1000 : undefined, // 15 minutes in CI
+  // Per-test timeout
+  timeout: 60 * 1000, // 60 seconds
   use: {
-    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:3000",
+    baseURL: "http://localhost:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
-    // Increase timeout for actions and navigations
-    actionTimeout: 10 * 1000, // 10 seconds for actions
-    navigationTimeout: 15 * 1000, // 15 seconds for page navigations
+    // Reasonable timeouts for actions and navigations
+    actionTimeout: 10 * 1000, // 10 seconds
+    navigationTimeout: 15 * 1000, // 15 seconds
+    // Disable service workers to prevent caching issues in tests
+    serviceWorkers: "block",
   },
 
   projects: [
@@ -27,31 +35,37 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
     },
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
+    // Disable other browsers by default for faster feedback
+    // Uncomment to test cross-browser compatibility
+    // {
+    //   name: "firefox",
+    //   use: { ...devices["Desktop Firefox"] },
+    // },
+    // {
+    //   name: "webkit",
+    //   use: { ...devices["Desktop Safari"] },
+    // },
   ],
 
   webServer: {
-    command:
-      "NODE_ENV=test npm run build && " +
-      'NEXTAUTH_SECRET="test-secret-for-e2e-tests-only-not-for-production" ' +
-      'NEXTAUTH_URL="http://localhost:3000" ' +
-      'AUTH_USER_EMAIL="test@example.com" ' +
-      'AUTH_USER_PASSWORD_HASH="$2b$10$K7L/8qO/LqWqvA/vRxQgP.9j5lqZ9vXK9/fP5vE4QmK5G7h4F8H3a" ' +
-      'GOOGLE_PROJECT_ID="test-project-id" ' +
-      'GOOGLE_LOCATION="us-central1" ' +
-      'GOOGLE_VERTEX_AI_MODEL_ID="gemini-2.5-flash-image" ' +
-      "NODE_ENV=test node .next/standalone/server.js",
+    // Environment variables are loaded via playwright-env-setup.ts
+    // Build once, then start the standalone server
+    command: "npm run build && node .next/standalone/server.js",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-    stdout: "pipe", // Show server logs in output
+    timeout: 120 * 1000, // 2 minutes to start
+    stdout: "pipe",
     stderr: "pipe",
+    // Pass environment variables to the server process
+    env: {
+      NODE_ENV: "test",
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET!,
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL!,
+      AUTH_USER_EMAIL: process.env.AUTH_USER_EMAIL!,
+      AUTH_USER_PASSWORD_HASH: process.env.AUTH_USER_PASSWORD_HASH!,
+      GOOGLE_PROJECT_ID: process.env.GOOGLE_PROJECT_ID!,
+      GOOGLE_LOCATION: process.env.GOOGLE_LOCATION!,
+      GOOGLE_VERTEX_AI_MODEL_ID: process.env.GOOGLE_VERTEX_AI_MODEL_ID!,
+    },
   },
 });
