@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     # Only run if CI workflow succeeded
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
-    
+
     permissions:
       contents: read
       id-token: write # Required for Workload Identity Federation
@@ -66,16 +66,16 @@ jobs:
         id: docker-build
         run: |
           IMAGE_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }}"
-          
+
           docker build \
             --build-arg NODE_ENV=production \
             --tag "${IMAGE_TAG}" \
             --tag "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest" \
             .
-          
+
           docker push "${IMAGE_TAG}"
           docker push "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest"
-          
+
           echo "image_url=${IMAGE_TAG}" >> $GITHUB_OUTPUT
 
       - name: Deploy to Cloud Run
@@ -128,11 +128,11 @@ jobs:
         run: |
           # Esperar un poco para que el servicio esté listo
           sleep 10
-          
+
           # Verificar que el servicio responde
           CLOUD_RUN_URL="${{ steps.deploy.outputs.url }}"
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${CLOUD_RUN_URL}")
-          
+
           if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 302 ] || [ "$HTTP_STATUS" -eq 307 ] || [ "$HTTP_STATUS" -eq 401 ]; then
             echo "✅ Service is responding (HTTP $HTTP_STATUS)"
           else
@@ -165,7 +165,7 @@ jobs:
     runs-on: ubuntu-latest
     if: failure() && github.event_name == 'push'
     needs: [deploy]
-    
+
     permissions:
       contents: read
       id-token: write
@@ -184,14 +184,14 @@ jobs:
       - name: Rollback to previous revision
         run: |
           echo "⚠️ Deployment failed, attempting rollback..."
-          
+
           # Obtener la penúltima revisión
           PREVIOUS_REVISION=$(gcloud run revisions list \
             --service=${{ env.SERVICE_NAME }} \
             --region=${{ env.REGION }} \
             --format='value(name)' \
             --limit=2 | tail -n 1)
-          
+
           if [ -n "$PREVIOUS_REVISION" ]; then
             echo "Rolling back to revision: $PREVIOUS_REVISION"
             gcloud run services update-traffic ${{ env.SERVICE_NAME }} \

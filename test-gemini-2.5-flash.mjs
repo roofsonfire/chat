@@ -35,37 +35,39 @@ async function testGemini25Flash() {
   for (const modelName of modelNames) {
     try {
       process.stdout.write(`Testing "${modelName}"... `);
-      
+
       const model = vertexAI.getGenerativeModel({ model: modelName });
-      
+
       // Quick validation
-      await model.countTokens({ 
-        contents: [{ role: "user", parts: [{ text: "test" }] }] 
+      await model.countTokens({
+        contents: [{ role: "user", parts: [{ text: "test" }] }],
       });
-      
+
       console.log("✅ AVAILABLE");
-      
+
       // Try to generate content
       console.log(`\n📤 Sending test prompt to ${modelName}...`);
       const result = await model.generateContent("Say hello in one word");
       const response = result.response;
       const text = response.candidates[0].content.parts[0].text;
       console.log(`📥 Response: ${text}\n`);
-      
+
       console.log("✨ SUCCESS! Gemini 2.5 Flash is working!\n");
       console.log("💡 Update your .env.local file:");
       console.log(`   GOOGLE_VERTEX_AI_MODEL_ID=${modelName}\n`);
-      
+
       return modelName;
     } catch (error) {
       console.log(`❌ Not available`);
-      console.log(`   Error: ${error.message.split('\n')[0]}\n`);
+      console.log(`   Error: ${error.message.split("\n")[0]}\n`);
     }
   }
-  
+
   console.log("❌ None of the Gemini 2.5 Flash model names worked.");
   console.log("\n💡 To enable this model:");
-  console.log("1. Visit: https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/gemini-2.5-flash-image");
+  console.log(
+    "1. Visit: https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/gemini-2.5-flash-image"
+  );
   console.log("2. Click 'Enable' or 'Deploy'");
   console.log("3. Wait a few minutes for activation");
   console.log("4. Run this script again\n");
