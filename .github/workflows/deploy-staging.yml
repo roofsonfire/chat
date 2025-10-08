@@ -24,7 +24,11 @@ jobs:
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
-    environment: staging
+    environment:
+      name: staging
+      url: https://${{ env.DOMAIN }}
+    env:
+      GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
     # Only run if CI workflow succeeded on pushes to main or when triggered manually
     if: >-
       ${{
@@ -58,11 +62,18 @@ jobs:
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
 
+      - name: Ensure required secrets are present
+        run: |
+          if [ -z "${GCP_SA_KEY}" ]; then
+            echo "::error::Missing required secret \\`GCP_SA_KEY\\`"
+            exit 1
+          fi
+
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
           # Alternativa con Workload Identity (más seguro):
           # workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/github/providers/github'
           # service_account: 'github-actions@norse-breaker-474323-n8.iam.gserviceaccount.com'
@@ -179,16 +190,25 @@ jobs:
     runs-on: ubuntu-latest
     if: failure() && github.event_name == 'push'
     needs: [deploy]
+    env:
+      GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
     permissions:
       contents: read
       id-token: write
 
     steps:
+      - name: Ensure required secrets are present
+        run: |
+          if [ -z "${GCP_SA_KEY}" ]; then
+            echo "::error::Missing required secret \\`GCP_SA_KEY\\`"
+            exit 1
+          fi
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
