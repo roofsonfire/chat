@@ -18,6 +18,10 @@ const requiredEnvVars = [
   "GOOGLE_PROJECT_ID",
   "GOOGLE_LOCATION",
   "GOOGLE_VERTEX_AI_MODEL_ID",
+  "NEXT_PUBLIC_TEST_EMAIL",
+  "NEXT_PUBLIC_TEST_PASSWORD",
+  "DISABLE_RATE_LIMIT",
+  "SKIP_VERTEX_MODEL_VALIDATION",
 ];
 
 const missingVars = requiredEnvVars.filter((varName) => !process.env[varName]);
