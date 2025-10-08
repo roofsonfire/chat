@@ -60,8 +60,10 @@ jobs:
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         with:
-          credentials_json: "${{ secrets.GCP_SA_KEY }}"
+          credentials_json: ${{ env.GCP_SA_KEY }}
           # Alternativa con Workload Identity (más seguro):
           # workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/github/providers/github'
           # service_account: 'github-actions@norse-breaker-474323-n8.iam.gserviceaccount.com'
@@ -186,8 +188,10 @@ jobs:
     steps:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         with:
-          credentials_json: "${{ secrets.GCP_SA_KEY }}"
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
