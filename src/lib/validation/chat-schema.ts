@@ -10,13 +10,28 @@ export const chatRequestSchema = z.object({
       z
         .object({
           role: z.enum(["user", "assistant"]),
-          content: z.string().max(10000, "Message content is too long"),
+          content: z
+            .string()
+            .max(10000, "Message content is too long")
+            .optional()
+            .default(""),
           image: z.string().optional(),
         })
-        .refine((data) => data.content.trim().length > 0 || data.image, {
-          message: "Message must contain either text content or an image",
-          path: ["content"],
-        })
+        .refine(
+          (data) => {
+            // User messages must have content or image
+            if (data.role === "user") {
+              return data.content.trim().length > 0 || data.image;
+            }
+            // Assistant messages can have empty content (they may contain generated images)
+            return true;
+          },
+          {
+            message:
+              "User messages must contain either text content or an image",
+            path: ["content"],
+          }
+        )
     )
     .min(1, "At least one message is required")
     .max(100, "Too many messages in conversation"),
