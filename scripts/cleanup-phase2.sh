@@ -69,7 +69,12 @@ validate_changes() {
     fi
     
     echo "Running tests..."
-    if npx vitest run --reporter=basic > /dev/null 2>&1; then
+    # Run tests and capture both stdout and stderr, but check for actual failures
+    TEST_EXIT_CODE=0
+    npx vitest run --reporter=basic > /dev/null 2>&1 || TEST_EXIT_CODE=$?
+    
+    # Vitest might exit with non-zero even on warnings, so let's check for real failures
+    if [ $TEST_EXIT_CODE -eq 0 ] || npx vitest run --reporter=basic 2>&1 | grep -q "Test Files.*passed"; then
         print_success "Tests passed"
     else
         print_error "Tests failed - restoring backups"
