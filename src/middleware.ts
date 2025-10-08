@@ -103,35 +103,7 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
  */
 export async function middleware(req: NextRequest) {
   try {
-    const skipRateLimiting =
-      process.env.NODE_ENV === "test" ||
-      process.env.DISABLE_RATE_LIMIT === "true";
-
-    // Skip rate limiting entirely in test mode or when explicitly disabled
-    if (skipRateLimiting) {
-      const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
-      const { pathname } = req.nextUrl;
-
-      // Allow requests for next-auth session and provider fetching
-      if (pathname.startsWith("/api/auth")) {
-        return NextResponse.next();
-      }
-
-      // Redirect to login if no token and not on the login page
-      if (!token && pathname !== "/login") {
-        const loginUrl = new URL("/login", req.url);
-        loginUrl.searchParams.set("from", pathname);
-        return NextResponse.redirect(loginUrl);
-      }
-
-      // If the user is authenticated and tries to access the login page, redirect to home
-      if (token && pathname === "/login") {
-        return NextResponse.redirect(new URL("/", req.url));
-      }
-
-      // Add security headers and continue
-      return addSecurityHeaders(NextResponse.next());
-    }
+    const disableRateLimiting = process.env.DISABLE_RATE_LIMIT === "true";
 
     // CSRF Protection: Origin validation for state-changing requests
     if (req.method !== "GET" && req.method !== "HEAD") {
@@ -178,84 +150,89 @@ export async function middleware(req: NextRequest) {
       ? CHAT_API_RATE_LIMIT_REQUESTS
       : RATE_LIMIT_REQUESTS;
 
-    try {
-      const rateLimitResult = await selectedRateLimiter.consume(ip);
+    const windowSeconds = isChatAPI
+      ? CHAT_API_RATE_LIMIT_WINDOW_SECONDS
+      : RATE_LIMIT_WINDOW_SECONDS;
 
-      // Add rate limit headers to show remaining quota
-      const remaining = rateLimitResult.remainingPoints;
-      const reset = Date.now() + rateLimitResult.msBeforeNext;
+    let remaining: number;
+    let reset: number;
 
-      // Continue with authentication check
-      const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
-      const { pathname } = req.nextUrl;
+    if (disableRateLimiting) {
+      remaining = Math.max(currentLimit - 1, 0);
+      reset = Date.now() + windowSeconds * 1000;
+    } else {
+      try {
+        const rateLimitResult = await selectedRateLimiter.consume(ip);
+        remaining = rateLimitResult.remainingPoints;
+        reset = Date.now() + rateLimitResult.msBeforeNext;
+      } catch (rateLimitError) {
+        if (
+          rateLimitError &&
+          typeof rateLimitError === "object" &&
+          "msBeforeNext" in rateLimitError
+        ) {
+          const rejectedResult = rateLimitError as { msBeforeNext: number };
+          const retryAfterSeconds = Math.ceil(
+            rejectedResult.msBeforeNext / 1000
+          );
+          const effectiveLimit = isChatAPI
+            ? CHAT_API_RATE_LIMIT_REQUESTS
+            : RATE_LIMIT_REQUESTS;
 
-      // Allow requests for next-auth session and provider fetching
-      if (pathname.startsWith("/api/auth")) {
-        return NextResponse.next();
-      }
-
-      // Redirect to login if no token and not on the login page
-      if (!token && pathname !== "/login") {
-        const loginUrl = new URL("/login", req.url);
-        loginUrl.searchParams.set("from", pathname);
-        return NextResponse.redirect(loginUrl);
-      }
-
-      // If the user is authenticated and tries to access the login page, redirect to home
-      if (token && pathname === "/login") {
-        return NextResponse.redirect(new URL("/", req.url));
-      }
-
-      // Create response and add security headers
-      const response = NextResponse.next();
-
-      // Add rate limit headers
-      response.headers.set("X-RateLimit-Limit", currentLimit.toString());
-      response.headers.set("X-RateLimit-Remaining", remaining.toString());
-      response.headers.set("X-RateLimit-Reset", reset.toString());
-
-      // Add security headers
-      return addSecurityHeaders(response);
-    } catch (rateLimitError) {
-      // Rate limit exceeded - rateLimiter.consume() throws when limit is reached
-      if (
-        rateLimitError &&
-        typeof rateLimitError === "object" &&
-        "msBeforeNext" in rateLimitError
-      ) {
-        const rejectedResult = rateLimitError as { msBeforeNext: number };
-        const retryAfterSeconds = Math.ceil(rejectedResult.msBeforeNext / 1000);
-        const effectiveLimit = isChatAPI
-          ? CHAT_API_RATE_LIMIT_REQUESTS
-          : RATE_LIMIT_REQUESTS;
-
-        logger.warn("Rate limit exceeded", {
-          ip,
-          path: req.nextUrl.pathname,
-          retryAfter: retryAfterSeconds,
-          rateLimiter: isChatAPI ? "chat-api" : "general",
-        });
-
-        return new NextResponse(
-          JSON.stringify({
-            error: "Too many requests. Please try again later.",
+          logger.warn("Rate limit exceeded", {
+            ip,
+            path: req.nextUrl.pathname,
             retryAfter: retryAfterSeconds,
-          }),
-          {
-            status: 429,
-            headers: {
-              "Content-Type": "application/json",
-              "X-RateLimit-Limit": effectiveLimit.toString(),
-              "X-RateLimit-Remaining": "0",
-              "Retry-After": retryAfterSeconds.toString(),
-            },
-          }
-        );
-      }
+            rateLimiter: isChatAPI ? "chat-api" : "general",
+          });
 
-      // Other errors - re-throw to outer catch
-      throw rateLimitError;
+          return new NextResponse(
+            JSON.stringify({
+              error: "Too many requests. Please try again later.",
+              retryAfter: retryAfterSeconds,
+            }),
+            {
+              status: 429,
+              headers: {
+                "Content-Type": "application/json",
+                "X-RateLimit-Limit": effectiveLimit.toString(),
+                "X-RateLimit-Remaining": "0",
+                "Retry-After": retryAfterSeconds.toString(),
+              },
+            }
+          );
+        }
+
+        throw rateLimitError;
+      }
     }
+
+    const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
+
+    // Allow requests for next-auth session and provider fetching
+    if (pathname.startsWith("/api/auth")) {
+      return NextResponse.next();
+    }
+
+    // Redirect to login if no token and not on the login page
+    if (!token && pathname !== "/login") {
+      const loginUrl = new URL("/login", req.url);
+      loginUrl.searchParams.set("from", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // If the user is authenticated and tries to access the login page, redirect to home
+    if (token && pathname === "/login") {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    const response = NextResponse.next();
+
+    response.headers.set("X-RateLimit-Limit", currentLimit.toString());
+    response.headers.set("X-RateLimit-Remaining", remaining.toString());
+    response.headers.set("X-RateLimit-Reset", reset.toString());
+
+    return addSecurityHeaders(response);
   } catch (error) {
     logger.error("Middleware error", {
       error:
