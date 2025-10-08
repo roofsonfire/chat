@@ -15,6 +15,9 @@ env:
   REGION: us-central1
   SERVICE_NAME: chat-staging
   DOMAIN: staging.chat.daza.ar
+  # GitHub repository secret providing the GCP service account JSON key.
+  # Moving this to workflow-level env avoids step-level secret context warnings in some IDE extensions.
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
 concurrency:
   group: deploy-staging
@@ -60,8 +63,6 @@ jobs:
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         with:
           credentials_json: ${{ env.GCP_SA_KEY }}
           # Alternativa con Workload Identity (más seguro):
@@ -188,8 +189,6 @@ jobs:
     steps:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         with:
           credentials_json: ${{ env.GCP_SA_KEY }}
 
