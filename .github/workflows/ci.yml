@@ -113,7 +113,6 @@ jobs:
       DISABLE_RATE_LIMIT: "true"
       SKIP_VERTEX_MODEL_VALIDATION: "true"
 
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
