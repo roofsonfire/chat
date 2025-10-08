@@ -1,6 +1,16 @@
 # 📚 Documentation Index
 
-Welcome to the comprehensive documentation for the Next.js Chat Application. This index provides a structured guide to all available documentation.
+Welcome to the comprehensive documentation for the Next.js ### 🔧 Utilities & Scripts
+
+- [**Scripts Documentation**](../scripts/README.md) - Available utility scripts
+- [**Password Hashing**](../scripts/utils/hash-password.js) - Password utility
+- [**Vertex AI Diagnostics**](../scripts/utils/diagnose-vertex-ai.sh) - AI service testing
+
+### 🤖 AI Integration
+
+- [**GitHub Copilot Instructions**](../.github/copilot-instructions.md) - AI pair programming context
+- [**Chat Modes Documentation**](../.github/chatmodes/README.md) - Specialized AI assistance modes
+- [**Security Scout Mode**](../.github/chatmodes/security-scout.chatmode.md) - Security-focused code reviewApplication. This index provides a structured guide to all available documentation.
 
 ## 🚀 Quick Start
 
