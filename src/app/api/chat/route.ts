@@ -32,10 +32,31 @@ export async function POST(req: NextRequest) {
       logger.warn("Invalid chat request", {
         requestId,
         errors: parsedBody.error.issues,
+        receivedBody: {
+          hasMessages: !!body.messages,
+          messageCount: body.messages?.length || 0,
+          messages:
+            body.messages?.map((m: Record<string, unknown>, i: number) => ({
+              index: i,
+              role: m?.role,
+              hasContent: !!m?.content,
+              contentLength: (m?.content as string)?.length || 0,
+              contentTrimmed: (m?.content as string)?.trim?.()?.length || 0,
+              hasImage: !!m?.image,
+              imageLength: (m?.image as string)?.length || 0,
+            })) || [],
+          hasModelId: !!body.modelId,
+          modelId: body.modelId,
+        },
       });
 
       const errorResponse: ChatErrorResponse = {
         error: "Invalid request body",
+        details: parsedBody.error.issues.map((issue) => ({
+          path: issue.path.join("."),
+          message: issue.message,
+          code: issue.code,
+        })),
       };
 
       return NextResponse.json(errorResponse, { status: 400 });

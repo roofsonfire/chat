@@ -38,4 +38,10 @@ export interface ChatRequest {
 export interface ChatErrorResponse {
   /** Error message describing what went wrong */
   error: string;
+  /** Optional detailed validation errors */
+  details?: Array<{
+    path: string;
+    message: string;
+    code: string;
+  }>;
 }
