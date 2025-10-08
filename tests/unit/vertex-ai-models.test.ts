@@ -2,8 +2,6 @@ import { describe, it, expect } from "vitest";
 import {
   VERTEX_AI_MODELS,
   DEFAULT_MODEL_ID,
-  AVAILABLE_MODELS,
-  type VertexAIModelId,
 } from "@/lib/constants/vertex-ai-models";
 
 describe("Vertex AI Models Constants", () => {
@@ -28,20 +26,6 @@ describe("Vertex AI Models Constants", () => {
     expect(VERTEX_AI_MODELS[DEFAULT_MODEL_ID]).toBeDefined();
   });
 
-  it("should have AVAILABLE_MODELS as an array", () => {
-    expect(Array.isArray(AVAILABLE_MODELS)).toBe(true);
-    expect(AVAILABLE_MODELS.length).toBeGreaterThan(0);
-  });
-
-  it("should have AVAILABLE_MODELS matching VERTEX_AI_MODELS entries", () => {
-    const modelIds = Object.keys(VERTEX_AI_MODELS);
-    expect(AVAILABLE_MODELS.length).toBe(modelIds.length);
-
-    AVAILABLE_MODELS.forEach((model) => {
-      expect(VERTEX_AI_MODELS[model.id as VertexAIModelId]).toBeDefined();
-    });
-  });
-
   it("should include Gemini 2.5 Flash (Image Gen) as default", () => {
     expect(DEFAULT_MODEL_ID).toBe("gemini-2.5-flash-image");
   });
@@ -54,5 +38,18 @@ describe("Vertex AI Models Constants", () => {
     expect(VERTEX_AI_MODELS["gemini-2.5-flash-image"].capabilities).toContain(
       "image-output"
     );
+  });
+
+  it("should have all models with required properties", () => {
+    const modelEntries = Object.values(VERTEX_AI_MODELS);
+    expect(modelEntries.length).toBeGreaterThan(0);
+
+    modelEntries.forEach((model) => {
+      expect(model).toHaveProperty("id");
+      expect(model).toHaveProperty("name");
+      expect(model).toHaveProperty("description");
+      expect(model).toHaveProperty("capabilities");
+      expect(Array.isArray(model.capabilities)).toBe(true);
+    });
   });
 });

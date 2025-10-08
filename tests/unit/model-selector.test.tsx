@@ -1,14 +1,14 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ModelSelector } from "@/components/chat/model-selector";
-import { AVAILABLE_MODELS } from "@/lib/constants/vertex-ai-models";
+import { VERTEX_AI_MODELS } from "@/lib/constants/vertex-ai-models";
 
 describe("ModelSelector", () => {
   it("renders with the selected model", () => {
     const onModelChange = vi.fn();
     render(
       <ModelSelector
-        selectedModel="gemini-1.5-flash-002"
+        selectedModel="gemini-2.5-flash-image"
         onModelChange={onModelChange}
       />
     );
@@ -21,7 +21,7 @@ describe("ModelSelector", () => {
     const onModelChange = vi.fn();
     render(
       <ModelSelector
-        selectedModel="gemini-1.5-flash-002"
+        selectedModel="gemini-2.5-flash-image"
         onModelChange={onModelChange}
         disabled={true}
       />
@@ -35,7 +35,7 @@ describe("ModelSelector", () => {
     const onModelChange = vi.fn();
     render(
       <ModelSelector
-        selectedModel="gemini-1.5-flash-002"
+        selectedModel="gemini-2.5-flash-image"
         onModelChange={onModelChange}
       />
     );
@@ -44,10 +44,11 @@ describe("ModelSelector", () => {
     expect(trigger).toHaveAttribute("aria-expanded");
   });
 
-  it("renders all available models in constants", () => {
-    // This test verifies that all models are available for selection
-    expect(AVAILABLE_MODELS.length).toBeGreaterThan(0);
-    expect(AVAILABLE_MODELS).toContainEqual(
+  it("renders available models from VERTEX_AI_MODELS", () => {
+    // This test verifies that models are available for selection
+    const models = Object.values(VERTEX_AI_MODELS);
+    expect(models.length).toBeGreaterThan(0);
+    expect(models[0]).toEqual(
       expect.objectContaining({
         id: "gemini-2.5-flash-image",
         name: expect.any(String),
