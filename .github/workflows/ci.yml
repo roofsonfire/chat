@@ -21,6 +21,8 @@ jobs:
     env:
       NEXTAUTH_SECRET: test-secret-key
       NEXTAUTH_URL: http://localhost:3000
+      DISABLE_RATE_LIMIT: "true"
+      SKIP_VERTEX_MODEL_VALIDATION: "true"
 
     steps:
       - name: Checkout code
@@ -50,8 +52,17 @@ jobs:
     needs: lint-and-type-check
     env:
       NODE_ENV: test
-      NEXTAUTH_SECRET: test-secret-key
-      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: "test-secret-key"
+      NEXTAUTH_URL: "http://localhost:3000"
+      AUTH_USER_EMAIL: "test@example.com"
+      AUTH_USER_PASSWORD_HASH: "$2b$10$4qGWCHsaGWixW2lgvn73peWQNHxAz.PM5PJWnjmUBgtK8QbgR3Xgi"
+      GOOGLE_PROJECT_ID: "dummy-project-id"
+      GOOGLE_LOCATION: "us-central1"
+      GOOGLE_VERTEX_AI_MODEL_ID: "gemini-2.5-flash-image"
+      NEXT_PUBLIC_TEST_EMAIL: "test@example.com"
+      NEXT_PUBLIC_TEST_PASSWORD: "test123"
+      DISABLE_RATE_LIMIT: "true"
+      SKIP_VERTEX_MODEL_VALIDATION: "true"
 
     steps:
       - name: Checkout code
@@ -89,18 +100,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: build
-
     env:
-      # Test environment variables
-      NEXTAUTH_SECRET: test-secret-key-for-ci-only
-      NEXTAUTH_URL: http://localhost:3000
-      AUTH_USER_EMAIL: test@example.com
-      AUTH_USER_PASSWORD_HASH: $2b$10$dummyHashForCITestingOnly1234567890
-      # Dummy values for CI - configure secrets/vars in repo settings for real API tests
-      # Note: Rate limiting now uses in-memory storage (no Redis needed!)
-      GOOGLE_PROJECT_ID: dummy-project-id
-      GOOGLE_LOCATION: us-central1
-      GOOGLE_VERTEX_AI_MODEL_ID: gemini-1.5-flash-002
+      NEXTAUTH_SECRET: "test-secret-key"
+      NEXTAUTH_URL: "http://localhost:3000"
+      AUTH_USER_EMAIL: "test@example.com"
+      AUTH_USER_PASSWORD_HASH: "$2b$10$4qGWCHsaGWixW2lgvn73peWQNHxAz.PM5PJWnjmUBgtK8QbgR3Xgi"
+      GOOGLE_PROJECT_ID: "dummy-project-id"
+      GOOGLE_LOCATION: "us-central1"
+      GOOGLE_VERTEX_AI_MODEL_ID: "gemini-2.5-flash-image"
+      NEXT_PUBLIC_TEST_EMAIL: "test@example.com"
+      NEXT_PUBLIC_TEST_PASSWORD: "test123"
+      DISABLE_RATE_LIMIT: "true"
+      SKIP_VERTEX_MODEL_VALIDATION: "true"
+
 
     steps:
       - name: Checkout code
@@ -159,10 +171,12 @@ jobs:
           NEXTAUTH_SECRET: build-secret
           NEXTAUTH_URL: http://localhost:3000
           AUTH_USER_EMAIL: test@example.com
-          AUTH_USER_PASSWORD_HASH: $2b$10$dummyHashForCITestingOnly1234567890
-          GOOGLE_PROJECT_ID: dummy-project
+          AUTH_USER_PASSWORD_HASH: "$2b$10$4qGWCHsaGWixW2lgvn73peWQNHxAz.PM5PJWnjmUBgtK8QbgR3Xgi"
+          GOOGLE_PROJECT_ID: dummy-project-id
           GOOGLE_LOCATION: us-central1
-          GOOGLE_VERTEX_AI_MODEL_ID: gemini-1.5-flash-002
+          GOOGLE_VERTEX_AI_MODEL_ID: gemini-2.5-flash-image
+          DISABLE_RATE_LIMIT: "true"
+          SKIP_VERTEX_MODEL_VALIDATION: "true"
 
       - name: Check build artifacts
         run: |
