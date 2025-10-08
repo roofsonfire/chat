@@ -78,10 +78,10 @@ jobs:
         run: npm ci
 
       - name: Run unit tests
-        run: npm test -- --run
+        run: npx vitest run --project=unit
 
       - name: Generate coverage report
-        run: npm run test:coverage -- --run
+        run: npx vitest run --coverage --project=unit
 
       - name: Upload coverage to Codecov
         if: github.event_name == 'push' && github.repository == 'roofsonfire/chat'
