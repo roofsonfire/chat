@@ -1,8 +1,9 @@
 import { test, expect } from "@playwright/test";
+import { setupAuthenticatedPage } from "../helpers/auth";
 
 test.describe("Home smoke test", () => {
   test("renders the landing page shell", async ({ page }) => {
-    await page.goto("/");
+    await setupAuthenticatedPage(page);
 
     await expect(page).toHaveTitle(/AI Chat Assistant/);
     await expect(
