@@ -103,8 +103,12 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
  */
 export async function middleware(req: NextRequest) {
   try {
-    // Skip rate limiting entirely in test mode for reliable E2E tests
-    if (process.env.NODE_ENV === "test") {
+    const skipRateLimiting =
+      process.env.NODE_ENV === "test" ||
+      process.env.DISABLE_RATE_LIMIT === "true";
+
+    // Skip rate limiting entirely in test mode or when explicitly disabled
+    if (skipRateLimiting) {
       const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
       const { pathname } = req.nextUrl;
 

@@ -67,6 +67,11 @@ export class ModelRegistryService {
    * @returns Array of available models in the current region
    */
   async fetchAvailableModels(): Promise<VertexAIModel[]> {
+    if (process.env.SKIP_VERTEX_MODEL_VALIDATION === "true") {
+      logger.info("Skipping Vertex model validation due to environment flag");
+      return this.getFallbackModels();
+    }
+
     try {
       logger.info("Validating available Gemini models in region", {
         region: env.GOOGLE_LOCATION,

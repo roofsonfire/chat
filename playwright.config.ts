@@ -56,5 +56,20 @@ export default defineConfig({
     timeout: 120 * 1000, // 2 minutes to start
     stdout: "pipe",
     stderr: "pipe",
+    env: {
+      NODE_ENV: "test",
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET ?? "",
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL ?? "",
+      AUTH_USER_EMAIL: process.env.AUTH_USER_EMAIL ?? "",
+      AUTH_USER_PASSWORD_HASH: process.env.AUTH_USER_PASSWORD_HASH ?? "",
+      GOOGLE_PROJECT_ID: process.env.GOOGLE_PROJECT_ID ?? "",
+      GOOGLE_LOCATION: process.env.GOOGLE_LOCATION ?? "",
+      GOOGLE_VERTEX_AI_MODEL_ID: process.env.GOOGLE_VERTEX_AI_MODEL_ID ?? "",
+      NEXT_PUBLIC_TEST_EMAIL: process.env.NEXT_PUBLIC_TEST_EMAIL ?? "",
+      NEXT_PUBLIC_TEST_PASSWORD: process.env.NEXT_PUBLIC_TEST_PASSWORD ?? "",
+      DISABLE_RATE_LIMIT: process.env.DISABLE_RATE_LIMIT ?? "",
+      SKIP_VERTEX_MODEL_VALIDATION:
+        process.env.SKIP_VERTEX_MODEL_VALIDATION ?? "",
+    },
   },
 });

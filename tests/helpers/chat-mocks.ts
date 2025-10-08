@@ -6,8 +6,6 @@ import { Page, Route } from "@playwright/test";
 export interface MockChatConfig {
   /** Simulated response text (can be chunked for streaming) */
   response: string;
-  /** Delay between chunks in ms (default: 50) */
-  streamDelay?: number;
   /** Chunk size for streaming (default: 10 characters) */
   chunkSize?: number;
   /** Whether to simulate an error */
@@ -22,30 +20,19 @@ export interface MockChatConfig {
  * Creates a streaming response for the chat API
  * Simulates the server-sent events behavior
  */
-function createStreamingResponse(
-  text: string,
-  chunkSize: number = 10,
-  delay: number = 50
-): ReadableStream<Uint8Array> {
-  const encoder = new TextEncoder();
-  let position = 0;
+function createStreamingBody(text: string, chunkSize: number = 10): string {
+  if (!text) {
+    return "";
+  }
 
-  return new ReadableStream({
-    async pull(controller) {
-      if (position >= text.length) {
-        controller.close();
-        return;
-      }
+  let body = "";
 
-      // Simulate network delay
-      await new Promise((resolve) => setTimeout(resolve, delay));
+  for (let position = 0; position < text.length; position += chunkSize) {
+    const chunk = text.slice(position, position + chunkSize);
+    body += `${JSON.stringify({ type: "text", content: chunk })}\n`;
+  }
 
-      const chunk = text.slice(position, position + chunkSize);
-      position += chunkSize;
-
-      controller.enqueue(encoder.encode(chunk));
-    },
-  });
+  return body;
 }
 
 /**
@@ -56,7 +43,6 @@ export async function mockChatAPI(page: Page, config: MockChatConfig) {
   await page.route("**/api/chat", async (route: Route) => {
     const {
       response,
-      streamDelay = 50,
       chunkSize = 10,
       error,
       errorMessage,
@@ -74,9 +60,6 @@ export async function mockChatAPI(page: Page, config: MockChatConfig) {
       return;
     }
 
-    // Create streaming response
-    const stream = createStreamingResponse(response, chunkSize, streamDelay);
-
     await route.fulfill({
       status: 200,
       contentType: "text/plain; charset=utf-8",
@@ -84,28 +67,9 @@ export async function mockChatAPI(page: Page, config: MockChatConfig) {
         "Cache-Control": "no-cache",
         Connection: "keep-alive",
       },
-      body: await streamToString(stream),
+      body: createStreamingBody(response, chunkSize),
     });
   });
-}
-
-/**
- * Helper to convert a ReadableStream to a string
- */
-async function streamToString(
-  stream: ReadableStream<Uint8Array>
-): Promise<string> {
-  const reader = stream.getReader();
-  const decoder = new TextDecoder();
-  let result = "";
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    result += decoder.decode(value, { stream: true });
-  }
-
-  return result;
 }
 
 /**

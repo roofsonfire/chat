@@ -4,27 +4,29 @@ Comprehensive Playwright end-to-end tests for the chat application, covering the
 
 ## Overview
 
-This test suite validates:
+This test suite validates the core journeys of the chat application:
 
-- **Message sending and receiving** with streaming responses
-- **Image upload functionality** with preview and validation
-- **Error handling** for API failures and invalid inputs
-- **Accessibility** features and keyboard navigation
-- **Cross-browser compatibility** (Chromium, Firefox, WebKit)
-- **Edge cases** and stress scenarios
+- **Authentication**: unauthenticated redirect and successful login
+- **Primary chat flow**: user sends a message and sees the streamed reply
+- **Image attachment**: attach an image and send it with a prompt
+- **API resilience**: surface failures gracefully to the user
+- **Accessibility smoke**: role-based login checks and keyboard-only chat input
 
 ## Test Structure
 
 ```
 tests/
 ├── e2e/
-│   └── chat.spec.ts          # Main chat flow tests
+│   ├── accessibility.spec.ts   # Accessibility smoke checks
+│   ├── auth.spec.ts            # Authentication journeys
+│   ├── chat.spec.ts            # Core chat flows
+│   └── home.spec.ts            # Home page smoke test
 ├── helpers/
-│   ├── auth.ts               # Authentication utilities
-│   ├── chat-mocks.ts         # API mocking utilities
-│   └── README.md             # Helper documentation
+│   ├── auth.ts                 # Authentication utilities
+│   ├── chat-mocks.ts           # API mocking utilities
+│   └── README.md               # Helper documentation
 └── fixtures/
-    └── test-image.png        # Test image for upload tests
+  └── test-image.png          # Test image for upload tests
 ```
 
 ## Running Tests
@@ -101,83 +103,20 @@ npx playwright test --project=webkit
 
 ## Test Coverage
 
-### Basic Chat Functionality
+### Coverage summary
 
-- ✅ Empty chat state display
-- ✅ Message input and send button visibility
-- ✅ Message typing functionality
-
-### Message Sending and Display
-
-- ✅ Send and display user messages
-- ✅ Receive and display assistant responses
-- ✅ Loading indicator during API calls
-- ✅ Input disabled state while processing
-- ✅ Input clearing after submission
-
-### Streaming Response
-
-- ✅ Chunked response streaming
-- ✅ Multiple sequential messages
-- ✅ Real-time text updates
-
-### Image Upload Functionality
-
-- ✅ Image upload button availability
-- ✅ Image preview after upload
-- ✅ Image removal functionality
-- ✅ Sending messages with images
-- ✅ Preview clearing after send
-
-### Error Handling
-
-- ✅ API error graceful handling
-- ✅ Invalid file type validation
-- ✅ Empty message prevention
-
-### Chat History Behavior
-
-- ✅ Auto-scroll to latest message
-- ✅ Message order preservation
-- ✅ Multiple message history
-
-### Accessibility
-
-- ✅ Proper ARIA labels
-- ✅ Role attributes for messages
-- ✅ Keyboard navigation support
-
-### Cross-browser Compatibility
-
-- ✅ Consistent rendering across browsers
-- ✅ Feature parity in all browsers
-
-### Edge Cases
-
-- ✅ Very long messages
-- ✅ Special characters handling
-- ✅ Rapid consecutive messages
-- ✅ Empty streaming responses
+- **Authentication**: redirect enforcement and happy-path login
+- **Chat messaging**: user sends a prompt and receives the assistant response
+- **Image messaging**: prompt with image attachment
+- **Error path**: simulated API failure surfaces fallback message
+- **Accessibility smoke**: role-based login inputs and keyboard-only chat interaction
+- **Home page**: single smoke assertion for the primary heading and title
 
 ## Test Architecture
 
 ### API Mocking
 
-Tests use a sophisticated mocking system that simulates:
-
-- **Streaming responses**: Chunked text delivery mimicking real AI responses
-- **Network delays**: Configurable delays between chunks
-- **Error scenarios**: Various HTTP error codes and messages
-
-Example:
-
-```typescript
-await mockChatAPI(page, {
-  response: "This is a streamed response",
-  streamDelay: 50, // 50ms between chunks
-  chunkSize: 10, // 10 characters per chunk
-});
-```
+Tests intercept `POST /api/chat` with `mockChatAPI` to simulate streamed responses or failures. The helper accepts plain text responses or error metadata to keep each scenario deterministic.
 
 ### Authentication
 
@@ -189,12 +128,9 @@ All tests run in an authenticated context using `setupAuthenticatedPage()`:
 
 ### Test Isolation
 
-Each test:
-
-- Starts with a clean authenticated session
-- Uses isolated API mocks
-- Cleans up after completion
-- Does not depend on other tests
+- Each test logs in via `setupAuthenticatedPage` and tears down mocks in `afterEach`
+- Chat API routes are intercepted per-test to avoid hitting real services
+- Critical flows are covered individually to keep failures focused
 
 ## Data Test IDs
 
@@ -245,21 +181,16 @@ Tests are configured to run in CI with:
 
 ### DO ✅
 
-- Use `data-testid` attributes for element selection
-- Mock API calls for reliability and speed
-- Wait for specific conditions using `waitForMessage()`
-- Test accessibility features
-- Verify both success and error paths
-- Test across all configured browsers
+- Target user journeys end-to-end instead of micro-interactions
+- Use `data-testid` locators and `waitForMessage()` for deterministic waits
+- Mock API calls for reliability and speed in CI
+- Keep the suite fast so retries remain effective
 
 ### DON'T ❌
 
-- Use CSS selectors that may change
-- Make real API calls in tests
-- Use arbitrary `setTimeout()` for waiting
-- Skip error scenarios
-- Assume timing will be consistent
-- Test only in one browser
+- Assert implementation details such as placeholder text or aria attributes
+- Duplicate coverage already handled by unit/integration tests
+- Depend on real external services or timing assumptions
 
 ## Debugging
 
@@ -291,21 +222,21 @@ npx playwright codegen http://localhost:3000
 
 ### Test timeout
 
-- Increase timeout in test: `{ timeout: 30000 }`
-- Check if API mocks are properly configured
-- Verify network conditions in CI
+- Ensure Playwright intercepted `/api/chat`
+- Verify the helper returned a response (stream text or error)
+- Keep messages short to avoid long processing times
 
 ### Element not found
 
-- Ensure component has correct `data-testid`
-- Check if authentication succeeded
-- Verify element is rendered (not conditionally hidden)
+- Confirm authentication completed successfully
+- Check that the message was sent via `waitForMessage()`
+- Validate fixtures (e.g., the test image path) still exist
 
 ### Flaky tests
 
-- Add explicit waits using `waitForMessage()`
-- Avoid using fixed `waitForTimeout()`
-- Ensure proper test isolation with cleanup
+- Use the provided helpers instead of manual `waitForTimeout()` calls
+- Keep each scenario focused on a single outcome
+- Prefer unit/integration tests for edge cases or UI detail changes
 
 ### CI failures
 

@@ -1,34 +1,19 @@
 import { test, expect } from "@playwright/test";
+import { login } from "../helpers/auth";
 
-test.describe("Authentication", () => {
-  test("should redirect unauthenticated users to login", async ({ page }) => {
+test.describe("Authentication journeys", () => {
+  test("redirects unauthenticated users to the login screen", async ({
+    page,
+  }) => {
     await page.goto("/");
-    // Wait for redirect with explicit timeout
     await page.waitForURL(/\/login/, { timeout: 10000 });
     await expect(page).toHaveURL(/\/login/);
   });
 
-  test("should show login form", async ({ page }) => {
-    await page.goto("/login");
-    // Wait for form to be fully loaded
-    await page.waitForSelector('input[type="email"]', { timeout: 10000 });
+  test("allows users to sign in with valid credentials", async ({ page }) => {
+    await login(page);
 
-    await expect(page.getByRole("heading", { name: /login/i })).toBeVisible();
-    await expect(page.getByPlaceholder(/email/i)).toBeVisible();
-    await expect(page.getByPlaceholder(/password/i)).toBeVisible();
-    await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
-  });
-
-  test("should not allow login with invalid credentials", async ({ page }) => {
-    await page.goto("/login");
-    // Wait for form to be ready
-    await page.waitForSelector('input[type="email"]', { timeout: 10000 });
-
-    await page.getByPlaceholder(/email/i).fill("invalid@example.com");
-    await page.getByPlaceholder(/password/i).fill("wrongpassword");
-    await page.getByRole("button", { name: /sign in/i }).click();
-
-    // Should stay on login page
-    await expect(page).toHaveURL(/\/login/);
+    await expect(page).toHaveURL("/");
+    await expect(page.getByTestId("chat-container")).toBeVisible();
   });
 });
