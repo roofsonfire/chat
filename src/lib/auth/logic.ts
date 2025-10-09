@@ -1,10 +1,24 @@
 import { env } from "@/lib/env";
 import type { AuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { validateCredentials } from "./provider";
+import { allowlist } from "@/lib/auth/allowlist";
+import { validateCredentials } from "@/lib/auth/provider";
 
-export const authOptions: AuthOptions = {
-  providers: [
+const providers: AuthOptions["providers"] = [
+  GoogleProvider({
+    clientId: env.GOOGLE_CLIENT_ID!,
+    clientSecret: env.GOOGLE_CLIENT_SECRET!,
+    authorization: {
+      params: {
+        scope: "openid email",
+      },
+    },
+  }),
+];
+
+if (env.ENABLE_TEST_CREDENTIALS === "true") {
+  providers.push(
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -12,18 +26,25 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials) {
-          return null;
-        }
-        return validateCredentials(credentials);
+        return validateCredentials(credentials ?? undefined);
       },
-    }),
-  ],
+    })
+  );
+}
+
+export const authOptions: AuthOptions = {
+  providers,
   secret: env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
   pages: {
     signIn: "/login",
+  },
+  callbacks: {
+    async signIn({ user }) {
+      // Only allow users in the allowlist
+      return allowlist.includes(user.email!);
+    },
   },
 };

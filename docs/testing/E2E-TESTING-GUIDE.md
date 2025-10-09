@@ -21,11 +21,14 @@ This project uses **Playwright** for E2E testing, following official Next.js and
    npx playwright install --with-deps
    ```
 
-2. **Ensure `.env.test` exists** with all required variables:
+2. **Ensure `.env.test` exists** with all required variables (including the test-only auth flag):
    ```bash
    cp .env.local .env.test
-   # Edit .env.test with test credentials
    ```
+
+# Edit .env.test with ENABLE_TEST_CREDENTIALS=true and the test account values
+
+````
 
 ### Running Tests
 
@@ -44,7 +47,7 @@ npm run test:e2e:debug
 
 # View last test report
 npm run test:e2e:report
-```
+````
 
 ## Testing Strategy
 
@@ -124,6 +127,8 @@ tests/
 - Login form validation
 - Invalid credentials handling
 - Session persistence
+
+> ℹ️ **Important:** The E2E suite uses the credentials provider behind the `ENABLE_TEST_CREDENTIALS` flag. Production runs rely solely on Google sign-in, so keep this flag disabled outside automated testing contexts.
 
 ### 2. Chat Functionality (`chat.spec.ts`)
 

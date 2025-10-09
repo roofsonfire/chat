@@ -90,7 +90,7 @@ TTL: 3600 (or Auto)
 ### 7. Test the Deployment
 
 - [ ] Visit https://staging.chat.daza.ar
-- [ ] Login with your credentials
+- [ ] Login with an allowlisted Google account (test credentials are for automated checks only)
 - [ ] Test chat functionality (text-only)
 - [ ] Test image generation: "Generate a red heart"
 - [ ] Verify image displays and can be downloaded

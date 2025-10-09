@@ -158,8 +158,9 @@ export function ChatMessage({ message, role, timestamp }: ChatMessageProps) {
 
 ### Authentication
 
-- NextAuth.js with credentials provider
-- Password hashing with bcrypt (10 rounds)
+- NextAuth.js with Google OAuth as the primary provider (invite allowlist enforced)
+- Credentials provider is gated behind `ENABLE_TEST_CREDENTIALS` for automated tests/local debugging
+- Password hashing with bcrypt (10 rounds) for the test credential flow
 - JWT tokens for session management
 - Protected routes via middleware
 - Rate limiting on auth endpoints

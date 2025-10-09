@@ -9,7 +9,9 @@ test.describe("Accessibility smoke", () => {
     await expect(page.getByRole("heading", { name: /login/i })).toBeVisible();
     await expect(page.getByRole("textbox", { name: /email/i })).toBeVisible();
     await expect(page.getByLabel(/password/i)).toBeVisible();
-    await expect(page.getByRole("button", { name: /sign in/i })).toBeEnabled();
+    await expect(
+      page.getByRole("button", { name: /^Sign In$/i })
+    ).toBeEnabled();
   });
 
   test("chat input works with keyboard only", async ({ page }) => {
