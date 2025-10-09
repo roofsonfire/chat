@@ -38,14 +38,17 @@ export const authOptions: AuthOptions = {
   // Enable detailed logs to help diagnose provider errors in staging
   debug: process.env.NODE_ENV !== "production",
   logger: {
-    error(code: string, metadata?: Record<string, unknown>) {
+    error(
+      code: string,
+      metadata?: Error | { [key: string]: unknown; error: Error }
+    ) {
       console.error("[NextAuth][error]", code, metadata);
     },
     warn(code: string) {
       console.warn("[NextAuth][warn]", code);
     },
-    info(code: string, metadata?: Record<string, unknown>) {
-      console.info("[NextAuth][info]", code, metadata);
+    debug(code: string, metadata?: unknown) {
+      console.debug("[NextAuth][debug]", code, metadata);
     },
   },
   session: {
