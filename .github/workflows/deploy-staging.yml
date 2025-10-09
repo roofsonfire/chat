@@ -78,6 +78,32 @@ jobs:
         run: |
           gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
+      - name: Ensure Cloud Run SA can read required secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Resolving project number for $PROJECT_ID"
+          PROJECT_NUMBER="$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')"
+          SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+          echo "Granting roles/secretmanager.secretAccessor to ${SA}"
+          SECRETS=(
+            nextauth-secret
+            auth-user-email
+            auth-user-password-hash
+            google-project-id
+            google-location
+            google-vertex-ai-model-id
+            google-client-id
+            google-client-secret
+          )
+          for SECRET in "${SECRETS[@]}"; do
+            echo "Binding $SECRET"
+            gcloud secrets add-iam-policy-binding "$SECRET" \
+              --member="serviceAccount:${SA}" \
+              --role="roles/secretmanager.secretAccessor" \
+              --project="$PROJECT_ID" || true
+          done
+
       - name: Build and push Docker image
         id: docker-build
         run: |
