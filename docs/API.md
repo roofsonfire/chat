@@ -110,7 +110,7 @@ NextAuth.js authentication endpoints. See [NextAuth.js documentation](https://ne
 **Available routes:**
 
 - `GET /api/auth/signin` - Sign in page
-- `POST /api/auth/signin/credentials` - Credentials sign in
+- `POST /api/auth/signin/credentials` - Credentials sign in (available only when `ENABLE_TEST_CREDENTIALS=true`)
 - `GET /api/auth/signout` - Sign out page
 - `POST /api/auth/signout` - Sign out action
 - `GET /api/auth/session` - Get current session
@@ -138,7 +138,7 @@ All API endpoints follow a consistent error format:
 
 ### Authentication
 
-The application uses NextAuth.js with credentials provider. Only pre-configured users (via environment variables) can log in.
+Authentication is handled by NextAuth.js using Google OAuth. Access is restricted to emails defined in the invite allowlist. A credentials provider is conditionally enabled for automated testing when the `ENABLE_TEST_CREDENTIALS` flag is set.
 
 ### Rate Limiting
 

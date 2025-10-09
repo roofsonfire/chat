@@ -116,7 +116,7 @@ npm run test:e2e
 
 ## 🔐 Authentication
 
-This application uses NextAuth.js with a credentials provider. Users are authenticated via environment variables (invite-only system).
+This application uses NextAuth.js with Google OAuth as the primary login path. Only users on the invite allowlist can access the app. A credentials provider remains available **only** when `ENABLE_TEST_CREDENTIALS=true` (used for automated tests and local debugging).
 
 ## 🎨 UI Components
 

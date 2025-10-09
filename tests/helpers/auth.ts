@@ -20,7 +20,7 @@ export async function login(page: Page) {
 
   await page.getByPlaceholder(/email/i).fill(TEST_USER.email);
   await page.getByPlaceholder(/password/i).fill(TEST_USER.password);
-  await page.getByRole("button", { name: /sign in/i }).click();
+  await page.getByRole("button", { name: /^Sign In$/i }).click();
 
   // Wait for redirect to home page
   await page.waitForURL("/", { timeout: 10000 });
