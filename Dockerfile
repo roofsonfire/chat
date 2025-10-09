@@ -29,6 +29,8 @@ ENV AUTH_USER_PASSWORD_HASH=build-time-dummy-hash
 ENV GOOGLE_PROJECT_ID=build-dummy
 ENV GOOGLE_LOCATION=build-dummy
 ENV GOOGLE_VERTEX_AI_MODEL_ID=build-dummy
+ENV GOOGLE_CLIENT_ID=build-dummy
+ENV GOOGLE_CLIENT_SECRET=build-dummy
 
 # Build the application
 RUN npm run build
