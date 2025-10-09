@@ -35,6 +35,19 @@ if (env.ENABLE_TEST_CREDENTIALS === "true") {
 export const authOptions: AuthOptions = {
   providers,
   secret: env.NEXTAUTH_SECRET,
+  // Enable detailed logs to help diagnose provider errors in staging
+  debug: process.env.NODE_ENV !== "production",
+  logger: {
+    error(code: string, metadata?: Record<string, unknown>) {
+      console.error("[NextAuth][error]", code, metadata);
+    },
+    warn(code: string) {
+      console.warn("[NextAuth][warn]", code);
+    },
+    info(code: string, metadata?: Record<string, unknown>) {
+      console.info("[NextAuth][info]", code, metadata);
+    },
+  },
   session: {
     strategy: "jwt",
   },
