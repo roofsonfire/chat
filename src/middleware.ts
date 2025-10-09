@@ -235,10 +235,10 @@ export async function middleware(req: NextRequest) {
     return addSecurityHeaders(response);
   } catch (error) {
     logger.error("Middleware error", {
-      error:
-        error instanceof Error
-          ? { message: error.message, stack: error.stack, name: error.name }
-          : error,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      errorStack: error instanceof Error ? error.stack : undefined,
+      errorName: error instanceof Error ? error.name : undefined,
+      errorObject: JSON.stringify(error, null, 2),
       path: req.nextUrl.pathname,
     });
     // Redirect to a dedicated error page on middleware failure
