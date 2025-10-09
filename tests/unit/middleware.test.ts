@@ -265,10 +265,9 @@ describe("Middleware", () => {
   });
 
   describe("Error Handling", () => {
-    it("should allow requests to proceed on middleware errors", async () => {
-      vi.mocked(getToken).mockRejectedValue(
-        new Error("Token validation failed")
-      );
+    it("should redirect to error page on middleware errors", async () => {
+      const testError = new Error("Token validation failed");
+      vi.mocked(getToken).mockRejectedValue(testError);
 
       const req = new NextRequest("http://localhost:3000/", {
         method: "GET",
@@ -276,15 +275,18 @@ describe("Middleware", () => {
 
       const response = await middleware(req);
 
-      // Should not throw and should allow the request through
-      expect(response.status).not.toBe(500);
+      // Should redirect to the middleware-error page
+      expect(response.status).toBe(307);
+      expect(response.headers.get("location")).toContain("/middleware-error");
+
+      // Should log the detailed error
       expect(logger.error).toHaveBeenCalledWith(
         "Middleware error",
         expect.objectContaining({
-          error: expect.objectContaining({
-            message: "Token validation failed",
-            name: "Error",
-          }),
+          errorMessage: "Token validation failed",
+          errorName: "Error",
+          errorObject: expect.any(String),
+          errorStack: expect.stringContaining("Error: Token validation failed"),
           path: "/",
         })
       );
