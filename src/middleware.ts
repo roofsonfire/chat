@@ -241,8 +241,9 @@ export async function middleware(req: NextRequest) {
           : error,
       path: req.nextUrl.pathname,
     });
-    // Allow request to proceed on middleware errors to avoid breaking the app
-    return NextResponse.next();
+    // Redirect to a dedicated error page on middleware failure
+    const errorUrl = new URL("/middleware-error", req.url);
+    return NextResponse.redirect(errorUrl);
   }
 }
 
