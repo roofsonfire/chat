@@ -64,7 +64,7 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
     "camera=(), microphone=(), geolocation=()"
   );
 
-  // Content Security Policy
+  // Content Security Policy - relaxed for OAuth
   response.headers.set(
     "Content-Security-Policy",
     [
@@ -73,7 +73,8 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
       "style-src 'self' 'unsafe-inline'", // Styled components require unsafe-inline
       "img-src 'self' data: blob:", // Allow data URIs for base64 images
       "font-src 'self'",
-      "connect-src 'self'",
+      "connect-src 'self' https://accounts.google.com", // Allow Google OAuth
+      "frame-src 'self' https://accounts.google.com", // Allow Google OAuth frames
       "frame-ancestors 'none'",
     ].join("; ")
   );
