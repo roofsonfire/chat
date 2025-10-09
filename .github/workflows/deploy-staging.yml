@@ -126,7 +126,7 @@ jobs:
         with:
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.REGION }}
-          image: ${{ steps.build_and_push.outputs.image_url }}
+          image: ${{ steps.docker-build.outputs.image_url }}
           flags: >-
             --allow-unauthenticated
             --memory=1Gi
