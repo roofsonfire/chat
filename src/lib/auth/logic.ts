@@ -11,7 +11,7 @@ const providers: AuthOptions["providers"] = [
     clientSecret: env.GOOGLE_CLIENT_SECRET!,
     authorization: {
       params: {
-        scope: "openid email",
+        scope: "openid email profile",
       },
     },
   }),
