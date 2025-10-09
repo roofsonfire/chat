@@ -121,8 +121,6 @@ jobs:
             NEXTAUTH_SECRET=nextauth-secret:latest
             AUTH_USER_EMAIL=auth-email:latest
             AUTH_USER_PASSWORD_HASH=auth-password-hash:latest
-            GOOGLE_CLIENT_ID=google-client-id:latest
-            GOOGLE_CLIENT_SECRET=google-client-secret:latest
 
       - name: Map custom domain (if not exists)
         continue-on-error: true # El mapping puede ya existir
