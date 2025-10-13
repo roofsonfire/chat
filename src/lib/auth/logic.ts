@@ -35,7 +35,6 @@ if (env.ENABLE_TEST_CREDENTIALS === "true") {
 export const authOptions: AuthOptions = {
   providers,
   secret: env.NEXTAUTH_SECRET,
-  url: env.NEXTAUTH_URL,
   // Enable detailed logs to help diagnose provider errors in staging
   debug: process.env.NODE_ENV !== "production",
   logger: {
@@ -59,21 +58,62 @@ export const authOptions: AuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async signIn({ user }) {
-      // Only allow users in the allowlist
-      return allowlist.includes(user.email!);
-    },
-    async redirect({ url, baseUrl }) {
-      // Ensure redirects always use the custom domain
-      if (url.startsWith("/")) {
-        // Relative URL - use the base URL (NEXTAUTH_URL)
-        return `${baseUrl}${url}`;
-      } else if (new URL(url).origin === baseUrl) {
-        // Same origin - allow the redirect
-        return url;
+    async signIn({ user, account }) {
+      console.log("[NextAuth][signIn] Callback triggered", {
+        userEmail: user?.email,
+        provider: account?.provider,
+        allowlist,
+        isInAllowlist: user?.email ? allowlist.includes(user.email) : false,
+      });
+
+      if (!user?.email) {
+        console.error("[NextAuth][signIn] No email provided by user");
+        return false;
       }
-      // Default fallback to base URL
-      return baseUrl;
+
+      const isAllowed = allowlist.includes(user.email);
+
+      if (!isAllowed) {
+        console.warn("[NextAuth][signIn] User not in allowlist", {
+          email: user.email,
+          allowlist,
+        });
+        return false;
+      }
+
+      console.log("[NextAuth][signIn] User allowed", { email: user.email });
+      return true;
+    },
+    async jwt({ token, user }) {
+      console.log("[NextAuth][jwt] Callback triggered", {
+        hasToken: !!token,
+        hasUser: !!user,
+        userEmail: user?.email || token?.email,
+      });
+
+      if (user) {
+        token.email = user.email;
+        token.name = user.name;
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      console.log("[NextAuth][session] Callback triggered", {
+        hasSession: !!session,
+        hasToken: !!token,
+        sessionUserEmail: session?.user?.email,
+        tokenEmail: token?.email,
+      });
+
+      if (token?.email && session.user) {
+        session.user.email = token.email as string;
+      }
+      if (token?.name && session.user) {
+        session.user.name = token.name as string;
+      }
+
+      return session;
     },
   },
 };
