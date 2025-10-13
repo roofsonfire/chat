@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { ChatService } from "@/lib/services/chat-service";
 import { VertexAI } from "@google-cloud/vertexai";
+import { handleVertexAIError } from "@/lib/errors/vertex-ai-errors";
 
 // Mock VertexAI
 vi.mock("@google-cloud/vertexai");
@@ -22,6 +23,10 @@ vi.mock("@/lib/logger", () => ({
     warn: vi.fn(),
     debug: vi.fn(),
   },
+}));
+
+vi.mock("@/lib/errors/vertex-ai-errors", () => ({
+  handleVertexAIError: vi.fn(),
 }));
 
 describe("ChatService", () => {
@@ -63,9 +68,10 @@ describe("ChatService", () => {
     });
   });
 
-  it("should throw VertexAIError on API failure", async () => {
+  it("should call handleVertexAIError on API failure", async () => {
+    const apiError = new Error("API Error");
     const mockGetModel = vi.fn().mockReturnValue({
-      generateContentStream: vi.fn().mockRejectedValue(new Error("API Error")),
+      generateContentStream: vi.fn().mockRejectedValue(apiError),
     });
 
     vi.mocked(VertexAI).mockImplementation(
@@ -78,7 +84,12 @@ describe("ChatService", () => {
     const chatService = new ChatService();
     const messages = [{ role: "user" as const, content: "Hello" }];
 
-    await expect(chatService.stream(messages)).rejects.toThrow();
+    await chatService.stream(messages);
+
+    expect(handleVertexAIError).toHaveBeenCalledWith(
+      apiError,
+      "gemini-2.5-flash"
+    );
   });
 
   it("should format messages with text content", async () => {
