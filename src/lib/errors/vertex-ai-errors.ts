@@ -1,4 +1,4 @@
-import { VertexAIError } from ".";
+import { VertexAIError } from "@/lib/errors";
 
 export function handleVertexAIError(error: Error, modelId?: string): never {
   if (error.message.includes("403")) {
