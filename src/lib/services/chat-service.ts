@@ -1,9 +1,9 @@
 import { VertexAI, GenerateContentRequest, Part } from "@google-cloud/vertexai";
 import { Message } from "@/lib/types";
 import { env } from "@/lib/env";
-import { VertexAIError } from "../errors";
 import { logger } from "../logger";
 import { DEFAULT_MODEL_ID } from "@/lib/constants/vertex-ai-models";
+import { handleVertexAIError } from "@/lib/errors/vertex-ai-errors";
 
 /**
  * Service class for handling chat interactions with Google Vertex AI.
@@ -92,7 +92,6 @@ export class ChatService {
     try {
       const streamingResp = await generativeModel.generateContentStream(req);
       logger.info("Successfully initialized stream from Vertex AI");
-      return streamingResp.stream;
     } catch (error) {
       logger.error("Error streaming from Vertex AI", {
         error,
@@ -100,28 +99,7 @@ export class ChatService {
         messageCount: messages.length,
         hasImages: messages.some((m) => m.image),
       });
-
-      if (error instanceof Error) {
-        if (error.message.includes("403")) {
-          throw new VertexAIError(
-            "Access denied. Please check your API permissions for the selected model."
-          );
-        } else if (error.message.includes("404")) {
-          throw new VertexAIError(
-            `Model '${selectedModelId}' not found. Please verify the model name.`
-          );
-        } else if (error.message.includes("400")) {
-          throw new VertexAIError(
-            "Invalid request. Please check your input format."
-          );
-        } else if (error.message.includes("429")) {
-          throw new VertexAIError(
-            "Rate limit exceeded. Please wait a moment before trying again."
-          );
-        }
-      }
-
-      throw new VertexAIError();
+      handleVertexAIError(error as Error, selectedModelId);
     }
   }
 
@@ -261,28 +239,7 @@ export class ChatService {
         messageCount: messages.length,
         hasImages: messages.some((m) => m.image),
       });
-
-      if (error instanceof Error) {
-        if (error.message.includes("403")) {
-          throw new VertexAIError(
-            "Access denied. Please check your API permissions for the selected model."
-          );
-        } else if (error.message.includes("404")) {
-          throw new VertexAIError(
-            `Model '${selectedModelId}' not found. Please verify the model name.`
-          );
-        } else if (error.message.includes("400")) {
-          throw new VertexAIError(
-            "Invalid request. Please check your input format."
-          );
-        } else if (error.message.includes("429")) {
-          throw new VertexAIError(
-            "Rate limit exceeded. Please wait a moment before trying again."
-          );
-        }
-      }
-
-      throw new VertexAIError();
+      handleVertexAIError(error as Error, selectedModelId);
     }
   }
 }
