@@ -35,6 +35,7 @@ if (env.ENABLE_TEST_CREDENTIALS === "true") {
 export const authOptions: AuthOptions = {
   providers,
   secret: env.NEXTAUTH_SECRET,
+  url: env.NEXTAUTH_URL,
   // Enable detailed logs to help diagnose provider errors in staging
   debug: process.env.NODE_ENV !== "production",
   logger: {
@@ -61,6 +62,18 @@ export const authOptions: AuthOptions = {
     async signIn({ user }) {
       // Only allow users in the allowlist
       return allowlist.includes(user.email!);
+    },
+    async redirect({ url, baseUrl }) {
+      // Ensure redirects always use the custom domain
+      if (url.startsWith("/")) {
+        // Relative URL - use the base URL (NEXTAUTH_URL)
+        return `${baseUrl}${url}`;
+      } else if (new URL(url).origin === baseUrl) {
+        // Same origin - allow the redirect
+        return url;
+      }
+      // Default fallback to base URL
+      return baseUrl;
     },
   },
 };

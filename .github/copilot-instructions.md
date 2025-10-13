@@ -2,6 +2,25 @@
 
 This document provides context and guidelines for GitHub Copilot when working on this Next.js chat application.
 
+## Repository & Hosting Information
+
+### Source Code Repository
+
+- **Platform**: GitHub
+- **Repository**: `roofsonfire/chat`
+- **URL**: https://github.com/roofsonfire/chat
+- **Clone URL**: `git@github.com:roofsonfire/chat.git`
+
+### Production Hosting
+
+- **Platform**: Google Cloud Platform (GCP)
+- **Service**: Google Cloud Run
+- **Project ID**: `norse-breaker-474323-n8`
+- **Region**: `us-central1` (Iowa)
+- **Service Name**: `chat-staging`
+- **Domain**: https://staging.chat.daza.ar
+- **Scaling**: 0-10 instances (serverless)
+
 ## Project Overview
 
 This is a production-grade chat application built with Next.js 15, TypeScript, and Google Vertex AI. The project emphasizes SOLID principles, Clean Code practices, comprehensive testing, and security best practices.
@@ -356,6 +375,14 @@ export default async function Page() {
 
 ## Additional Resources
 
+### Project Resources
+
+- [GitHub Repository](https://github.com/roofsonfire/chat) - Source code and issues
+- [Live Staging Site](https://staging.chat.daza.ar) - Current deployment
+- [Project Documentation](../docs/README.md) - Comprehensive documentation
+
+### Technology Documentation
+
 - [Next.js 15 Documentation](https://nextjs.org/docs)
 - [React 19 Documentation](https://react.dev)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
@@ -364,6 +391,12 @@ export default async function Page() {
 - [Vertex AI SDK](https://cloud.google.com/vertex-ai/docs)
 - [NextAuth.js](https://next-auth.js.org/)
 - [Zod](https://zod.dev/)
+
+### Google Cloud Resources
+
+- [Cloud Run Documentation](https://cloud.google.com/run/docs)
+- [Secret Manager](https://cloud.google.com/secret-manager/docs)
+- [Vertex AI Pricing](https://cloud.google.com/vertex-ai/pricing)
 
 ## When Suggesting Code
 
@@ -412,6 +445,16 @@ export default async function Page() {
 - Return consistent error responses
 - Log errors with context
 
+### When working with Deployment:
+
+- Use Google Cloud Run for serverless hosting
+- Store secrets in Google Cloud Secret Manager
+- Follow the deployment scripts in `scripts/deployment/`
+- Ensure environment variables are properly configured
+- Monitor logs via `gcloud run logs` commands
+
 ---
 
+**Repository**: https://github.com/roofsonfire/chat  
+**Live Demo**: https://staging.chat.daza.ar  
 **Remember**: This is a production-grade application. Prioritize code quality, security, performance, and maintainability in all suggestions.

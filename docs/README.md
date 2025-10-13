@@ -1,16 +1,22 @@
 # 📚 Documentation Index
 
-Welcome to the comprehensive documentation for the Next.js ### 🔧 Utilities & Scripts
+Welcome to the comprehensive documentation for the Next.js AI Chat Assistant. This index provides a structured guide to all available documentation.
 
-- [**Scripts Documentation**](../scripts/README.md) - Available utility scripts
-- [**Password Hashing**](../scripts/utils/hash-password.js) - Password utility
-- [**Vertex AI Diagnostics**](../scripts/utils/diagnose-vertex-ai.sh) - AI service testing
+## 🌐 Project Information
 
-### 🤖 AI Integration
+### Repository & Hosting
 
-- [**GitHub Copilot Instructions**](../.github/copilot-instructions.md) - AI pair programming context
-- [**Chat Modes Documentation**](../.github/chatmodes/README.md) - Specialized AI assistance modes
-- [**Security Scout Mode**](../.github/chatmodes/security-scout.chatmode.md) - Security-focused code reviewApplication. This index provides a structured guide to all available documentation.
+- **GitHub Repository**: [roofsonfire/chat](https://github.com/roofsonfire/chat)
+- **Live Staging**: [https://staging.chat.daza.ar](https://staging.chat.daza.ar)
+- **Platform**: Google Cloud Run (serverless)
+- **Region**: us-central1 (Iowa)
+
+### Quick Links
+
+- [🏠 Repository Home](https://github.com/roofsonfire/chat)
+- [🌐 Live Demo](https://staging.chat.daza.ar)
+- [🐛 Report Issues](https://github.com/roofsonfire/chat/issues)
+- [💬 Discussions](https://github.com/roofsonfire/chat/discussions)
 
 ## 🚀 Quick Start
 
@@ -25,6 +31,8 @@ Welcome to the comprehensive documentation for the Next.js ### 🔧 Utilities & 
 ### Core Development
 
 - [**Development Guide**](DEVELOPMENT.md) - Complete development setup and workflows
+- [**Editor Setup Guide**](EDITOR-SETUP.md) - VS Code & Zed optimization for maximum productivity
+- [**Project Navigation Guide**](PROJECT-NAVIGATION.md) - Smart navigation patterns and file organization
 - [**API Documentation**](API.md) - REST API endpoints and usage
 - [**Contributing Guidelines**](../CONTRIBUTING.md) - How to contribute to the project
 - [**Code of Conduct**](../CODE_OF_CONDUCT.md) - Community standards and behavior
@@ -103,15 +111,16 @@ Welcome to the comprehensive documentation for the Next.js ### 🔧 Utilities & 
 
 ### By Audience
 
-- **🆕 New Contributors**: README → CONTRIBUTING → DEVELOPMENT
-- **👩‍💻 Developers**: DEVELOPMENT → API → Testing docs
+- **🆕 New Contributors**: README → CONTRIBUTING → DEVELOPMENT → EDITOR-SETUP
+- **👩‍💻 Developers**: DEVELOPMENT → EDITOR-SETUP → PROJECT-NAVIGATION → API → Testing docs
 - **🚀 DevOps**: All deployment/\* documents
 - **🤖 GitHub Copilot**: `.github/copilot-instructions.md`
 - **🛡️ Security Team**: SECURITY.md → Middleware Security docs
 
 ### By Topic
 
-- **🔧 Setup**: README, DEVELOPMENT, Environment guides
+- **🔧 Setup**: README, DEVELOPMENT, EDITOR-SETUP, Environment guides
+- **🧭 Navigation**: PROJECT-NAVIGATION, File organization, Search patterns
 - **📡 API**: API.md, Authentication docs
 - **🧪 Testing**: All testing/\* documents
 - **🚀 Deployment**: All deployment/\* documents
@@ -134,10 +143,19 @@ This documentation follows these principles:
 - **🎯 Actionable**: Includes step-by-step instructions
 - **🔄 Up-to-date**: Regularly maintained and reviewed
 - **🤖 AI-Friendly**: Optimized for GitHub Copilot context
+- **🛠️ Editor-Optimized**: Enhanced for VS Code and Zed consumption
 
 ---
 
-**Last Updated**: January 2025  
+## 📍 Project Details
+
+- **Repository**: [github.com/roofsonfire/chat](https://github.com/roofsonfire/chat)
+- **Live Demo**: [staging.chat.daza.ar](https://staging.chat.daza.ar)
+- **Platform**: Google Cloud Run
+- **Framework**: Next.js 15 + TypeScript 5
+- **AI Provider**: Google Vertex AI
+
+**Last Updated**: October 2025  
 **Maintained by**: Development Team  
 **Review Schedule**: Monthly
 

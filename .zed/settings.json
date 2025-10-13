@@ -1,0 +1,299 @@
+{
+  // Editor Configuration
+  "tab_size": 2,
+  "hard_tabs": false,
+  "soft_wrap": "editor_width",
+  "show_whitespaces": "selection",
+  "remove_trailing_whitespace_on_save": true,
+  "ensure_final_newline_on_save": true,
+  "format_on_save": "on",
+  "code_actions_on_format": {
+    "source.organizeImports": true,
+    "source.fixAll.eslint": true
+  },
+  "preferred_line_length": 80,
+  "wrap_guides": [80, 120],
+  "show_wrap_guides": true,
+  "indent_guides": {
+    "enabled": true,
+    "line_width": 1,
+    "active_line_width": 2,
+    "coloring": "indent_aware"
+  },
+
+  // Language Server Configuration
+  "lsp": {
+    "typescript-language-server": {
+      "initialization_options": {
+        "preferences": {
+          "quotePreference": "double",
+          "importModuleSpecifier": "relative",
+          "includeCompletionsForModuleExports": true,
+          "includeCompletionsForImportStatements": true
+        },
+        "suggest": {
+          "autoImports": true,
+          "completeFunctionCalls": true,
+          "includeCompletionsForModuleExports": true
+        }
+      }
+    },
+    "eslint": {
+      "settings": {
+        "codeActionOnSave": {
+          "mode": "all",
+          "rules": ["!debugger", "!no-only-tests/*"]
+        },
+        "format": true,
+        "quiet": false,
+        "onIgnoredFiles": "off"
+      }
+    },
+    "tailwindcss-language-server": {
+      "settings": {
+        "includeLanguages": {
+          "typescript": "javascript",
+          "typescriptreact": "javascript"
+        },
+        "experimental": {
+          "classRegex": [
+            ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+            ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+          ]
+        }
+      }
+    }
+  },
+
+  // Language-Specific Settings
+  "languages": {
+    "TypeScript": {
+      "tab_size": 2,
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "code_actions_on_format": {
+        "source.organizeImports": true,
+        "source.fixAll.eslint": true
+      }
+    },
+    "TSX": {
+      "tab_size": 2,
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "code_actions_on_format": {
+        "source.organizeImports": true,
+        "source.fixAll.eslint": true
+      }
+    },
+    "JavaScript": {
+      "tab_size": 2,
+      "formatter": "prettier",
+      "format_on_save": "on"
+    },
+    "JSON": {
+      "tab_size": 2,
+      "formatter": "prettier"
+    },
+    "Markdown": {
+      "tab_size": 2,
+      "formatter": "prettier",
+      "soft_wrap": "editor_width",
+      "preferred_line_length": 100
+    },
+    "CSS": {
+      "tab_size": 2,
+      "formatter": "prettier"
+    }
+  },
+
+  // File associations
+  "file_types": {
+    "Dockerfile": ["Dockerfile*", "*.dockerfile"],
+    "JSON": ["*.json", "*.jsonc", ".eslintrc", ".prettierrc"],
+    "TypeScript": ["*.ts", "*.mts", "*.cts"],
+    "TSX": ["*.tsx"],
+    "JavaScript": ["*.js", "*.mjs", "*.cjs"],
+    "Markdown": ["*.md", "*.mdx"]
+  },
+
+  // Search and file handling
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/node_modules",
+    "**/.next",
+    "**/dist",
+    "**/build",
+    "**/coverage",
+    "**/playwright-report",
+    "**/test-results",
+    "**/.storybook/static",
+    "**/tsconfig.tsbuildinfo"
+  ],
+
+  // UI and Theme Configuration
+  "theme": "One Dark",
+  "buffer_font_family": "JetBrains Mono",
+  "buffer_font_size": 14,
+  "buffer_font_weight": 400,
+  "ui_font_family": "Inter",
+  "ui_font_size": 14,
+
+  // Editor UI
+  "scrollbar": {
+    "show": "auto",
+    "cursors": true,
+    "git_diff": true,
+    "search_results": true,
+    "selected_symbol": true,
+    "diagnostics": true
+  },
+  "gutter": {
+    "line_numbers": true,
+    "code_actions": true,
+    "fold": true
+  },
+  "toolbar": {
+    "breadcrumbs": true,
+    "quick_actions": true
+  },
+
+  // Project panel configuration
+  "project_panel": {
+    "button": true,
+    "default_width": 300,
+    "dock": "left",
+    "file_icons": true,
+    "folder_icons": true,
+    "git_status": true,
+    "indent_size": 20,
+    "auto_fold_dirs": true
+  },
+
+  // Terminal configuration
+  "terminal": {
+    "button": true,
+    "dock": "bottom",
+    "default_height": 300,
+    "working_directory": "current_project_directory",
+    "shell": "system",
+    "font_family": "JetBrains Mono",
+    "font_size": 14
+  },
+
+  // Git integration
+  "git": {
+    "git_gutter": "tracked_files",
+    "inline_blame": {
+      "enabled": true,
+      "delay_ms": 600
+    }
+  },
+
+  // Collaboration settings
+  "collaboration_panel": {
+    "button": false,
+    "dock": "left",
+    "default_width": 240
+  },
+
+  // Assistant/AI settings
+  "assistant": {
+    "default_model": {
+      "provider": "openai",
+      "model": "gpt-4"
+    },
+    "button": true,
+    "dock": "right",
+    "default_width": 400
+  },
+
+  // Performance optimizations
+  "journal": {
+    "hour_format": "hour24"
+  },
+  "auto_update": true,
+  "restore_on_startup": "last_workspace",
+
+  // Vim mode (optional, can be enabled/disabled)
+  "vim_mode": false,
+
+  // Copilot integration (if available)
+  "features": {
+    "copilot": true
+  },
+
+  // Project-specific tasks (similar to VS Code tasks)
+  "tasks": [
+    {
+      "label": "🚀 Start Development Server",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "tags": ["dev"]
+    },
+    {
+      "label": "🔨 Build for Production",
+      "command": "npm",
+      "args": ["run", "build"],
+      "tags": ["build"]
+    },
+    {
+      "label": "🧪 Run Tests",
+      "command": "npm",
+      "args": ["run", "test"],
+      "tags": ["test"]
+    },
+    {
+      "label": "🎭 Run E2E Tests",
+      "command": "npm",
+      "args": ["run", "test:e2e"],
+      "tags": ["test", "e2e"]
+    },
+    {
+      "label": "🔍 Lint Code",
+      "command": "npm",
+      "args": ["run", "lint"],
+      "tags": ["lint"]
+    },
+    {
+      "label": "💅 Format Code",
+      "command": "npm",
+      "args": ["run", "format"],
+      "tags": ["format"]
+    },
+    {
+      "label": "📚 Start Storybook",
+      "command": "npm",
+      "args": ["run", "storybook"],
+      "tags": ["storybook"]
+    },
+    {
+      "label": "🚀 Deploy to Staging",
+      "command": "./scripts/deployment/deploy-staging.sh",
+      "tags": ["deploy"]
+    }
+  ],
+
+  // Diagnostic configuration
+  "show_completions_on_input": true,
+  "show_completion_documentation": true,
+  "completion_documentation_secondary_query_debounce": 300,
+
+  // Inlay hints
+  "inlay_hints": {
+    "enabled": true,
+    "show_type_hints": true,
+    "show_parameter_hints": true,
+    "show_other_hints": true,
+    "edit_debounce_ms": 700
+  },
+
+  // Outline panel
+  "outline_panel": {
+    "button": true,
+    "default_width": 300,
+    "dock": "right"
+  },
+
+  // Base keymap (can be "SublimeText", "VSCode", "JetBrains", "Vim")
+  "base_keymap": "VSCode"
+}
