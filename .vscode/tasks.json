@@ -1,0 +1,406 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    // Development Tasks
+    {
+      "label": "🚀 Start Development Server",
+      "type": "npm",
+      "script": "dev",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "detail": "Start Next.js development server with Turbopack"
+    },
+    {
+      "label": "🔨 Build for Production",
+      "type": "npm",
+      "script": "build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Build Next.js app for production with Turbopack"
+    },
+    {
+      "label": "▶️ Start Production Server",
+      "type": "npm",
+      "script": "start",
+      "group": "build",
+      "dependsOn": "🔨 Build for Production",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Start production Next.js server"
+    },
+
+    // Code Quality Tasks
+    {
+      "label": "🔍 Lint Code",
+      "type": "npm",
+      "script": "lint",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$eslint-stylish"],
+      "detail": "Run ESLint with auto-fix"
+    },
+    {
+      "label": "🔍 Check Linting (No Fix)",
+      "type": "npm",
+      "script": "lint:check",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$eslint-stylish"],
+      "detail": "Check linting without auto-fixing"
+    },
+    {
+      "label": "💅 Format Code",
+      "type": "npm",
+      "script": "format",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Format code with Prettier"
+    },
+    {
+      "label": "💅 Check Code Formatting",
+      "type": "npm",
+      "script": "format:check",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Check code formatting without fixing"
+    },
+    {
+      "label": "📋 Type Check",
+      "type": "npm",
+      "script": "type-check",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Run TypeScript type checking"
+    },
+
+    // Testing Tasks
+    {
+      "label": "🧪 Run Unit Tests",
+      "type": "npm",
+      "script": "test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Run unit tests with Vitest"
+    },
+    {
+      "label": "🧪 Unit Tests (Watch Mode)",
+      "type": "shell",
+      "command": "npm run test -- --watch",
+      "group": "test",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Run unit tests in watch mode"
+    },
+    {
+      "label": "🧪 Unit Tests with UI",
+      "type": "npm",
+      "script": "test:ui",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Run unit tests with interactive UI"
+    },
+    {
+      "label": "📊 Test Coverage Report",
+      "type": "npm",
+      "script": "test:coverage",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Generate test coverage report"
+    },
+    {
+      "label": "🎭 E2E Tests",
+      "type": "npm",
+      "script": "test:e2e",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Run E2E tests with Playwright (headless)"
+    },
+    {
+      "label": "🎭 E2E Tests (Headed)",
+      "type": "npm",
+      "script": "test:e2e:headed",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Run E2E tests with browser visible"
+    },
+    {
+      "label": "🎭 E2E Tests (Interactive)",
+      "type": "npm",
+      "script": "test:e2e:ui",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Run E2E tests with Playwright UI"
+    },
+    {
+      "label": "🎭 E2E Tests (Debug)",
+      "type": "npm",
+      "script": "test:e2e:debug",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Debug E2E tests"
+    },
+    {
+      "label": "📈 E2E Test Report",
+      "type": "npm",
+      "script": "test:e2e:report",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Show E2E test report"
+    },
+
+    // Storybook Tasks
+    {
+      "label": "📚 Start Storybook",
+      "type": "npm",
+      "script": "storybook",
+      "group": "build",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Start Storybook development server"
+    },
+    {
+      "label": "📚 Build Storybook",
+      "type": "npm",
+      "script": "build-storybook",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Build Storybook for production"
+    },
+
+    // Utility Tasks
+    {
+      "label": "🔐 Generate Password Hash",
+      "type": "npm",
+      "script": "hash-password",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      },
+      "detail": "Generate bcrypt password hash"
+    },
+
+    // Deployment Tasks
+    {
+      "label": "🚀 Deploy to Staging",
+      "type": "shell",
+      "command": "./scripts/deployment/deploy-staging.sh",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "detail": "Deploy to Google Cloud Run staging environment"
+    },
+
+    // Composite Tasks
+    {
+      "label": "✅ Full Quality Check",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "📋 Type Check",
+        "🔍 Check Linting (No Fix)",
+        "💅 Check Code Formatting",
+        "🧪 Run Unit Tests"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Run all quality checks (type check, lint, format, tests)"
+    },
+    {
+      "label": "🔧 Fix Code Issues",
+      "dependsOrder": "sequence",
+      "dependsOn": ["💅 Format Code", "🔍 Lint Code"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Format and lint code to fix common issues"
+    },
+    {
+      "label": "🚀 Pre-Deploy Check",
+      "dependsOrder": "sequence",
+      "dependsOn": ["✅ Full Quality Check", "🔨 Build for Production"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Complete pre-deployment validation"
+    },
+
+    // Quick Actions
+    {
+      "label": "🧹 Clean Build",
+      "type": "shell",
+      "command": "rm -rf .next && npm run build",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Clean .next directory and rebuild"
+    },
+    {
+      "label": "🧹 Clean Install",
+      "type": "shell",
+      "command": "rm -rf node_modules package-lock.json && npm install",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Clean node_modules and reinstall dependencies"
+    },
+    {
+      "label": "📦 Update Dependencies",
+      "type": "shell",
+      "command": "npm update && npm audit fix",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "detail": "Update npm dependencies and fix vulnerabilities"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "testPattern",
+      "description": "Test pattern to run",
+      "default": "",
+      "type": "promptString"
+    }
+  ]
+}
