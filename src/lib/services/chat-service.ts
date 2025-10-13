@@ -90,8 +90,9 @@ export class ChatService {
     });
 
     try {
-      const streamingResp = await generativeModel.generateContentStream(req);
+      const resp = await generativeModel.generateContentStream(req);
       logger.info("Successfully initialized stream from Vertex AI");
+      return resp.stream;
     } catch (error) {
       logger.error("Error streaming from Vertex AI", {
         error,
@@ -128,7 +129,7 @@ export class ChatService {
     });
 
     try {
-      const streamingResp = await generativeModel.generateContentStream(req);
+      const resp = await generativeModel.generateContentStream(req);
       logger.info("Successfully initialized stream from Vertex AI");
 
       let chunkCount = 0;
@@ -140,7 +141,7 @@ export class ChatService {
           try {
             logger.debug("Starting stream processing");
 
-            for await (const chunk of streamingResp.stream) {
+            for await (const chunk of resp.stream) {
               chunkCount++;
 
               logger.debug(`Processing chunk ${chunkCount}`, {
@@ -225,7 +226,7 @@ export class ChatService {
         },
       });
 
-      streamingResp.response.catch((err) => {
+      resp.response.catch((err) => {
         logger.debug("Suppressed SDK aggregation error (expected)", {
           errorMessage: err?.message || String(err),
         });
