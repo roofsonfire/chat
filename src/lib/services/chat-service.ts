@@ -28,20 +28,7 @@ export class ChatService {
    * @returns AsyncGenerator for streaming text responses
    * @throws {VertexAIError} When the AI service fails to respond
    */
-  async stream(messages: Message[], modelId?: string) {
-    const selectedModelId =
-      modelId || env.GOOGLE_VERTEX_AI_MODEL_ID || DEFAULT_MODEL_ID;
-
-    logger.info("Starting chat stream", {
-      modelId: selectedModelId,
-      messageCount: messages.length,
-      hasImages: messages.some((m) => m.image),
-    });
-
-    const generativeModel = this.vertexAI.getGenerativeModel({
-      model: selectedModelId,
-    });
-
+  private _prepareContentRequest(messages: Message[]): GenerateContentRequest {
     const contents = messages.map((message, index) => {
       const parts: Part[] = [{ text: message.content }];
 
@@ -53,7 +40,6 @@ export class ChatService {
 
         const imageParts = message.image.split(",");
         if (imageParts.length > 1 && imageParts[1]) {
-          // Extract MIME type from data URL (e.g., "data:image/jpeg;base64")
           const mimeTypeMatch = imageParts[0]?.match(/data:([^;]+)/);
           const mimeType = mimeTypeMatch?.[1] || "image/jpeg";
 
@@ -79,13 +65,28 @@ export class ChatService {
       };
     });
 
-    const req: GenerateContentRequest = {
-      contents,
-    };
+    return { contents };
+  }
+
+  async stream(messages: Message[], modelId?: string) {
+    const selectedModelId =
+      modelId || env.GOOGLE_VERTEX_AI_MODEL_ID || DEFAULT_MODEL_ID;
+
+    logger.info("Starting chat stream", {
+      modelId: selectedModelId,
+      messageCount: messages.length,
+      hasImages: messages.some((m) => m.image),
+    });
+
+    const generativeModel = this.vertexAI.getGenerativeModel({
+      model: selectedModelId,
+    });
+
+    const req = this._prepareContentRequest(messages);
 
     logger.debug("Sending request to Vertex AI", {
-      contentCount: contents.length,
-      partsPerContent: contents.map((c) => c.parts.length),
+      contentCount: req.contents.length,
+      partsPerContent: req.contents.map((c) => c.parts.length),
     });
 
     try {
@@ -100,7 +101,6 @@ export class ChatService {
         hasImages: messages.some((m) => m.image),
       });
 
-      // Provide more specific error messages
       if (error instanceof Error) {
         if (error.message.includes("403")) {
           throw new VertexAIError(
@@ -125,15 +125,6 @@ export class ChatService {
     }
   }
 
-  /**
-   * Streams responses from the AI model and converts to a ReadableStream.
-   * This method properly handles the stream lifecycle to avoid aggregation errors.
-   *
-   * @param messages - Array of conversation messages with roles and content
-   * @param modelId - The Vertex AI model to use (defaults to env variable or DEFAULT_MODEL_ID)
-   * @returns ReadableStream for HTTP response streaming
-   * @throws {VertexAIError} When the AI service fails to respond
-   */
   async streamToReadable(
     messages: Message[],
     modelId?: string
@@ -151,58 +142,17 @@ export class ChatService {
       model: selectedModelId,
     });
 
-    const contents = messages.map((message, index) => {
-      const parts: Part[] = [{ text: message.content }];
-
-      if (message.image) {
-        logger.debug(`Processing image for message ${index}`, {
-          hasImage: true,
-          imageLength: message.image.length,
-        });
-
-        const imageParts = message.image.split(",");
-        if (imageParts.length > 1 && imageParts[1]) {
-          // Extract MIME type from data URL (e.g., "data:image/jpeg;base64")
-          const mimeTypeMatch = imageParts[0]?.match(/data:([^;]+)/);
-          const mimeType = mimeTypeMatch?.[1] || "image/jpeg";
-
-          logger.debug(`Image details for message ${index}`, {
-            mimeType,
-            base64Length: imageParts[1].length,
-          });
-
-          parts.push({
-            inlineData: {
-              mimeType,
-              data: imageParts[1],
-            },
-          });
-        } else {
-          logger.warn(`Invalid image format for message ${index}`);
-        }
-      }
-
-      return {
-        role: message.role,
-        parts,
-      };
-    });
-
-    const req: GenerateContentRequest = {
-      contents,
-    };
+    const req = this._prepareContentRequest(messages);
 
     logger.debug("Sending request to Vertex AI", {
-      contentCount: contents.length,
-      partsPerContent: contents.map((c) => c.parts.length),
+      contentCount: req.contents.length,
+      partsPerContent: req.contents.map((c) => c.parts.length),
     });
 
     try {
       const streamingResp = await generativeModel.generateContentStream(req);
       logger.info("Successfully initialized stream from Vertex AI");
 
-      // Create ReadableStream directly from the streaming response
-      // We'll manually iterate and convert to avoid double-consumption
       let chunkCount = 0;
       let totalTextLength = 0;
       let imageCount = 0;
@@ -212,7 +162,6 @@ export class ChatService {
           try {
             logger.debug("Starting stream processing");
 
-            // Use the stream from the response
             for await (const chunk of streamingResp.stream) {
               chunkCount++;
 
@@ -234,7 +183,6 @@ export class ChatService {
               for (const part of parts) {
                 if (!part) continue;
 
-                // Handle text parts
                 if (part.text) {
                   totalTextLength += part.text.length;
                   logger.debug(`Enqueuing text part from chunk ${chunkCount}`, {
@@ -249,7 +197,6 @@ export class ChatService {
                   controller.enqueue(JSON.stringify(textChunk) + "\n");
                 }
 
-                // Handle image parts
                 if (part.inlineData) {
                   imageCount++;
                   logger.info(`Enqueuing image part from chunk ${chunkCount}`, {
@@ -300,7 +247,6 @@ export class ChatService {
         },
       });
 
-      // Suppress SDK's internal aggregation attempt
       streamingResp.response.catch((err) => {
         logger.debug("Suppressed SDK aggregation error (expected)", {
           errorMessage: err?.message || String(err),
@@ -316,7 +262,6 @@ export class ChatService {
         hasImages: messages.some((m) => m.image),
       });
 
-      // Provide more specific error messages
       if (error instanceof Error) {
         if (error.message.includes("403")) {
           throw new VertexAIError(
