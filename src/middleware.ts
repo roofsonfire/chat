@@ -1,53 +1,137 @@
-import { getToken } from "next-auth/jwt";
+import { getToken, JWT } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { RateLimiterMemory } from "rate-limiter-flexible";
+import { RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
 
-/** Rate limit: 10 requests per 15 seconds per IP (more lenient for image generation) */
+// --- Rate Limiting Configuration ---
 const RATE_LIMIT_REQUESTS = 10;
 const RATE_LIMIT_WINDOW_SECONDS = 15;
-
-/** Separate, more lenient rate limit for chat API (image generation is resource-intensive) */
 const CHAT_API_RATE_LIMIT_REQUESTS = 3;
 const CHAT_API_RATE_LIMIT_WINDOW_SECONDS = 30;
 
-/**
- * In-memory rate limiter for general requests
- * Note: This resets when the server restarts and doesn't work across multiple instances.
- * For production with multiple servers, consider using Upstash Redis or another distributed store.
- */
 const rateLimiter = new RateLimiterMemory({
-  points: RATE_LIMIT_REQUESTS, // Number of requests
-  duration: RATE_LIMIT_WINDOW_SECONDS, // Per 15 seconds
-  blockDuration: 0, // Do not block, just reject
+  points: RATE_LIMIT_REQUESTS,
+  duration: RATE_LIMIT_WINDOW_SECONDS,
+  blockDuration: 0,
 });
 
-/**
- * Separate rate limiter for chat API endpoints (image generation)
- */
 const chatAPIRateLimiter = new RateLimiterMemory({
-  points: CHAT_API_RATE_LIMIT_REQUESTS, // 3 requests
-  duration: CHAT_API_RATE_LIMIT_WINDOW_SECONDS, // Per 30 seconds
-  blockDuration: 0, // Do not block, just reject
+  points: CHAT_API_RATE_LIMIT_REQUESTS,
+  duration: CHAT_API_RATE_LIMIT_WINDOW_SECONDS,
+  blockDuration: 0,
 });
 
-/**
- * Add security headers to responses
- * Implements defense-in-depth security practices
- */
+// --- Middleware Helper Functions ---
+
+async function handleRateLimiting(
+  req: NextRequest
+): Promise<NextResponse | RateLimiterRes> {
+  if (process.env.DISABLE_RATE_LIMIT === "true") {
+    return new RateLimiterRes();
+  }
+
+  const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  const { pathname } = req.nextUrl;
+  const isChatAPI = pathname.startsWith("/api/chat");
+
+  const limiter = isChatAPI ? chatAPIRateLimiter : rateLimiter;
+  const limit = isChatAPI ? CHAT_API_RATE_LIMIT_REQUESTS : RATE_LIMIT_REQUESTS;
+
+  try {
+    return await limiter.consume(ip);
+  } catch (rateLimitError) {
+    if (
+      rateLimitError &&
+      typeof rateLimitError === "object" &&
+      "msBeforeNext" in rateLimitError
+    ) {
+      const rejectedResult = rateLimitError as { msBeforeNext: number };
+      const retryAfterSeconds = Math.ceil(rejectedResult.msBeforeNext / 1000);
+
+      logger.warn("Rate limit exceeded", {
+        ip,
+        path: pathname,
+        retryAfter: retryAfterSeconds,
+        rateLimiter: isChatAPI ? "chat-api" : "general",
+      });
+
+      return new NextResponse(
+        JSON.stringify({
+          error: "Too many requests. Please try again later.",
+          retryAfter: retryAfterSeconds,
+        }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "X-RateLimit-Limit": limit.toString(),
+            "X-RateLimit-Remaining": "0",
+            "Retry-After": retryAfterSeconds.toString(),
+          },
+        }
+      );
+    }
+    throw rateLimitError;
+  }
+}
+
+function handleCsrf(req: NextRequest): NextResponse | void {
+  if (req.method === "GET" || req.method === "HEAD") {
+    return;
+  }
+
+  const origin = req.headers.get("origin");
+  const host = req.headers.get("host");
+
+  if (origin && host) {
+    const originUrl = new URL(origin);
+    const expectedOrigin = originUrl.hostname;
+    const actualHost = host.split(":")[0];
+
+    if (expectedOrigin !== actualHost && expectedOrigin !== "localhost") {
+      logger.warn("CSRF protection: Origin mismatch", {
+        origin: expectedOrigin,
+        host: actualHost,
+        method: req.method,
+        path: req.nextUrl.pathname,
+      });
+
+      return new NextResponse(JSON.stringify({ error: "Invalid origin" }), {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+}
+
+async function handleAuth(
+  req: NextRequest,
+  token: JWT | null
+): Promise<NextResponse | void> {
+  const { pathname } = req.nextUrl;
+
+  if (pathname.startsWith("/api/auth")) {
+    return;
+  }
+
+  if (!token && pathname !== "/login") {
+    const loginUrl = new URL("/login", req.url);
+    loginUrl.searchParams.set("from", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  if (token && pathname === "/login") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+}
+
 function addSecurityHeaders(response: NextResponse): NextResponse {
-  // Prevent clickjacking attacks
   response.headers.set("X-Frame-Options", "DENY");
-
-  // Enable browser XSS protection
   response.headers.set("X-Content-Type-Options", "nosniff");
-
-  // Prevent MIME type sniffing
   response.headers.set("X-XSS-Protection", "1; mode=block");
 
-  // Enforce HTTPS in production
   if (process.env.NODE_ENV === "production") {
     response.headers.set(
       "Strict-Transport-Security",
@@ -55,26 +139,21 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
     );
   }
 
-  // Referrer policy - balance privacy and functionality
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-
-  // Permissions policy - restrict potentially dangerous features
   response.headers.set(
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=()"
   );
-
-  // Content Security Policy - relaxed for OAuth
   response.headers.set(
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // Next.js requires unsafe-eval and unsafe-inline
-      "style-src 'self' 'unsafe-inline'", // Styled components require unsafe-inline
-      "img-src 'self' data: blob:", // Allow data URIs for base64 images
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob:",
       "font-src 'self'",
-      "connect-src 'self' https://accounts.google.com", // Allow Google OAuth
-      "frame-src 'self' https://accounts.google.com", // Allow Google OAuth frames
+      "connect-src 'self' https://accounts.google.com",
+      "frame-src 'self' https://accounts.google.com",
       "frame-ancestors 'none'",
     ].join("; ")
   );
@@ -82,156 +161,36 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
   return response;
 }
 
-/**
- * Middleware for authentication, rate limiting, and security.
- * Protects all routes except public assets and auth endpoints.
- *
- * Security Features:
- * - CSRF protection via origin validation
- * - Security headers (CSP, HSTS, etc.)
- * - Rate limiting with IP-based identification
- * - Authentication enforcement
- *
- * Rate Limiting:
- * - Applies to all requests (including API routes)
- * - Uses IP-based identification
- * - Sliding window: 5 requests per 10 seconds
- *
- * Authentication:
- * - Redirects unauthenticated users to /login
- * - Allows access to /api/auth/* for NextAuth
- * - Redirects authenticated users away from /login
- */
+// --- Main Middleware ---
+
 export async function middleware(req: NextRequest) {
   try {
-    const disableRateLimiting = process.env.DISABLE_RATE_LIMIT === "true";
+    const csrfResponse = handleCsrf(req);
+    if (csrfResponse) return csrfResponse;
 
-    // CSRF Protection: Origin validation for state-changing requests
-    if (req.method !== "GET" && req.method !== "HEAD") {
-      const origin = req.headers.get("origin");
-      const host = req.headers.get("host");
-
-      // Allow requests with no origin (e.g., Postman, cURL) in development
-      if (origin && host) {
-        const originUrl = new URL(origin);
-        const expectedOrigin = originUrl.hostname;
-        const actualHost = host.split(":")[0]; // Remove port if present
-
-        if (expectedOrigin !== actualHost && expectedOrigin !== "localhost") {
-          logger.warn("CSRF protection: Origin mismatch", {
-            origin: expectedOrigin,
-            host: actualHost,
-            method: req.method,
-            path: req.nextUrl.pathname,
-          });
-
-          return new NextResponse(
-            JSON.stringify({
-              error: "Invalid origin",
-            }),
-            {
-              status: 403,
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-        }
-      }
-    }
-
-    // Rate limiting with in-memory store
-    const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
-    const { pathname } = req.nextUrl;
-
-    // Use separate rate limiter for chat API (image generation)
-    const isChatAPI = pathname.startsWith("/api/chat");
-    const selectedRateLimiter = isChatAPI ? chatAPIRateLimiter : rateLimiter;
-    const currentLimit = isChatAPI
-      ? CHAT_API_RATE_LIMIT_REQUESTS
-      : RATE_LIMIT_REQUESTS;
-
-    const windowSeconds = isChatAPI
-      ? CHAT_API_RATE_LIMIT_WINDOW_SECONDS
-      : RATE_LIMIT_WINDOW_SECONDS;
-
-    let remaining: number;
-    let reset: number;
-
-    if (disableRateLimiting) {
-      remaining = Math.max(currentLimit - 1, 0);
-      reset = Date.now() + windowSeconds * 1000;
-    } else {
-      try {
-        const rateLimitResult = await selectedRateLimiter.consume(ip);
-        remaining = rateLimitResult.remainingPoints;
-        reset = Date.now() + rateLimitResult.msBeforeNext;
-      } catch (rateLimitError) {
-        if (
-          rateLimitError &&
-          typeof rateLimitError === "object" &&
-          "msBeforeNext" in rateLimitError
-        ) {
-          const rejectedResult = rateLimitError as { msBeforeNext: number };
-          const retryAfterSeconds = Math.ceil(
-            rejectedResult.msBeforeNext / 1000
-          );
-          const effectiveLimit = isChatAPI
-            ? CHAT_API_RATE_LIMIT_REQUESTS
-            : RATE_LIMIT_REQUESTS;
-
-          logger.warn("Rate limit exceeded", {
-            ip,
-            path: req.nextUrl.pathname,
-            retryAfter: retryAfterSeconds,
-            rateLimiter: isChatAPI ? "chat-api" : "general",
-          });
-
-          return new NextResponse(
-            JSON.stringify({
-              error: "Too many requests. Please try again later.",
-              retryAfter: retryAfterSeconds,
-            }),
-            {
-              status: 429,
-              headers: {
-                "Content-Type": "application/json",
-                "X-RateLimit-Limit": effectiveLimit.toString(),
-                "X-RateLimit-Remaining": "0",
-                "Retry-After": retryAfterSeconds.toString(),
-              },
-            }
-          );
-        }
-
-        throw rateLimitError;
-      }
-    }
+    const rateLimitResult = await handleRateLimiting(req);
+    if (rateLimitResult instanceof NextResponse) return rateLimitResult;
 
     const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
-
-    // Allow requests for next-auth session and provider fetching
-    if (pathname.startsWith("/api/auth")) {
-      return NextResponse.next();
-    }
-
-    // Redirect to login if no token and not on the login page
-    if (!token && pathname !== "/login") {
-      const loginUrl = new URL("/login", req.url);
-      loginUrl.searchParams.set("from", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-
-    // If the user is authenticated and tries to access the login page, redirect to home
-    if (token && pathname === "/login") {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
+    const authResponse = await handleAuth(req, token);
+    if (authResponse) return authResponse;
 
     const response = NextResponse.next();
 
-    response.headers.set("X-RateLimit-Limit", currentLimit.toString());
-    response.headers.set("X-RateLimit-Remaining", remaining.toString());
-    response.headers.set("X-RateLimit-Reset", reset.toString());
+    const isChatAPI = req.nextUrl.pathname.startsWith("/api/chat");
+    const limit = isChatAPI
+      ? CHAT_API_RATE_LIMIT_REQUESTS
+      : RATE_LIMIT_REQUESTS;
+
+    response.headers.set("X-RateLimit-Limit", limit.toString());
+    response.headers.set(
+      "X-RateLimit-Remaining",
+      rateLimitResult.remainingPoints.toString()
+    );
+    response.headers.set(
+      "X-RateLimit-Reset",
+      (Date.now() + rateLimitResult.msBeforeNext).toString()
+    );
 
     return addSecurityHeaders(response);
   } catch (error) {
@@ -242,7 +201,7 @@ export async function middleware(req: NextRequest) {
       errorObject: JSON.stringify(error, null, 2),
       path: req.nextUrl.pathname,
     });
-    // Redirect to a dedicated error page on middleware failure
+
     const errorUrl = new URL("/middleware-error", req.url);
     return NextResponse.redirect(errorUrl);
   }
@@ -250,13 +209,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public assets
-     */
     "/((?!_next/static|_next/image|favicon.ico|middleware-error|.*\\..*).*)",
   ],
 };

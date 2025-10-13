@@ -19,8 +19,14 @@ vi.mock("rate-limiter-flexible", () => {
     consume = mockConsume;
   }
 
+  class MockRateLimiterRes {
+    remainingPoints = 9;
+    msBeforeNext = 10000;
+  }
+
   return {
     RateLimiterMemory: MockRateLimiterMemory,
+    RateLimiterRes: MockRateLimiterRes,
   };
 });
 
