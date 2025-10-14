@@ -11,18 +11,37 @@ export interface GeneratedImage {
 }
 
 /**
- * Represents a message in the chat conversation.
+ * Base message interface with common properties
  */
-export interface Message {
+export interface BaseMessage {
   /** The role of the message sender (user or AI assistant) */
   role: "user" | "assistant";
   /** The text content of the message */
   content: string;
+}
+
+/**
+ * User message with optional image upload
+ */
+export interface UserMessage extends BaseMessage {
+  role: "user";
   /** Optional base64-encoded image data URL (for user uploads) */
   image?: string;
+}
+
+/**
+ * Assistant message with optional generated images
+ */
+export interface AssistantMessage extends BaseMessage {
+  role: "assistant";
   /** Optional array of AI-generated images (for assistant responses) */
   generatedImages?: GeneratedImage[];
 }
+
+/**
+ * Union type for all message types
+ */
+export type Message = UserMessage | AssistantMessage;
 
 /**
  * Request payload for the chat API endpoint.
