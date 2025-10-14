@@ -34,7 +34,7 @@ export function ModelSelector({
         onValueChange={onModelChange}
         disabled={disabled || isLoading}
       >
-        <SelectTrigger id="model-select" className="w-[240px]">
+        <SelectTrigger id="model-select" className="w-full sm:w-[240px]">
           {isLoading ? (
             <span className="text-muted-foreground">Loading models...</span>
           ) : (

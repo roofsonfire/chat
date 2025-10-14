@@ -52,7 +52,7 @@ export function MessageInput({
         <div className="relative mb-4" data-testid="image-preview-container">
           <Image
             src={imagePreview}
-            alt="Image preview"
+            alt="Uploaded image attached to chat message"
             width={80}
             height={80}
             className="rounded-lg"
@@ -72,20 +72,16 @@ export function MessageInput({
         </div>
       )}
       <div className="relative">
-        <label htmlFor="image-upload">
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            asChild
-            aria-label="Attach image"
-            data-testid="attach-image-button"
-          >
-            <span className="cursor-pointer">
-              <ImageIcon className="h-6 w-6" />
-            </span>
-          </Button>
-        </label>
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          onClick={() => fileInputRef.current?.click()}
+          aria-label="Attach image"
+          data-testid="attach-image-button"
+        >
+          <ImageIcon className="h-6 w-6" />
+        </Button>
         <Input
           value={input}
           onChange={handleInputChange}
