@@ -1,10 +1,85 @@
 import { env } from "@/lib/env";
-import type { AuthOptions } from "next-auth";
+import type { AuthOptions, Account, User, Session } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { allowlist } from "@/lib/auth/allowlist";
 import { validateCredentials } from "@/lib/auth/provider";
 import { logger } from "@/lib/logger";
+
+// --- Auth Callback Functions ---
+
+async function handleSignIn({
+  user,
+  account,
+}: {
+  user: User;
+  account: Account | null;
+}) {
+  logger.info("[NextAuth][signIn] Callback triggered", {
+    userEmail: user?.email,
+    provider: account?.provider,
+    allowlist,
+    isInAllowlist: user?.email ? allowlist.includes(user.email) : false,
+  });
+
+  if (!user?.email) {
+    logger.error("[NextAuth][signIn] No email provided by user");
+    return false;
+  }
+
+  const isAllowed = allowlist.includes(user.email);
+
+  if (!isAllowed) {
+    logger.warn("[NextAuth][signIn] User not in allowlist", {
+      email: user.email,
+      allowlist,
+    });
+    return false;
+  }
+
+  logger.info("[NextAuth][signIn] User allowed", { email: user.email });
+  return true;
+}
+
+async function populateJwt({ token, user }: { token: JWT; user?: User }) {
+  logger.info("[NextAuth][jwt] Callback triggered", {
+    hasToken: !!token,
+    hasUser: !!user,
+    userEmail: user?.email || token?.email,
+  });
+
+  if (user) {
+    token.email = user.email;
+    token.name = user.name;
+  }
+
+  return token;
+}
+
+async function createSession({
+  session,
+  token,
+}: {
+  session: Session;
+  token: JWT;
+}) {
+  logger.info("[NextAuth][session] Callback triggered", {
+    hasSession: !!session,
+    hasToken: !!token,
+    sessionUserEmail: session?.user?.email,
+    tokenEmail: token?.email,
+  });
+
+  if (token?.email && session.user) {
+    session.user.email = token.email as string;
+  }
+  if (token?.name && session.user) {
+    session.user.name = token.name as string;
+  }
+
+  return session;
+}
 
 const providers: AuthOptions["providers"] = [
   GoogleProvider({
@@ -65,62 +140,8 @@ export const authOptions: AuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async signIn({ user, account }) {
-      logger.info("[NextAuth][signIn] Callback triggered", {
-        userEmail: user?.email,
-        provider: account?.provider,
-        allowlist,
-        isInAllowlist: user?.email ? allowlist.includes(user.email) : false,
-      });
-
-      if (!user?.email) {
-        logger.error("[NextAuth][signIn] No email provided by user");
-        return false;
-      }
-
-      const isAllowed = allowlist.includes(user.email);
-
-      if (!isAllowed) {
-        logger.warn("[NextAuth][signIn] User not in allowlist", {
-          email: user.email,
-          allowlist,
-        });
-        return false;
-      }
-
-      logger.info("[NextAuth][signIn] User allowed", { email: user.email });
-      return true;
-    },
-    async jwt({ token, user }) {
-      logger.info("[NextAuth][jwt] Callback triggered", {
-        hasToken: !!token,
-        hasUser: !!user,
-        userEmail: user?.email || token?.email,
-      });
-
-      if (user) {
-        token.email = user.email;
-        token.name = user.name;
-      }
-
-      return token;
-    },
-    async session({ session, token }) {
-      logger.info("[NextAuth][session] Callback triggered", {
-        hasSession: !!session,
-        hasToken: !!token,
-        sessionUserEmail: session?.user?.email,
-        tokenEmail: token?.email,
-      });
-
-      if (token?.email && session.user) {
-        session.user.email = token.email as string;
-      }
-      if (token?.name && session.user) {
-        session.user.name = token.name as string;
-      }
-
-      return session;
-    },
+    signIn: handleSignIn,
+    jwt: populateJwt,
+    session: createSession,
   },
 };
