@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { allowlist } from "@/lib/auth/allowlist";
 import { validateCredentials } from "@/lib/auth/provider";
+import { logger } from "@/lib/logger";
 
 const providers: AuthOptions["providers"] = [
   GoogleProvider({
@@ -42,13 +43,19 @@ export const authOptions: AuthOptions = {
       code: string,
       metadata?: Error | { [key: string]: unknown; error: Error }
     ) {
-      console.error("[NextAuth][error]", code, metadata);
+      logger.error(
+        `[NextAuth][error] ${code}`,
+        metadata ? { metadata } : undefined
+      );
     },
     warn(code: string) {
-      console.warn("[NextAuth][warn]", code);
+      logger.warn(`[NextAuth][warn] ${code}`, { code });
     },
     debug(code: string, metadata?: unknown) {
-      console.debug("[NextAuth][debug]", code, metadata);
+      logger.debug(
+        `[NextAuth][debug] ${code}`,
+        metadata ? { metadata } : undefined
+      );
     },
   },
   session: {
@@ -59,7 +66,7 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      console.log("[NextAuth][signIn] Callback triggered", {
+      logger.info("[NextAuth][signIn] Callback triggered", {
         userEmail: user?.email,
         provider: account?.provider,
         allowlist,
@@ -67,25 +74,25 @@ export const authOptions: AuthOptions = {
       });
 
       if (!user?.email) {
-        console.error("[NextAuth][signIn] No email provided by user");
+        logger.error("[NextAuth][signIn] No email provided by user");
         return false;
       }
 
       const isAllowed = allowlist.includes(user.email);
 
       if (!isAllowed) {
-        console.warn("[NextAuth][signIn] User not in allowlist", {
+        logger.warn("[NextAuth][signIn] User not in allowlist", {
           email: user.email,
           allowlist,
         });
         return false;
       }
 
-      console.log("[NextAuth][signIn] User allowed", { email: user.email });
+      logger.info("[NextAuth][signIn] User allowed", { email: user.email });
       return true;
     },
     async jwt({ token, user }) {
-      console.log("[NextAuth][jwt] Callback triggered", {
+      logger.info("[NextAuth][jwt] Callback triggered", {
         hasToken: !!token,
         hasUser: !!user,
         userEmail: user?.email || token?.email,
@@ -99,7 +106,7 @@ export const authOptions: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      console.log("[NextAuth][session] Callback triggered", {
+      logger.info("[NextAuth][session] Callback triggered", {
         hasSession: !!session,
         hasToken: !!token,
         sessionUserEmail: session?.user?.email,
