@@ -63,6 +63,39 @@ export class ModelRegistryService {
   }
 
   /**
+   * Validate models in parallel with timeout
+   * @param models - Array of models to validate
+   * @returns Array of validation promises
+   */
+  private validateModelsInParallel(
+    models: VertexAIModel[]
+  ): Promise<(VertexAIModel | null)[]> {
+    const validationPromises = models.map(async (model) => {
+      const isAvailable = await Promise.race([
+        this.validateModel(model.name),
+        new Promise<boolean>((resolve) =>
+          setTimeout(() => resolve(false), 5000)
+        ), // 5s timeout
+      ]);
+
+      return isAvailable ? model : null;
+    });
+
+    return Promise.all(validationPromises);
+  }
+
+  /**
+   * Filter available models from validation results
+   * @param results - Array of validation results
+   * @returns Array of available models
+   */
+  private filterAvailableModels(
+    results: (VertexAIModel | null)[]
+  ): VertexAIModel[] {
+    return results.filter((model): model is VertexAIModel => model !== null);
+  }
+
+  /**
    * Fetch available models by validating known models
    * @returns Array of available models in the current region
    */
@@ -77,22 +110,8 @@ export class ModelRegistryService {
         region: env.GOOGLE_LOCATION,
       });
 
-      // Validate models in parallel with a timeout
-      const validationPromises = this.KNOWN_MODELS.map(async (model) => {
-        const isAvailable = await Promise.race([
-          this.validateModel(model.name),
-          new Promise<boolean>((resolve) =>
-            setTimeout(() => resolve(false), 5000)
-          ), // 5s timeout
-        ]);
-
-        return isAvailable ? model : null;
-      });
-
-      const results = await Promise.all(validationPromises);
-      const availableModels = results.filter(
-        (model): model is VertexAIModel => model !== null
-      );
+      const results = await this.validateModelsInParallel(this.KNOWN_MODELS);
+      const availableModels = this.filterAvailableModels(results);
 
       logger.info(`Found ${availableModels.length} available Gemini models`);
 

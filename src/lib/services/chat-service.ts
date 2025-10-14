@@ -4,7 +4,7 @@ import {
   Part,
   GenerativeModel,
 } from "@google-cloud/vertexai";
-import { Message } from "@/lib/types";
+import { Message, UserMessage } from "@/lib/types";
 import { env } from "@/lib/env";
 import { logger } from "../logger";
 import { DEFAULT_MODEL_ID } from "@/lib/constants/vertex-ai-models";
@@ -25,25 +25,21 @@ export class ChatService {
   }
 
   /**
-   * Streams responses from the AI model for a given conversation.
-   * Supports both text and image inputs.
-   *
-   * @param messages - Array of conversation messages with roles and content
-   * @param modelId - The Vertex AI model to use (defaults to env variable or DEFAULT_MODEL_ID)
-   * @returns AsyncGenerator for streaming text responses
-   * @throws {VertexAIError} When the AI service fails to respond
+   * Prepares the content request from messages for Vertex AI.
    */
   private _prepareContentRequest(messages: Message[]): GenerateContentRequest {
     const contents = messages.map((message, index) => {
       const parts: Part[] = [{ text: message.content }];
 
-      if (message.image) {
+      // Only user messages can have images
+      if (message.role === "user" && (message as UserMessage).image) {
+        const userMessage = message as UserMessage;
         logger.debug(`Processing image for message ${index}`, {
           hasImage: true,
-          imageLength: message.image.length,
+          imageLength: userMessage.image!.length,
         });
 
-        const imageParts = message.image.split(",");
+        const imageParts = userMessage.image!.split(",");
         if (imageParts.length > 1 && imageParts[1]) {
           const mimeTypeMatch = imageParts[0]?.match(/data:([^;]+)/);
           const mimeType = mimeTypeMatch?.[1] || "image/jpeg";
@@ -73,6 +69,9 @@ export class ChatService {
     return { contents };
   }
 
+  /**
+   * Sets up common streaming parameters and logs the request.
+   */
   private _setupStream(
     messages: Message[],
     modelId?: string
@@ -90,13 +89,9 @@ export class ChatService {
     });
     const req = this._prepareContentRequest(messages);
     const messageCount = messages.length;
-    const hasImages = messages.some((m) => m.image);
-    return { generativeModel, req, selectedModelId, messageCount, hasImages };
-  }
-
-  async stream(messages: Message[], modelId?: string) {
-    const { generativeModel, req, selectedModelId, messageCount, hasImages } =
-      this._setupStream(messages, modelId);
+    const hasImages = messages.some(
+      (m) => m.role === "user" && (m as UserMessage).image
+    );
 
     logger.info("Starting chat stream", {
       modelId: selectedModelId,
@@ -108,6 +103,22 @@ export class ChatService {
       contentCount: req.contents.length,
       partsPerContent: req.contents.map((c) => c.parts.length),
     });
+
+    return { generativeModel, req, selectedModelId, messageCount, hasImages };
+  }
+
+  /**
+   * Streams responses from the AI model for a given conversation.
+   * Supports both text and image inputs.
+   *
+   * @param messages - Array of conversation messages with roles and content
+   * @param modelId - The Vertex AI model to use (defaults to env variable or DEFAULT_MODEL_ID)
+   * @returns AsyncGenerator for streaming text responses
+   * @throws {VertexAIError} When the AI service fails to respond
+   */
+  async stream(messages: Message[], modelId?: string) {
+    const { generativeModel, req, selectedModelId, messageCount, hasImages } =
+      this._setupStream(messages, modelId);
 
     try {
       const resp = await generativeModel.generateContentStream(req);
@@ -130,17 +141,6 @@ export class ChatService {
   ): Promise<ReadableStream> {
     const { generativeModel, req, selectedModelId, messageCount, hasImages } =
       this._setupStream(messages, modelId);
-
-    logger.info("Starting chat stream", {
-      modelId: selectedModelId,
-      messageCount,
-      hasImages,
-    });
-
-    logger.debug("Sending request to Vertex AI", {
-      contentCount: req.contents.length,
-      partsPerContent: req.contents.map((c) => c.parts.length),
-    });
 
     try {
       const resp = await generativeModel.generateContentStream(req);

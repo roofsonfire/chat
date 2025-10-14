@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ImageIcon, SendIcon, CloseIcon } from "@/components/ui/icons";
-import { imageToBase64, validateImageFile } from "@/lib/utils/image-validation";
 import Image from "next/image";
-import { logger } from "@/lib/logger";
+import { useImageUpload } from "@/lib/hooks/use-image-upload";
 
 interface MessageInputProps {
   input: string;
@@ -23,45 +22,16 @@ export function MessageInput({
   isLoading,
   setImage,
 }: MessageInputProps) {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageError, setImageError] = useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const { imagePreview, imageError, handleImageChange, removeImage } =
+    useImageUpload();
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Reset previous error
-    setImageError(null);
-
-    // Validate the image file
-    const validation = validateImageFile(file);
-    if (!validation.valid) {
-      setImageError(validation.error || "Invalid image file");
-      logger.warn("Image validation failed", { error: validation.error });
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-      return;
-    }
-
-    try {
-      const base64Image = await imageToBase64(file);
-      setImage(base64Image);
-      setImagePreview(base64Image);
-    } catch (error) {
-      setImageError("Failed to process image");
-      logger.error("Error converting image to base64", { error });
-    }
+  const handleImageChangeWrapper = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleImageChange(e, setImage);
   };
 
   const handleRemoveImage = () => {
-    setImage(null);
-    setImagePreview(null);
-    setImageError(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    removeImage(setImage, fileInputRef);
   };
 
   return (
@@ -102,16 +72,6 @@ export function MessageInput({
         </div>
       )}
       <div className="relative">
-        <Input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleImageChange}
-          className="hidden"
-          id="image-upload"
-          aria-label="Upload image"
-          data-testid="image-upload-input"
-        />
         <label htmlFor="image-upload">
           <Button
             type="button"
@@ -145,6 +105,16 @@ export function MessageInput({
         >
           <SendIcon className="h-6 w-6" />
         </Button>
+        <Input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImageChangeWrapper}
+          className="hidden"
+          id="image-upload"
+          aria-label="Upload image"
+          data-testid="image-upload-input"
+        />
       </div>
     </form>
   );
