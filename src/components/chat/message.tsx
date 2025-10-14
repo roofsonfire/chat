@@ -59,16 +59,17 @@ export function ChatMessage({ message }: ChatMessageProps) {
               {(message as AssistantMessage).generatedImages!.map(
                 (img, idx) => (
                   <div key={idx} className="group relative">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={`data:${img.mimeType};base64,${img.data}`}
-                      alt={`Generated image ${idx + 1}`}
+                      alt={`AI-generated image ${idx + 1}`}
+                      width={400}
+                      height={400}
                       className="h-auto max-w-full rounded-lg"
                       style={{ maxWidth: "400px" }}
                       data-testid={`generated-image-${idx}`}
                     />
                     <Button
-                      size="sm"
+                      size="icon"
                       variant="secondary"
                       className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100"
                       onClick={() => {
