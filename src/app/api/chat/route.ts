@@ -1,10 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ZodError } from "zod";
 import { ChatService } from "@/lib/services/chat-service";
 import { chatRequestSchema } from "@/lib/validation/chat-schema";
 import { logger } from "@/lib/logger";
 import type { ChatErrorResponse } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
+
+/**
+ * Handles invalid chat request validation errors.
+ * Logs detailed error information and returns a structured error response.
+ *
+ * @param error - Zod validation error
+ * @param body - Raw request body for logging
+ * @param requestId - Unique request identifier
+ * @returns NextResponse with validation error details
+ */
+function handleInvalidRequest(
+  error: ZodError,
+  body: unknown,
+  requestId: string
+): NextResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const safeBody = body as any;
+  logger.warn("Invalid chat request", {
+    requestId,
+    errors: error.issues,
+    receivedBody: {
+      hasMessages: !!safeBody.messages,
+      messageCount: safeBody.messages?.length || 0,
+      messages:
+        safeBody.messages?.map((m: Record<string, unknown>, i: number) => ({
+          index: i,
+          role: m?.role,
+          hasContent: !!m?.content,
+          contentLength: (m?.content as string)?.length || 0,
+          contentTrimmed: (m?.content as string)?.trim?.()?.length || 0,
+          hasImage: !!m?.image,
+          imageLength: (m?.image as string)?.length || 0,
+        })) || [],
+      hasModelId: !!safeBody.modelId,
+      modelId: safeBody.modelId,
+    },
+  });
+
+  const errorResponse: ChatErrorResponse = {
+    error: "Invalid request body",
+    details: error.issues.map((issue) => ({
+      path: issue.path.join("."),
+      message: issue.message,
+      code: issue.code,
+    })),
+  };
+
+  return NextResponse.json(errorResponse, { status: 400 });
+}
 
 /**
  * POST /api/chat - Stream AI responses for chat messages
@@ -29,37 +79,7 @@ export async function POST(req: NextRequest) {
     const parsedBody = chatRequestSchema.safeParse(body);
 
     if (!parsedBody.success) {
-      logger.warn("Invalid chat request", {
-        requestId,
-        errors: parsedBody.error.issues,
-        receivedBody: {
-          hasMessages: !!body.messages,
-          messageCount: body.messages?.length || 0,
-          messages:
-            body.messages?.map((m: Record<string, unknown>, i: number) => ({
-              index: i,
-              role: m?.role,
-              hasContent: !!m?.content,
-              contentLength: (m?.content as string)?.length || 0,
-              contentTrimmed: (m?.content as string)?.trim?.()?.length || 0,
-              hasImage: !!m?.image,
-              imageLength: (m?.image as string)?.length || 0,
-            })) || [],
-          hasModelId: !!body.modelId,
-          modelId: body.modelId,
-        },
-      });
-
-      const errorResponse: ChatErrorResponse = {
-        error: "Invalid request body",
-        details: parsedBody.error.issues.map((issue) => ({
-          path: issue.path.join("."),
-          message: issue.message,
-          code: issue.code,
-        })),
-      };
-
-      return NextResponse.json(errorResponse, { status: 400 });
+      return handleInvalidRequest(parsedBody.error, body, requestId);
     }
 
     const { messages, modelId } = parsedBody.data;
