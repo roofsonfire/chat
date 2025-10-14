@@ -1,4 +1,9 @@
-import { VertexAI, GenerateContentRequest, Part } from "@google-cloud/vertexai";
+import {
+  VertexAI,
+  GenerateContentRequest,
+  Part,
+  GenerativeModel,
+} from "@google-cloud/vertexai";
 import { Message } from "@/lib/types";
 import { env } from "@/lib/env";
 import { logger } from "../logger";
@@ -68,21 +73,36 @@ export class ChatService {
     return { contents };
   }
 
-  async stream(messages: Message[], modelId?: string) {
+  private _setupStream(
+    messages: Message[],
+    modelId?: string
+  ): {
+    generativeModel: GenerativeModel;
+    req: GenerateContentRequest;
+    selectedModelId: string;
+    messageCount: number;
+    hasImages: boolean;
+  } {
     const selectedModelId =
       modelId || env.GOOGLE_VERTEX_AI_MODEL_ID || DEFAULT_MODEL_ID;
-
-    logger.info("Starting chat stream", {
-      modelId: selectedModelId,
-      messageCount: messages.length,
-      hasImages: messages.some((m) => m.image),
-    });
-
     const generativeModel = this.vertexAI.getGenerativeModel({
       model: selectedModelId,
     });
-
     const req = this._prepareContentRequest(messages);
+    const messageCount = messages.length;
+    const hasImages = messages.some((m) => m.image);
+    return { generativeModel, req, selectedModelId, messageCount, hasImages };
+  }
+
+  async stream(messages: Message[], modelId?: string) {
+    const { generativeModel, req, selectedModelId, messageCount, hasImages } =
+      this._setupStream(messages, modelId);
+
+    logger.info("Starting chat stream", {
+      modelId: selectedModelId,
+      messageCount,
+      hasImages,
+    });
 
     logger.debug("Sending request to Vertex AI", {
       contentCount: req.contents.length,
@@ -97,8 +117,8 @@ export class ChatService {
       logger.error("Error streaming from Vertex AI", {
         error,
         modelId: selectedModelId,
-        messageCount: messages.length,
-        hasImages: messages.some((m) => m.image),
+        messageCount,
+        hasImages,
       });
       handleVertexAIError(error as Error, selectedModelId);
     }
@@ -108,20 +128,14 @@ export class ChatService {
     messages: Message[],
     modelId?: string
   ): Promise<ReadableStream> {
-    const selectedModelId =
-      modelId || env.GOOGLE_VERTEX_AI_MODEL_ID || DEFAULT_MODEL_ID;
+    const { generativeModel, req, selectedModelId, messageCount, hasImages } =
+      this._setupStream(messages, modelId);
 
     logger.info("Starting chat stream", {
       modelId: selectedModelId,
-      messageCount: messages.length,
-      hasImages: messages.some((m) => m.image),
+      messageCount,
+      hasImages,
     });
-
-    const generativeModel = this.vertexAI.getGenerativeModel({
-      model: selectedModelId,
-    });
-
-    const req = this._prepareContentRequest(messages);
 
     logger.debug("Sending request to Vertex AI", {
       contentCount: req.contents.length,
@@ -226,9 +240,9 @@ export class ChatService {
         },
       });
 
-      resp.response.catch((err) => {
+      resp.response.catch((err: unknown) => {
         logger.debug("Suppressed SDK aggregation error (expected)", {
-          errorMessage: err?.message || String(err),
+          errorMessage: (err as Error)?.message || String(err),
         });
       });
 
@@ -237,8 +251,8 @@ export class ChatService {
       logger.error("Error streaming from Vertex AI", {
         error,
         modelId: selectedModelId,
-        messageCount: messages.length,
-        hasImages: messages.some((m) => m.image),
+        messageCount,
+        hasImages,
       });
       handleVertexAIError(error as Error, selectedModelId);
     }
