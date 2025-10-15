@@ -2,14 +2,15 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ImageIcon, SendIcon, CloseIcon } from "@/components/ui/icons";
 import Image from "next/image";
 import { useImageUpload } from "@/lib/hooks/use-image-upload";
+import { Input } from "@/components/ui/input";
 
 interface MessageInputProps {
   input: string;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   isLoading: boolean;
   setImage: (image: string | null) => void;
@@ -80,14 +81,16 @@ export function MessageInput({
           onClick={() => fileInputRef.current?.click()}
           aria-label="Attach image"
           data-testid="attach-image-button"
+          className="text-muted-foreground absolute top-2.5 left-2 h-8 w-8"
         >
           <ImageIcon className="h-6 w-6" />
         </Button>
-        <Input
+        <Textarea
           value={input}
           onChange={handleInputChange}
           placeholder="Type a message..."
-          className="pr-12 pl-12"
+          className="resize-none pr-12 pl-12"
+          rows={1}
           disabled={isLoading}
           aria-label="Message input"
           data-testid="message-input"
@@ -95,7 +98,7 @@ export function MessageInput({
         <Button
           type="submit"
           size="icon"
-          className="absolute top-1/2 right-2 -translate-y-1/2"
+          className="absolute top-2.5 right-2 h-8 w-8"
           disabled={isLoading}
           aria-label="Send message"
           data-testid="send-message-button"
