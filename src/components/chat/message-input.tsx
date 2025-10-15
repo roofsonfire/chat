@@ -50,14 +50,15 @@ export function MessageInput({
       )}
       {imagePreview && (
         <div className="relative mb-4" data-testid="image-preview-container">
-          <Image
-            src={imagePreview}
-            alt="Uploaded image attached to chat message"
-            width={80}
-            height={80}
-            className="rounded-lg"
-            data-testid="image-preview"
-          />
+          <div className="relative h-20 w-20">
+            <Image
+              src={imagePreview}
+              alt="Uploaded image attached to chat message"
+              fill
+              className="rounded-lg object-cover"
+              data-testid="image-preview"
+            />
+          </div>
           <Button
             type="button"
             size="icon"

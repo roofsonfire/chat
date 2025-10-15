@@ -31,14 +31,15 @@ export function ChatMessage({ message }: ChatMessageProps) {
       >
         {/* User uploaded image (input) */}
         {isUser && (message as UserMessage).image && (
-          <Image
-            src={(message as UserMessage).image!}
-            alt="User uploaded content"
-            width={200}
-            height={200}
-            className="mb-2 rounded-lg"
-            data-testid="message-image"
-          />
+          <div className="relative mb-2 h-50 w-50">
+            <Image
+              src={(message as UserMessage).image!}
+              alt="User uploaded content"
+              fill
+              className="rounded-lg object-cover"
+              data-testid="message-image"
+            />
+          </div>
         )}
 
         {/* Message text */}
@@ -58,14 +59,15 @@ export function ChatMessage({ message }: ChatMessageProps) {
             <div className="mt-2 space-y-2" data-testid="generated-images">
               {(message as AssistantMessage).generatedImages!.map(
                 (img, idx) => (
-                  <div key={idx} className="group relative">
+                  <div
+                    key={idx}
+                    className="group relative h-100 w-100 max-w-[400px]"
+                  >
                     <Image
                       src={`data:${img.mimeType};base64,${img.data}`}
                       alt={`AI-generated image ${idx + 1}`}
-                      width={400}
-                      height={400}
-                      className="h-auto max-w-full rounded-lg"
-                      style={{ maxWidth: "400px" }}
+                      fill
+                      className="rounded-lg object-cover"
                       data-testid={`generated-image-${idx}`}
                     />
                     <Button
