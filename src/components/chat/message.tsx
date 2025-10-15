@@ -20,12 +20,17 @@ export function ChatMessage({ message }: ChatMessageProps) {
       aria-label={`${isUser ? "User" : "Assistant"} message`}
       data-testid={`message-${isUser ? "user" : "assistant"}`}
     >
+      {!isUser && (
+        <div className="bg-background flex h-8 w-8 shrink-0 items-center justify-center rounded-md border shadow-sm select-none">
+          🤖
+        </div>
+      )}
       <div
         className={cn(
-          "max-w-[80%] rounded-lg px-4 py-2",
+          "max-w-[80%] px-4 py-2 shadow-md",
           isUser
-            ? "bg-primary text-primary-foreground"
-            : "bg-muted text-muted-foreground"
+            ? "bg-primary text-primary-foreground rounded-t-xl rounded-bl-xl"
+            : "bg-muted text-muted-foreground rounded-t-xl rounded-br-xl"
         )}
         data-testid="message-content"
       >
