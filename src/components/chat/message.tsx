@@ -15,7 +15,10 @@ export function ChatMessage({ message }: ChatMessageProps) {
 
   return (
     <div
-      className={cn("flex items-start space-x-4", isUser ? "justify-end" : "")}
+      className={cn(
+        "my-4 flex items-start space-x-4",
+        isUser ? "justify-end" : ""
+      )}
       role="article"
       aria-label={`${isUser ? "User" : "Assistant"} message`}
       data-testid={`message-${isUser ? "user" : "assistant"}`}
