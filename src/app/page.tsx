@@ -1,5 +1,5 @@
-import { ChatMinimal } from "@/components/chat/chat.minimal";
+import { Chat } from "@/components/chat/chat";
 
 export default function Home() {
-  return <ChatMinimal />;
+  return <Chat />;
 }
