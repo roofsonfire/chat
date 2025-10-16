@@ -6,7 +6,10 @@ export function useChatErrorHandler() {
     error: unknown,
     setMessages: React.Dispatch<React.SetStateAction<Message[]>>
   ) => {
-    logger.error("Error fetching chat response", { error });
+    // Log error details for debugging (without console noise in development)
+    if (process.env.NODE_ENV === "development") {
+      console.debug("Chat API Error Details:", error);
+    }
 
     // Determine error type and provide appropriate user message
     let errorMessage =

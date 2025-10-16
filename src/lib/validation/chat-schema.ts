@@ -16,7 +16,12 @@ export const chatRequestSchema = z.object({
             .optional()
             .default(""),
           image: z.string().optional(),
-          timestamp: z.date().optional(),
+          timestamp: z
+            .union([z.date(), z.string()])
+            .optional()
+            .transform((val) =>
+              val ? (typeof val === "string" ? new Date(val) : val) : new Date()
+            ),
         })
         .refine(
           (data) => {
