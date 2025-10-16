@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface ChatMessageProps {
   message: Message;
@@ -25,9 +26,9 @@ export function ChatMessage({ message }: ChatMessageProps) {
       data-testid={`message-${isUser ? "user" : "assistant"}`}
     >
       {!isUser && (
-        <div className="bg-background flex h-8 w-8 shrink-0 items-center justify-center rounded-md border shadow-sm select-none">
-          🤖
-        </div>
+        <Avatar className="h-8 w-8">
+          <AvatarFallback>🤖</AvatarFallback>
+        </Avatar>
       )}
       <Card
         className={cn(

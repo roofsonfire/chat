@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 import { Message } from "@/lib/types";
 import { ChatMessage } from "./message";
-import { TypingIndicator } from "@/components/ui/typing-indicator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChatHistoryProps {
   messages: Message[];
@@ -42,8 +42,10 @@ export function ChatHistory({ messages, isLoading = false }: ChatHistoryProps) {
             className="flex items-start space-x-4"
             data-testid="loading-indicator"
           >
-            <div className="bg-muted text-muted-foreground rounded-lg px-4 py-2">
-              <TypingIndicator />
+            <Skeleton className="h-8 w-8 rounded-md" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
             </div>
           </div>
         )}

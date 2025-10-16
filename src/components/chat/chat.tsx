@@ -6,6 +6,7 @@ import { MessageInput } from "./message-input";
 import { ModelSelector } from "./model-selector";
 import { Sparkles } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export function Chat() {
   const {
@@ -38,6 +39,7 @@ export function Chat() {
           </div>
         </CardHeader>
       </Card>
+      <Separator className="my-4" />
       <div
         className="mx-auto max-w-3xl flex-1 pb-4"
         data-testid="chat-history-container"

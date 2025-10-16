@@ -7,6 +7,7 @@ import { ImageIcon, SendIcon, CloseIcon } from "@/components/ui/icons";
 import Image from "next/image";
 import { useImageUpload } from "@/lib/hooks/use-image-upload";
 import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface MessageInputProps {
   input: string;
@@ -42,12 +43,9 @@ export function MessageInput({
       data-testid="message-input-form"
     >
       {imageError && (
-        <div
-          className="bg-destructive/10 text-destructive mb-2 rounded-md p-2 text-sm"
-          data-testid="image-error"
-        >
-          {imageError}
-        </div>
+        <Alert variant="destructive" className="mb-2" data-testid="image-error">
+          <AlertDescription>{imageError}</AlertDescription>
+        </Alert>
       )}
       {imagePreview && (
         <div className="relative mb-4" data-testid="image-preview-container">
