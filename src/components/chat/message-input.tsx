@@ -81,7 +81,7 @@ export function MessageInput({
           onClick={() => fileInputRef.current?.click()}
           aria-label="Attach image"
           data-testid="attach-image-button"
-          className="text-muted-foreground absolute top-2.5 left-2 h-10 w-10 sm:h-8 sm:w-8"
+          className="text-muted-foreground hover:bg-accent absolute top-2.5 left-2 h-10 w-10 transition-all duration-200 hover:scale-110 sm:h-8 sm:w-8"
         >
           <ImageIcon className="h-6 w-6" />
         </Button>
@@ -98,7 +98,7 @@ export function MessageInput({
         <Button
           type="submit"
           size="icon"
-          className="absolute top-2.5 right-2 h-10 w-10 sm:h-8 sm:w-8"
+          className="hover:bg-primary/90 absolute top-2.5 right-2 h-10 w-10 transition-all duration-200 hover:scale-110 sm:h-8 sm:w-8"
           disabled={isLoading}
           aria-label="Send message"
           data-testid="send-message-button"

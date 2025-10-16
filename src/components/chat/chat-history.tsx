@@ -41,7 +41,7 @@ export function ChatHistory({ messages, isLoading = false }: ChatHistoryProps) {
           data-testid="loading-indicator"
         >
           <div className="bg-muted text-muted-foreground rounded-lg px-4 py-2">
-            <TypingIndicator size="sm" />
+            <TypingIndicator />
           </div>
         </div>
       )}
