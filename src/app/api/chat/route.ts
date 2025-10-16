@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { ChatService } from "@/lib/services/chat-service";
 import { chatRequestSchema } from "@/lib/validation/chat-schema";
 import { logger } from "@/lib/logger";
-import type { ChatErrorResponse } from "@/lib/types";
+import type { ChatErrorResponse, Message } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +84,12 @@ export async function POST(req: NextRequest) {
 
     const { messages, modelId } = parsedBody.data;
 
+    // Add timestamps to messages if missing (for backward compatibility)
+    const messagesWithTimestamps: Message[] = messages.map((msg) => ({
+      ...msg,
+      timestamp: new Date(),
+    }));
+
     logger.info("Processing validated chat request", {
       requestId,
       messageCount: messages.length,
@@ -95,10 +101,9 @@ export async function POST(req: NextRequest) {
 
     logger.debug("Starting stream generation", { requestId });
     const readableStream = await chatService.streamToReadable(
-      messages,
+      messagesWithTimestamps,
       modelId
     );
-
     logger.info("Returning streaming response", { requestId });
     return new Response(readableStream, {
       headers: {
