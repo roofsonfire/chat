@@ -10,6 +10,12 @@ import {
 import { useAvailableModels } from "@/lib/hooks/use-available-models";
 import { VERTEX_AI_MODELS } from "@/lib/constants/vertex-ai-models";
 import { ImageIcon } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ModelSelectorProps {
   selectedModel: string;
@@ -26,9 +32,6 @@ export function ModelSelector({
 
   return (
     <div className="flex items-center gap-2">
-      <label htmlFor="model-select" className="text-sm font-medium">
-        Model:
-      </label>
       <Select
         value={selectedModel}
         onValueChange={onModelChange}
@@ -55,9 +58,27 @@ export function ModelSelector({
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{model.name}</span>
                     {canGenerateImages && (
-                      <span title="Can generate images">
-                        <ImageIcon className="h-3 w-3 text-purple-500" />
-                      </span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span title="Can generate images">
+                                    <ImageIcon className="h-3 w-3 text-purple-500" />
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Can generate images</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            This model can generate images.
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     )}
                   </div>
                   <span className="text-muted-foreground text-xs">
