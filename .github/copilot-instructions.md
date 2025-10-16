@@ -41,7 +41,7 @@ This is a production-grade chat application built with Next.js 15, TypeScript, a
 - **Zod** for runtime validation
 - **bcrypt** for password hashing
 - **rate-limiter-flexible** for rate limiting
-- **shadcn/ui** with Radix UI components
+- **shadcn/ui v4** with complete Radix UI component library (Button, Card, Input, Dialog, Tabs, ScrollArea, Select, Tooltip, DropdownMenu, Sheet)
 - **lucide-react** for icons
 
 ### Testing & Quality
@@ -64,7 +64,20 @@ src/
 │   ├── layout.tsx         # Root layout with providers
 │   └── page.tsx           # Home page
 ├── components/            # React components
-│   ├── ui/                # shadcn/ui base components
+│   ├── ui/                # Complete shadcn/ui v4 component library
+│   │   ├── button.tsx     # Button component with variants
+│   │   ├── card.tsx       # Card components (Card, CardHeader, CardTitle, etc.)
+│   │   ├── input.tsx      # Input component
+│   │   ├── textarea.tsx   # Textarea component
+│   │   ├── label.tsx      # Label component
+│   │   ├── select.tsx     # Select dropdown components
+│   │   ├── dialog.tsx     # Modal dialog components
+│   │   ├── tabs.tsx       # Tab navigation components
+│   │   ├── scroll-area.tsx # Custom scrollbar component
+│   │   ├── tooltip.tsx    # Tooltip components
+│   │   ├── dropdown-menu.tsx # Dropdown menu components
+│   │   ├── sheet.tsx      # Slide-out panel components
+│   │   └── [other components...]
 │   ├── chat/              # Chat-specific components
 │   └── auth/              # Authentication components
 ├── lib/                   # Core utilities and services
@@ -193,14 +206,20 @@ export function ChatMessage({ message, role, timestamp }: ChatMessageProps) {
 - Add comprehensive error handling
 - Return consistent response structures
 
-### Security
+### UI Component Library (shadcn/ui v4)
 
-- **Middleware security headers**: X-Frame-Options, CSP, HSTS, etc.
-- **Rate limiting**: 5 requests per 10 seconds per IP
-- **Input validation**: Zod schemas for all external data
-- **Password hashing**: bcrypt with salt rounds
-- **Environment variables**: Validated with Zod on startup
-- **No sensitive data in logs**: Sanitize before logging
+- **Complete shadcn/ui v4 implementation** with modern `data-slot` attributes
+- **All components follow accessibility standards** and WCAG guidelines
+- **Consistent theming** with CSS variables and Tailwind CSS
+- **TypeScript-first** with proper type definitions
+- **Available components**: Button, Card, Input, Textarea, Label, Select, Dialog, Tabs, ScrollArea, Tooltip, DropdownMenu, Sheet
+
+### Recent Updates
+
+- **October 2025**: Completed repository-wide shadcn/ui migration to v4 patterns
+- Added missing components (DropdownMenu, Sheet) for complete UI library
+- Updated all existing components with modern `data-slot` attributes
+- Maintained backward compatibility and accessibility standards
 
 ## Testing Guidelines
 
@@ -410,6 +429,7 @@ export default async function Page() {
 8. **Consider security** implications
 9. **Optimize for performance** (Server Components, streaming, etc.)
 10. **Ensure accessibility** in UI components
+11. **Use shadcn/ui v4 components** - All components have been migrated to modern patterns with `data-slot` attributes
 
 ## Specific Guidance
 
@@ -431,11 +451,14 @@ export default async function Page() {
 
 ### When working with UI Components:
 
-- Use shadcn/ui components as base
-- Extend with Tailwind CSS utilities
-- Ensure responsive design (mobile-first)
-- Add loading and error states
-- Test accessibility with Playwright
+- Use **shadcn/ui v4 components** as the foundation for all UI elements
+- All components include modern `data-slot` attributes for proper styling
+- **Available components**: Button, Card, Input, Textarea, Label, Select, Dialog, Tabs, ScrollArea, Tooltip, DropdownMenu, Sheet
+- Extend with Tailwind CSS utilities for custom styling
+- Ensure responsive design (mobile-first approach)
+- Add loading and error states using existing patterns
+- Test accessibility with Playwright axe-core integration
+- Follow established component patterns and TypeScript conventions
 
 ### When working with API Routes:
 
