@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Message } from "@/lib/types";
 import { ChatMessage } from "./message";
-import { Spinner } from "@/components/ui/spinner";
+import { TypingIndicator } from "@/components/ui/typing-indicator";
 
 interface ChatHistoryProps {
   messages: Message[];
@@ -41,7 +41,7 @@ export function ChatHistory({ messages, isLoading = false }: ChatHistoryProps) {
           data-testid="loading-indicator"
         >
           <div className="bg-muted text-muted-foreground rounded-lg px-4 py-2">
-            <Spinner size="sm" />
+            <TypingIndicator size="sm" />
           </div>
         </div>
       )}
