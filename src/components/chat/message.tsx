@@ -64,7 +64,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         )}
 
         <div className="text-muted-foreground mt-1 text-xs">
-          {new Date(message.timestamp).toLocaleTimeString([], {
+          {message.timestamp.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}
