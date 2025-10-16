@@ -120,8 +120,40 @@ export async function POST(req: NextRequest) {
       errorMessage: error instanceof Error ? error.message : String(error),
     });
 
+    // Provide more specific error messages based on error type
+    let errorMessage = "Internal server error";
+
+    if (error instanceof Error) {
+      const errorString = error.message.toLowerCase();
+
+      if (
+        errorString.includes("permission") ||
+        errorString.includes("unauthorized")
+      ) {
+        errorMessage =
+          "Authentication failed. Please check your Google Cloud credentials.";
+      } else if (
+        errorString.includes("quota") ||
+        errorString.includes("limit")
+      ) {
+        errorMessage = "API quota exceeded. Please try again later.";
+      } else if (
+        errorString.includes("network") ||
+        errorString.includes("timeout")
+      ) {
+        errorMessage =
+          "Network error. Please check your connection and try again.";
+      } else if (
+        errorString.includes("model") &&
+        errorString.includes("not found")
+      ) {
+        errorMessage =
+          "The requested AI model is not available. Please try a different model.";
+      }
+    }
+
     const errorResponse: ChatErrorResponse = {
-      error: "Internal server error",
+      error: errorMessage,
     };
 
     return NextResponse.json(errorResponse, { status: 500 });

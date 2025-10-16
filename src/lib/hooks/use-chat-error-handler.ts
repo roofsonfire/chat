@@ -8,15 +8,41 @@ export function useChatErrorHandler() {
   ) => {
     logger.error("Error fetching chat response", { error });
 
+    // Determine error type and provide appropriate user message
+    let errorMessage =
+      "Sorry, I encountered an error processing your request. Please try again.";
+
+    if (error instanceof Error) {
+      const errorString = error.message.toLowerCase();
+
+      if (errorString.includes("rate limit") || errorString.includes("429")) {
+        errorMessage =
+          "I'm receiving too many requests right now. Please wait a moment and try again.";
+      } else if (
+        errorString.includes("network") ||
+        errorString.includes("fetch")
+      ) {
+        errorMessage =
+          "There seems to be a connection issue. Please check your internet connection and try again.";
+      } else if (
+        errorString.includes("unauthorized") ||
+        errorString.includes("403")
+      ) {
+        errorMessage =
+          "There appears to be an authentication issue. Please refresh the page and try again.";
+      } else if (errorString.includes("timeout")) {
+        errorMessage = "The request timed out. Please try again.";
+      }
+    }
+
     // Add error message to chat for user feedback
-    const errorMessage: Message = {
+    const errorMessageObj: Message = {
       role: "assistant",
-      content:
-        "Sorry, I encountered an error processing your request. Please try again.",
+      content: errorMessage,
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, errorMessage]);
+    setMessages((prev) => [...prev, errorMessageObj]);
   };
 
   return {
