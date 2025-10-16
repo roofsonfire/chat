@@ -1,5 +1,4 @@
 import { Message } from "@/lib/types";
-import { logger } from "../logger";
 
 export function useChatErrorHandler() {
   const handleChatError = (
