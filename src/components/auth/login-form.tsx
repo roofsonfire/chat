@@ -1,4 +1,5 @@
 "use client";
+import { env } from "@/lib/env";
 
 import * as React from "react";
 import { signIn } from "next-auth/react";
@@ -19,8 +20,7 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
     React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
-  const showTestCredentials =
-    process.env.NEXT_PUBLIC_ENABLE_TEST_CREDENTIALS === "true";
+  const showTestCredentials = env.ENABLE_TEST_CREDENTIALS === "true";
 
   const handleGoogleLogin = async () => {
     try {
