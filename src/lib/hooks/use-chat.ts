@@ -30,6 +30,7 @@ export function useChat() {
     const userMessage: Message = {
       role: "user",
       content: input,
+      timestamp: new Date(),
       ...(image && { image }),
     };
     setMessages((prev) => [...prev, userMessage]);

@@ -72,6 +72,7 @@ export function useStreamingParser() {
             (generatedImages.length > 0
               ? "I've generated an image for you."
               : ""),
+          timestamp: new Date(),
           generatedImages:
             generatedImages.length > 0 ? [...generatedImages] : undefined,
         };
