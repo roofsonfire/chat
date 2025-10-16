@@ -13,6 +13,7 @@ export function useChatErrorHandler() {
       role: "assistant",
       content:
         "Sorry, I encountered an error processing your request. Please try again.",
+      timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, errorMessage]);
