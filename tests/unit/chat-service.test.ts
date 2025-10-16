@@ -59,7 +59,9 @@ describe("ChatService", () => {
     );
 
     const chatService = new ChatService();
-    const messages = [{ role: "user" as const, content: "Hello" }];
+    const messages = [
+      { role: "user" as const, content: "Hello", timestamp: new Date() },
+    ];
 
     await chatService.stream(messages);
 
@@ -82,7 +84,9 @@ describe("ChatService", () => {
     );
 
     const chatService = new ChatService();
-    const messages = [{ role: "user" as const, content: "Hello" }];
+    const messages = [
+      { role: "user" as const, content: "Hello", timestamp: new Date() },
+    ];
 
     await chatService.stream(messages);
 
@@ -115,11 +119,22 @@ describe("ChatService", () => {
 
     const chatService = new ChatService();
     const messages = [
-      { role: "user" as const, content: "First message" },
-      { role: "assistant" as const, content: "Response" },
-      { role: "user" as const, content: "Second message" },
+      {
+        role: "user" as const,
+        content: "First message",
+        timestamp: new Date(),
+      },
+      {
+        role: "assistant" as const,
+        content: "Response",
+        timestamp: new Date(),
+      },
+      {
+        role: "user" as const,
+        content: "Second message",
+        timestamp: new Date(),
+      },
     ];
-
     await chatService.stream(messages);
 
     expect(capturedRequest.contents).toHaveLength(3);
@@ -161,6 +176,7 @@ describe("ChatService", () => {
         role: "user" as const,
         content: "What's this?",
         image: "data:image/jpeg;base64,/9j/4AAQSkZJRg==",
+        timestamp: new Date(),
       },
     ];
 
@@ -195,7 +211,9 @@ describe("ChatService", () => {
     );
 
     const chatService = new ChatService();
-    const messages = [{ role: "user" as const, content: "Hello" }];
+    const messages = [
+      { role: "user" as const, content: "Hello", timestamp: new Date() },
+    ];
 
     await chatService.stream(messages, "gemini-1.5-pro-002");
 
@@ -221,7 +239,9 @@ describe("ChatService", () => {
     );
 
     const chatService = new ChatService();
-    const messages = [{ role: "user" as const, content: "Hello" }];
+    const messages = [
+      { role: "user" as const, content: "Hello", timestamp: new Date() },
+    ];
 
     await chatService.stream(messages);
 
