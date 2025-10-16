@@ -18,6 +18,8 @@ export interface BaseMessage {
   role: "user" | "assistant";
   /** The text content of the message */
   content: string;
+  /** The timestamp of the message */
+  timestamp: Date;
 }
 
 /**
