@@ -38,7 +38,7 @@ export function MessageInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-background border-t p-4"
+      className="bg-background border-t p-4 sm:p-6"
       data-testid="message-input-form"
     >
       {imageError && (
@@ -81,7 +81,7 @@ export function MessageInput({
           onClick={() => fileInputRef.current?.click()}
           aria-label="Attach image"
           data-testid="attach-image-button"
-          className="text-muted-foreground absolute top-2.5 left-2 h-8 w-8"
+          className="text-muted-foreground absolute top-2.5 left-2 h-10 w-10 sm:h-8 sm:w-8"
         >
           <ImageIcon className="h-6 w-6" />
         </Button>
@@ -89,7 +89,7 @@ export function MessageInput({
           value={input}
           onChange={handleInputChange}
           placeholder="Type a message..."
-          className="resize-none pr-12 pl-12"
+          className="min-h-[40px] resize-none pr-14 pl-14 text-base sm:pr-12 sm:pl-12"
           rows={1}
           disabled={isLoading}
           aria-label="Message input"
@@ -98,7 +98,7 @@ export function MessageInput({
         <Button
           type="submit"
           size="icon"
-          className="absolute top-2.5 right-2 h-8 w-8"
+          className="absolute top-2.5 right-2 h-10 w-10 sm:h-8 sm:w-8"
           disabled={isLoading}
           aria-label="Send message"
           data-testid="send-message-button"
