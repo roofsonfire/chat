@@ -53,12 +53,22 @@ export function ChatMessage({ message }: ChatMessageProps) {
         {/* Message text */}
         {message.content && (
           <p
-            className="break-words whitespace-pre-wrap"
+            className={cn(
+              "leading-relaxed break-words whitespace-pre-wrap",
+              isUser ? "font-medium" : "font-normal"
+            )}
             data-testid="message-text"
           >
             {message.content}
           </p>
         )}
+
+        <div className="text-muted-foreground mt-1 text-xs">
+          {new Date(message.timestamp).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </div>
 
         {/* AI-generated images (output) */}
         {!isUser &&
