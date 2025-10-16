@@ -16,6 +16,7 @@ export const chatRequestSchema = z.object({
             .optional()
             .default(""),
           image: z.string().optional(),
+          timestamp: z.date().optional(),
         })
         .refine(
           (data) => {

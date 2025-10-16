@@ -9,10 +9,9 @@ export function useChatState() {
   const [image, setImage] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
   };
-
   return {
     messages,
     setMessages,
