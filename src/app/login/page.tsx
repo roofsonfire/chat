@@ -1,3 +1,4 @@
+import { env } from "@/lib/env";
 import {
   Card,
   CardContent,
@@ -8,8 +9,7 @@ import {
 import { LoginForm } from "@/components/auth/login-form";
 
 export default function LoginPage() {
-  const enableTestCredentials =
-    process.env.NEXT_PUBLIC_ENABLE_TEST_CREDENTIALS === "true";
+  const enableTestCredentials = env.ENABLE_TEST_CREDENTIALS === "true";
 
   return (
     <div className="flex min-h-screen items-center justify-center">
