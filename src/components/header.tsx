@@ -1,4 +1,12 @@
 import { Bot } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface HeaderProps {
   selectedModel?: string;
@@ -7,25 +15,26 @@ interface HeaderProps {
 
 export function Header({ selectedModel, onModelChange }: HeaderProps) {
   return (
-    <header className="border-muted bg-background border-b p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Bot className="text-accent h-6 w-6" />
-          <h1 className="text-foreground text-xl font-semibold">
-            AI Assistant
-          </h1>
-        </div>
-        {selectedModel && onModelChange && (
-          <select
-            value={selectedModel}
-            onChange={(e) => onModelChange(e.target.value)}
-            className="border-muted bg-background text-foreground rounded-md border px-2 py-1"
-          >
-            <option value="gemini-1.5-flash">Flash</option>
-            <option value="gemini-1.5-pro">Pro</option>
-          </select>
-        )}
-      </div>
-    </header>
+    <Card>
+      <CardHeader>
+        <CardContent className="flex items-center justify-between p-0">
+          <div className="flex items-center gap-4">
+            <Bot className="text-accent h-6 w-6" />
+            <CardTitle className="text-xl">AI Assistant</CardTitle>
+          </div>
+          {selectedModel && onModelChange && (
+            <Select value={selectedModel} onValueChange={onModelChange}>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gemini-1.5-flash">Flash</SelectItem>
+                <SelectItem value="gemini-1.5-pro">Pro</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        </CardContent>
+      </CardHeader>
+    </Card>
   );
 }

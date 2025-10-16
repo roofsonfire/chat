@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { Message } from "@/lib/types";
 import { ChatMessage } from "./message";
 import { TypingIndicator } from "@/components/ui/typing-indicator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ChatHistoryProps {
   messages: Message[];
@@ -31,21 +32,23 @@ export function ChatHistory({ messages, isLoading = false }: ChatHistoryProps) {
   }
 
   return (
-    <div className="space-y-4 p-4" data-testid="chat-messages">
-      {messages.map((message, index) => (
-        <ChatMessage key={index} message={message} />
-      ))}
-      {isLoading && (
-        <div
-          className="flex items-start space-x-4"
-          data-testid="loading-indicator"
-        >
-          <div className="bg-muted text-muted-foreground rounded-lg px-4 py-2">
-            <TypingIndicator />
+    <ScrollArea className="h-full">
+      <div className="space-y-4 p-4" data-testid="chat-messages">
+        {messages.map((message, index) => (
+          <ChatMessage key={index} message={message} />
+        ))}
+        {isLoading && (
+          <div
+            className="flex items-start space-x-4"
+            data-testid="loading-indicator"
+          >
+            <div className="bg-muted text-muted-foreground rounded-lg px-4 py-2">
+              <TypingIndicator />
+            </div>
           </div>
-        </div>
-      )}
-      <div ref={bottomRef} />
-    </div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+    </ScrollArea>
   );
 }

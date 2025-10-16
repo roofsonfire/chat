@@ -11,6 +11,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         type={type}
         className={cn("input-base", className)}
         ref={ref}
+        data-slot="input"
         {...props}
       />
     );

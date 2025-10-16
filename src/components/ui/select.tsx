@@ -22,6 +22,7 @@ const SelectTrigger = React.forwardRef<
       "border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:ring-ring flex h-10 w-full items-center justify-between rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className
     )}
+    data-slot="select-trigger"
     {...props}
   >
     {children}
@@ -81,6 +82,7 @@ const SelectContent = React.forwardRef<
         className
       )}
       position={position}
+      data-slot="select-content"
       {...props}
     >
       <SelectScrollUpButton />
@@ -106,6 +108,7 @@ const SelectLabel = React.forwardRef<
   <SelectPrimitive.Label
     ref={ref}
     className={cn("py-1.5 pr-2 pl-8 text-sm font-semibold", className)}
+    data-slot="select-label"
     {...props}
   />
 ));
@@ -121,6 +124,7 @@ const SelectItem = React.forwardRef<
       "focus:bg-accent focus:text-accent-foreground relative flex w-full cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
+    data-slot="select-item"
     {...props}
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -141,6 +145,7 @@ const SelectSeparator = React.forwardRef<
   <SelectPrimitive.Separator
     ref={ref}
     className={cn("bg-muted -mx-1 my-1 h-px", className)}
+    data-slot="select-separator"
     {...props}
   />
 ));
