@@ -16,7 +16,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
   return (
     <div
       className={cn(
-        "my-4 flex items-start space-x-4",
+        "animate-in fade-in slide-in-from-bottom-4 my-4 flex items-start space-x-4 duration-500",
         isUser ? "justify-end" : ""
       )}
       role="article"
@@ -30,7 +30,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       )}
       <div
         className={cn(
-          "max-w-[80%] px-4 py-2 shadow-md",
+          "max-w-[80%] px-4 py-2 shadow-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg",
           isUser
             ? "bg-primary text-primary-foreground rounded-t-xl rounded-bl-xl"
             : "bg-muted text-muted-foreground rounded-t-xl rounded-br-xl"
