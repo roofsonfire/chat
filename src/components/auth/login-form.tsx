@@ -1,5 +1,4 @@
 "use client";
-import { env } from "@/lib/env";
 
 import * as React from "react";
 import { signIn } from "next-auth/react";
@@ -13,9 +12,15 @@ import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 
-type LoginFormProps = React.HTMLAttributes<HTMLDivElement>;
+type LoginFormProps = React.HTMLAttributes<HTMLDivElement> & {
+  enableTestCredentials?: boolean;
+};
 
-export function LoginForm({ className, ...props }: LoginFormProps) {
+export function LoginForm({
+  className,
+  enableTestCredentials = false,
+  ...props
+}: LoginFormProps) {
   const router = useRouter();
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false);
   const [isCredentialsLoading, setIsCredentialsLoading] =
@@ -24,7 +29,7 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
   const [password, setPassword] = React.useState<string>("");
   const [rememberMe, setRememberMe] = React.useState<boolean>(false);
   const [acceptTerms, setAcceptTerms] = React.useState<boolean>(false);
-  const showTestCredentials = env.ENABLE_TEST_CREDENTIALS === "true";
+  const showTestCredentials = enableTestCredentials;
 
   const handleGoogleLogin = async () => {
     try {

@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useImageUpload } from "@/lib/hooks/use-image-upload";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
 
 interface MessageInputProps {
   input: string;
@@ -27,9 +28,36 @@ export function MessageInput({
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const { imagePreview, imageError, handleImageChange, removeImage } =
     useImageUpload();
+  const [uploadProgress, setUploadProgress] = React.useState(0);
+  const [isUploading, setIsUploading] = React.useState(false);
 
-  const handleImageChangeWrapper = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleImageChange(e, setImage);
+  const handleImageChangeWrapper = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    // Simulate upload progress
+    const progressInterval = setInterval(() => {
+      setUploadProgress((prev) => {
+        if (prev >= 90) {
+          clearInterval(progressInterval);
+          return 90;
+        }
+        return prev + 10;
+      });
+    }, 100);
+
+    try {
+      await handleImageChange(e, setImage);
+      setUploadProgress(100);
+      setTimeout(() => setIsUploading(false), 500);
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      clearInterval(progressInterval);
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
   };
 
   const handleRemoveImage = () => {
@@ -46,6 +74,15 @@ export function MessageInput({
         <Alert variant="destructive" className="mb-2" data-testid="image-error">
           <AlertDescription>{imageError}</AlertDescription>
         </Alert>
+      )}
+      {isUploading && (
+        <div className="mb-2">
+          <div className="text-muted-foreground mb-1 flex items-center justify-between text-sm">
+            <span>Uploading image...</span>
+            <span>{uploadProgress}%</span>
+          </div>
+          <Progress value={uploadProgress} className="h-2" />
+        </div>
       )}
       {imagePreview && (
         <div className="relative mb-4" data-testid="image-preview-container">
