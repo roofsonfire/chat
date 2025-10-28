@@ -190,7 +190,7 @@ gcloud secrets delete nextauth-secret
 
 ## 📝 Comandos Útiles
 
-### Listar todos los servicios
+### Listar los servicios
 
 ```bash
 gcloud run services list --region us-central1

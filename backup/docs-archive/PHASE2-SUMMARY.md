@@ -147,7 +147,6 @@ This document summarizes all improvements implemented in Phase 2 of the autonomo
 
 #### Features:
 
-- **Auto-Documentation**: `autodocs` tag generates prop tables
 - **Interactive Controls**: Modify props in real-time
 - **Accessibility Testing**: @storybook/addon-a11y integration
 - **Component Testing**: @storybook/addon-vitest for testing stories

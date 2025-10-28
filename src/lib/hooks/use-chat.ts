@@ -1,8 +1,11 @@
+"use client";
+
 import { Message } from "@/lib/types";
 import { useChatState } from "./use-chat-state";
 import { useChatAPI } from "./use-chat-api";
 import { useStreamingParser } from "./use-streaming-parser";
 import { useChatErrorHandler } from "./use-chat-error-handler";
+import { logger } from "@/lib/logger";
 
 export function useChat() {
   const {
@@ -18,6 +21,8 @@ export function useChat() {
     selectedModel,
     setSelectedModel,
   } = useChatState();
+
+  logger.info("useChat", { messages, input, isLoading, image, selectedModel });
 
   const { sendChatRequest } = useChatAPI();
   const { parseStream } = useStreamingParser();

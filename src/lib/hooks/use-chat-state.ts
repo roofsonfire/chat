@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Message } from "@/lib/types";
 import { DEFAULT_MODEL_ID } from "@/lib/constants/vertex-ai-models";

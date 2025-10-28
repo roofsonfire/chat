@@ -129,7 +129,7 @@ Enhanced 4 chat components with `data-testid` attributes for reliable testing:
 ### 5. Error Handling (3 tests)
 
 - API error graceful handling
-- Invalid image file validation (skipped - TODO)
+- Invalid image file validation (skipped)
 - Empty message prevention
 
 ### 6. Chat History Behavior (2 tests)

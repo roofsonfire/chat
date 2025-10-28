@@ -144,7 +144,7 @@ export function Chat() {
                 </div>
               </ResizablePanel>
               <ResizableHandle withHandle />
-              <ResizablePanel defaultSize={25} minSize={15}>
+              <ResizablePanel defaultSize={45} minSize={15}>
                 <div className="flex h-full items-end">
                   <MessageInput
                     input={input}

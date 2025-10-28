@@ -12,15 +12,18 @@ import { logger } from "@/lib/logger";
 async function handleSignIn({
   user,
   account,
+  profile,
 }: {
   user: User;
   account: Account | null;
+  profile?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }) {
   logger.info("[NextAuth][signIn] Callback triggered", {
     userEmail: user?.email,
     provider: account?.provider,
     allowlist,
     isInAllowlist: user?.email ? allowlist.includes(user.email) : false,
+    profile,
   });
 
   if (!user?.email) {
@@ -42,11 +45,25 @@ async function handleSignIn({
   return true;
 }
 
-async function populateJwt({ token, user }: { token: JWT; user?: User }) {
+async function populateJwt({
+  token,
+  user,
+  account,
+  profile,
+}: {
+  token: JWT;
+  user?: User;
+  account?: Account | null;
+  profile?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+}) {
   logger.info("[NextAuth][jwt] Callback triggered", {
     hasToken: !!token,
     hasUser: !!user,
     userEmail: user?.email || token?.email,
+    token: JSON.stringify(token, null, 2),
+    user: JSON.stringify(user, null, 2),
+    account: JSON.stringify(account, null, 2),
+    profile: JSON.stringify(profile, null, 2),
   });
 
   if (user) {
@@ -60,15 +77,20 @@ async function populateJwt({ token, user }: { token: JWT; user?: User }) {
 async function createSession({
   session,
   token,
+  user,
 }: {
   session: Session;
   token: JWT;
+  user: User;
 }) {
   logger.info("[NextAuth][session] Callback triggered", {
     hasSession: !!session,
     hasToken: !!token,
     sessionUserEmail: session?.user?.email,
     tokenEmail: token?.email,
+    session: JSON.stringify(session, null, 2),
+    token: JSON.stringify(token, null, 2),
+    user: JSON.stringify(user, null, 2),
   });
 
   if (token?.email && session.user) {
@@ -102,7 +124,16 @@ if (env.ENABLE_TEST_CREDENTIALS === "true") {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        return validateCredentials(credentials ?? undefined);
+        logger.info("[NextAuth][authorize] Credentials provided", {
+          credentials: JSON.stringify(credentials, null, 2),
+        });
+        const validatedUser = await validateCredentials(
+          credentials ?? undefined
+        );
+        logger.info("[NextAuth][authorize] Credentials validation result", {
+          validatedUser: JSON.stringify(validatedUser, null, 2),
+        });
+        return validatedUser;
       },
     })
   );
