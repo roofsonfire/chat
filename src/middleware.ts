@@ -55,65 +55,50 @@ export async function middleware(req: NextRequest) {
     method: req.method,
     ip: req.ip,
   });
-  try {
-    const csrfResponse = handleCsrf(req);
-    if (csrfResponse) {
-      logger.warn("middleware: CSRF check failed, returning 403");
-      return csrfResponse;
-    }
 
-    const rateLimitResult = await rateLimitMiddleware(req);
-    if (rateLimitResult instanceof NextResponse) {
-      logger.warn("middleware: Rate limit exceeded, returning 429");
-      return rateLimitResult;
-    }
-
-    const authResponse = await authMiddleware(req);
-    if (authResponse) {
-      logger.info("middleware: Auth middleware returned a response");
-      return authResponse;
-    }
-
-    const response = NextResponse.next();
-    logger.debug("middleware: NextResponse.next() called");
-
-    const isChatAPI = req.nextUrl.pathname.startsWith("/api/chat");
-    const limit = isChatAPI ? 3 : 10; // CHAT_API_RATE_LIMIT_REQUESTS : RATE_LIMIT_REQUESTS
-    logger.debug("middleware: Rate limit details", {
-      isChatAPI,
-      limit,
-      remaining: rateLimitResult.remainingPoints,
-    });
-
-    response.headers.set("X-RateLimit-Limit", limit.toString());
-    response.headers.set(
-      "X-RateLimit-Remaining",
-      rateLimitResult.remainingPoints.toString()
-    );
-    response.headers.set(
-      "X-RateLimit-Reset",
-      (Date.now() + rateLimitResult.msBeforeNext).toString()
-    );
-    logger.debug("middleware: Rate limit headers set");
-
-    const finalResponse = securityHeadersMiddleware(response);
-    logger.info("middleware: Request processed successfully");
-    return finalResponse;
-  } catch (error) {
-    logger.error("Middleware error", {
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
-      errorStack: error instanceof Error ? error.stack : undefined,
-      errorName: error instanceof Error ? error.name : undefined,
-      errorObject: JSON.stringify(error, null, 2),
-      path: req.nextUrl.pathname,
-    });
-
-    const errorUrl = new URL("/middleware-error", req.url);
-    logger.info("middleware: Redirecting to error page", {
-      errorUrl: errorUrl.toString(),
-    });
-    return NextResponse.redirect(errorUrl);
+  const csrfResponse = handleCsrf(req);
+  if (csrfResponse) {
+    logger.warn("middleware: CSRF check failed, returning 403");
+    return csrfResponse;
   }
+
+  const rateLimitResult = await rateLimitMiddleware(req);
+  if (rateLimitResult instanceof NextResponse) {
+    logger.warn("middleware: Rate limit exceeded, returning 429");
+    return rateLimitResult;
+  }
+
+  const authResponse = await authMiddleware(req);
+  if (authResponse) {
+    logger.info("middleware: Auth middleware returned a response");
+    return authResponse;
+  }
+
+  const response = NextResponse.next();
+  logger.debug("middleware: NextResponse.next() called");
+
+  const isChatAPI = req.nextUrl.pathname.startsWith("/api/chat");
+  const limit = isChatAPI ? 3 : 10; // CHAT_API_RATE_LIMIT_REQUESTS : RATE_LIMIT_REQUESTS
+  logger.debug("middleware: Rate limit details", {
+    isChatAPI,
+    limit,
+    remaining: rateLimitResult.remainingPoints,
+  });
+
+  response.headers.set("X-RateLimit-Limit", limit.toString());
+  response.headers.set(
+    "X-RateLimit-Remaining",
+    rateLimitResult.remainingPoints.toString()
+  );
+  response.headers.set(
+    "X-RateLimit-Reset",
+    (Date.now() + rateLimitResult.msBeforeNext).toString()
+  );
+  logger.debug("middleware: Rate limit headers set");
+
+  const finalResponse = securityHeadersMiddleware(response);
+  logger.info("middleware: Request processed successfully");
+  return finalResponse;
 }
 
 export const config = {

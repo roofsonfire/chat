@@ -44,6 +44,26 @@ export default defineConfig({
           },
         },
       },
+      // Integration tests project
+      {
+        plugins: [react()],
+        resolve: {
+          alias: {
+            "@": path.resolve(dirname, "./src"),
+          },
+        },
+        test: {
+          name: "integration",
+          globals: true,
+          environment: "jsdom",
+          setupFiles: ["./tests/setup.ts"],
+          include: ["tests/integration/**/*.spec.ts"],
+          exclude: ["**/node_modules/**", "**/dist/**"],
+          env: {
+            NODE_ENV: "development",
+          },
+        },
+      },
       // Storybook tests project
       {
         plugins: [
