@@ -6,28 +6,6 @@ This document summarizes all improvements and bug fixes made to the chat applica
 
 ## Issues Resolved
 
-### 1. ✅ Complete E2E Testing Infrastructure (Playwright)
-
-**Problem:** README claimed E2E testing with Playwright existed, but no test infrastructure was set up.
-
-**Solution:**
-
-- Installed `@playwright/test` package
-- Created `playwright.config.ts` with comprehensive configuration
-- Added three test suites:
-  - `tests/e2e/auth.spec.ts` - Authentication flow tests
-  - `tests/e2e/home.spec.ts` - Home page tests
-  - `tests/e2e/accessibility.spec.ts` - Accessibility tests
-- Added test scripts to `package.json`:
-  - `test:e2e` - Run tests
-  - `test:e2e:ui` - Interactive UI mode
-  - `test:e2e:debug` - Debug mode
-- Updated `.gitignore` with Playwright directories
-
-**Impact:** Enables automated testing of critical user flows and accessibility compliance.
-
----
-
 ### 2. ✅ Enhanced Environment Variable Validation
 
 **Problem:** `env.ts` would crash with cryptic Zod errors when environment variables were missing or invalid.
@@ -251,10 +229,6 @@ All changes follow:
 
 ### New Files Created
 
-- `playwright.config.ts`
-- `tests/e2e/auth.spec.ts`
-- `tests/e2e/home.spec.ts`
-- `tests/e2e/accessibility.spec.ts`
 - `src/lib/utils/image-validation.ts`
 - `src/components/ui/loading.tsx`
 - `src/app/loading.tsx`
@@ -281,8 +255,6 @@ All changes follow:
 ## Dependencies
 
 ### Installed
-
-- `@playwright/test` - E2E testing framework
 
 ### Removed
 
@@ -321,15 +293,13 @@ Integration testing for Next.js App Router API routes requires special setup. Re
 - **Option 2**: Start Next.js dev server and make real HTTP requests with supertest/fetch
 - **Option 3**: Wait for official Next.js testing utilities
 
-Current E2E tests with Playwright already cover end-to-end API integration through the UI.
-
 ### ✅ 3. Set Up CI/CD Pipeline (COMPLETED - Commit a35f330)
 
 Comprehensive GitHub Actions workflow implemented:
 
-- **4 Parallel Jobs**: Lint/Type Check, Unit Tests, E2E Tests, Build Check
+- **3 Parallel Jobs**: Lint/Type Check, Unit Tests, Build Check
 - **Code Quality**: ESLint, TypeScript, Prettier enforcement
-- **Test Automation**: 45 unit tests + Playwright E2E tests
+- **Test Automation**: 45 unit tests
 - **Coverage Reporting**: Codecov integration with artifact uploads
 - **Build Verification**: Next.js production build validation
 - **Documentation**: docs/CI-CD.md with setup guide and troubleshooting
@@ -543,7 +513,6 @@ Type-safe feature flag system with comprehensive targeting options:
 ```
 feat: implement comprehensive improvements and testing infrastructure
 
-- Add Playwright E2E testing with 3 test suites (auth, home, accessibility)
 - Enhance environment validation with user-friendly error messages
 - Fix image MIME type detection to support multiple formats
 - Remove unused dependencies (@ai-sdk/google, ai)

@@ -14,6 +14,11 @@ export function useChatState() {
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
   };
+
+  const clearHistory = () => {
+    setMessages([]);
+  };
+
   return {
     messages,
     setMessages,
@@ -26,5 +31,6 @@ export function useChatState() {
     setImage,
     selectedModel,
     setSelectedModel,
+    clearHistory,
   };
 }

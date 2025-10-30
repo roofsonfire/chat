@@ -20,9 +20,8 @@ export function useChat() {
     setImage,
     selectedModel,
     setSelectedModel,
+    clearHistory,
   } = useChatState();
-
-  logger.info("useChat", { messages, input, isLoading, image, selectedModel });
 
   const { sendChatRequest } = useChatAPI();
   const { parseStream } = useStreamingParser();
@@ -65,5 +64,6 @@ export function useChat() {
     setImage,
     selectedModel,
     setSelectedModel,
+    clearHistory,
   };
 }

@@ -50,12 +50,6 @@ Welcome to the comprehensive documentation for the Next.js AI Chat Assistant. Th
 - [**Model Selection**](features/MODEL-SELECTION.md) - AI model configuration
 - [**Database Integration**](features/DATABASE-INTEGRATION.md) - Database setup and usage
 
-## 🧪 Testing Documentation
-
-- [**E2E Testing Guide**](testing/E2E-TESTING-GUIDE.md) - End-to-end testing with Playwright
-- [**E2E Testing Summary**](testing/E2E-TESTING-SUMMARY.md) - Testing strategy overview
-- [**E2E Testing Optimizations**](testing/E2E-TESTING-OPTIMIZATIONS.md) - Performance improvements
-
 ## 🚀 Deployment & Operations
 
 ### Deployment Guides

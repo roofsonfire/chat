@@ -53,6 +53,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { useTheme } from "next-themes";
 import {
   Settings,
   MessageSquare,
@@ -73,7 +74,9 @@ export function Chat() {
     setImage,
     selectedModel,
     setSelectedModel,
+    clearHistory,
   } = useChat();
+  const { setTheme } = useTheme();
 
   const [open, setOpen] = useState(false);
 
@@ -91,6 +94,17 @@ export function Chat() {
   const runCommand = (command: () => void) => {
     setOpen(false);
     command();
+  };
+
+  const exportChat = () => {
+    const content = messages.map((m) => `${m.role}: ${m.content}`).join("\n");
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "chat-history.txt";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -113,49 +127,33 @@ export function Chat() {
               </div>
               <SidebarTrigger />
             </div>
-            <div className="flex items-center space-x-2">
-              <Sparkles className="text-primary h-5 w-5" />
-              <ModelSelector
-                selectedModel={selectedModel}
-                onModelChange={setSelectedModel}
-                disabled={isLoading}
-              />
-              <button
-                onClick={() => setOpen(true)}
-                className="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center gap-2 rounded-md border px-3 text-sm font-medium whitespace-nowrap outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
-                title="Command Palette (⌘K)"
-              >
-                <Search className="h-4 w-4" />
-                <span className="sr-only">Command Palette</span>
-              </button>
-            </div>
           </CardHeader>
+          <div className="p-4 pt-0">
+            <ModelSelector
+              selectedModel={selectedModel}
+              onModelChange={setSelectedModel}
+              disabled={isLoading}
+            />
+          </div>
         </Card>
         <Separator className="my-4" />
-        <div className="flex flex-1">
-          <div className="flex-1">
-            <ResizablePanelGroup direction="vertical" className="h-full">
-              <ResizablePanel defaultSize={75} minSize={30}>
-                <div
-                  className="mx-auto h-full max-w-3xl pb-4"
-                  data-testid="chat-history-container"
-                >
-                  <ChatHistory messages={messages} isLoading={isLoading} />
-                </div>
-              </ResizablePanel>
-              <ResizableHandle withHandle />
-              <ResizablePanel defaultSize={45} minSize={15}>
-                <div className="flex h-full items-end">
-                  <MessageInput
-                    input={input}
-                    handleInputChange={handleInputChange}
-                    handleSubmit={handleSubmit}
-                    isLoading={isLoading}
-                    setImage={setImage}
-                  />
-                </div>
-              </ResizablePanel>
-            </ResizablePanelGroup>
+        <div className="flex flex-1 flex-col">
+          <div className="flex-1 overflow-y-auto">
+            <div
+              className="mx-auto h-full max-w-3xl pb-4"
+              data-testid="chat-history-container"
+            >
+              <ChatHistory messages={messages} isLoading={isLoading} />
+            </div>
+          </div>
+          <div className="flex-shrink-0">
+            <MessageInput
+              input={input}
+              handleInputChange={handleInputChange}
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+              setImage={setImage}
+            />
           </div>
         </div>
       </div>
@@ -192,15 +190,16 @@ export function Chat() {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => console.log("History cleared")}
-                      >
+                      <AlertDialogAction onClick={clearHistory}>
                         Clear History
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <button className="hover:bg-accent w-full rounded px-2 py-1 text-left text-sm">
+                <button
+                  className="hover:bg-accent w-full rounded px-2 py-1 text-left text-sm"
+                  onClick={exportChat}
+                >
                   Export Chat
                 </button>
               </AccordionContent>
@@ -214,13 +213,22 @@ export function Chat() {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="space-y-1 pl-6">
-                <button className="hover:bg-accent w-full rounded px-2 py-1 text-left text-sm">
+                <button
+                  className="hover:bg-accent w-full rounded px-2 py-1 text-left text-sm"
+                  onClick={() => setTheme("light")}
+                >
                   Light Mode
                 </button>
-                <button className="hover:bg-accent w-full rounded px-2 py-1 text-left text-sm">
+                <button
+                  className="hover:bg-accent w-full rounded px-2 py-1 text-left text-sm"
+                  onClick={() => setTheme("dark")}
+                >
                   Dark Mode
                 </button>
-                <button className="hover:bg-accent w-full rounded px-2 py-1 text-left text-sm">
+                <button
+                  className="hover:bg-accent w-full rounded px-2 py-1 text-left text-sm"
+                  onClick={() => setTheme("system")}
+                >
                   System
                 </button>
               </AccordionContent>

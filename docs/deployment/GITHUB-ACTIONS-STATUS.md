@@ -13,7 +13,6 @@ Both GitHub Actions workflows are now configured and working correctly.
    - Jobs:
      - Lint and Type Check
      - Unit Tests (with coverage)
-     - E2E Tests (Playwright)
      - Build Check
    - Duration: ~6-15 minutes
 
@@ -124,7 +123,6 @@ Complete CI/CD pipeline with:
 - Linting (ESLint, Prettier)
 - Type checking (TypeScript)
 - Unit tests (Vitest)
-- E2E tests (Playwright)
 - Build verification
 - Code coverage upload
 

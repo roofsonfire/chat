@@ -42,7 +42,6 @@
 ### Development & Testing
 
 - **Vitest**: `3.2.4` (Unit testing)
-- **Playwright**: `1.55.1` (E2E testing)
 - **ESLint**: `9.37.0`
 - **Prettier**: `3.6.2`
 - **Storybook**: `9.1.10`
@@ -89,7 +88,6 @@ NEXTAUTH_URL=https://staging.chat.daza.ar
 - **Security Headers**: CSP, HSTS, X-Frame-Options via middleware
 - **Serverless Deployment**: Google Cloud Run with auto-scaling
 - **Custom Domain**: staging.chat.daza.ar with SSL
-- **Comprehensive Testing**: Unit tests (Vitest) + E2E tests (Playwright)
 - **Code Quality Tools**: ESLint, Prettier, Husky pre-commit hooks
 - **Performance Monitoring**: Web Vitals tracking
 - **Documentation**: Comprehensive docs in `/docs` directory
@@ -116,7 +114,6 @@ NEXTAUTH_URL=https://staging.chat.daza.ar
 
 - **Unit Tests**: `tests/unit/` (Vitest)
 - **Integration Tests**: `tests/integration/` (Vitest)
-- **E2E Tests**: `tests/e2e/` (Playwright)
 - **Component Tests**: Storybook documentation
 - **Target Coverage**: >80% on critical paths
 
@@ -125,9 +122,6 @@ NEXTAUTH_URL=https://staging.chat.daza.ar
 ```bash
 npm run test              # Unit tests
 npm run test:coverage     # With coverage report
-npm run test:e2e          # E2E tests (headless)
-npm run test:e2e:headed   # E2E tests (with browser)
-npm run test:e2e:ui       # Interactive E2E testing
 ```
 
 ## 📁 Current Project Structure
@@ -273,7 +267,6 @@ chat/
 - ✅ **Production Ready**: Deployed and accessible at staging.chat.daza.ar
 - ✅ **Well Documented**: Comprehensive documentation maintained
 - ✅ **High Code Quality**: ESLint, Prettier, TypeScript strict mode
-- ✅ **Tested**: Unit and E2E tests in place
 - ✅ **Secure**: Multiple security layers implemented
 - ✅ **Performant**: Modern tech stack with optimizations
 - ✅ **Maintainable**: Clean architecture and good practices

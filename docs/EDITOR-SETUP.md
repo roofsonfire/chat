@@ -24,7 +24,7 @@ The workspace includes `.vscode/extensions.json` with recommended extensions. VS
 
 - **TypeScript & React**: `ms-vscode.vscode-typescript-next`, `dsznajder.es7-react-js-snippets`
 - **Code Quality**: `esbenp.prettier-vscode`, `dbaeumer.vscode-eslint`, `usernamehw.errorlens`
-- **Testing**: `vitest.explorer`, `ms-playwright.playwright`
+- **Testing**: `vitest.explorer`
 - **AI & Git**: `github.copilot`, `eamodio.gitlens`
 - **Styling**: `bradlc.vscode-tailwindcss`
 
@@ -60,7 +60,6 @@ Pre-configured settings in `.vscode/settings.json`:
 - **`Ctrl+Shift+P` → `Tasks: Run Task`**
   - 🚀 Start Development Server
   - 🧪 Run Unit Tests (Watch Mode)
-  - 🎭 E2E Tests (Interactive)
   - 🔧 Fix Code Issues (Format + Lint)
   - 🚀 Deploy to Staging
 
@@ -74,7 +73,6 @@ Pre-configured launch configurations in `.vscode/launch.json`:
 2. **🌐 Debug Next.js (Chrome)** - Client-side debugging
 3. **🔗 Attach to Next.js** - Attach to running process
 4. **🧪 Debug Unit Tests (Vitest)** - Debug specific tests
-5. **🎭 Debug E2E Tests (Playwright)** - Debug browser tests
 
 #### Quick Debug Actions:
 
@@ -154,7 +152,6 @@ Pre-configured tasks in `.zed/settings.json`:
 - 🚀 **Start Development Server** (`npm run dev`)
 - 🔨 **Build for Production** (`npm run build`)
 - 🧪 **Run Tests** (`npm run test`)
-- 🎭 **Run E2E Tests** (`npm run test:e2e`)
 - 🔍 **Lint Code** (`npm run lint`)
 - 💅 **Format Code** (`npm run format`)
 - 📚 **Start Storybook** (`npm run storybook`)
@@ -282,9 +279,6 @@ export default [
 # Unit tests (watch mode)
 npm run test -- --watch
 
-# E2E tests (interactive)
-npm run test:e2e:ui
-
 # Coverage report
 npm run test:coverage
 ```
@@ -376,18 +370,6 @@ cd scripts/deployment
 
 1. Use terminal: `npm run test -- --inspect-brk <file>`
 2. Attach debugger to process
-
-#### E2E Test Debugging
-
-**Playwright Debug Mode:**
-
-```bash
-# Interactive debugging
-npm run test:e2e:debug
-
-# VS Code launch config
-F5 → Select "🎭 Debug E2E Tests (Playwright)"
-```
 
 ---
 
@@ -510,18 +492,6 @@ npx prettier --write .
 
 1. Install Vitest extension
 2. Configure test runner: `Cmd+Shift+P → "Test: Configure"`
-
-#### Playwright Issues
-
-**Problem**: E2E tests failing
-
-```bash
-# Install browsers
-npx playwright install
-
-# Check configuration
-npx playwright test --list
-```
 
 ### 🚀 Deployment Issues
 

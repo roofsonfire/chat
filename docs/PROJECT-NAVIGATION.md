@@ -144,12 +144,8 @@ chat/
 │   │   ├── 📁 components/       # Component tests
 │   │   ├── 📁 lib/              # Library tests
 │   │   └── 📁 utils/            # Utility tests
-│   ├── 📁 integration/          # Integration tests
-│   │   └── 📁 api/              # API integration tests
-│   └── 📁 e2e/                  # End-to-end tests
-│       ├── auth.spec.ts         # Authentication tests
-│       ├── chat.spec.ts         # Chat functionality tests
-│       └── fixtures/            # Test data
+│   └── 📁 integration/          # Integration tests
+│       └── 📁 api/              # API integration tests
 │
 ├── 📁 .storybook/           # 📖 Component Documentation
 ├── 📁 .husky/               # Git hooks
@@ -164,7 +160,6 @@ chat/
     ├── eslint.config.mjs      # ESLint rules
     ├── prettier.config.js     # Code formatting
     ├── vitest.config.ts       # Unit test configuration
-    ├── playwright.config.ts   # E2E test configuration
     └── Dockerfile             # Container configuration
 ```
 

@@ -43,7 +43,23 @@ export function ModelSelector({
             {isLoading ? (
               <span className="text-muted-foreground">Loading models...</span>
             ) : (
-              <SelectValue placeholder="Select a model" />
+              <div className="flex items-center gap-2 truncate">
+                <span className="truncate font-medium">
+                  {
+                    VERTEX_AI_MODELS[
+                      selectedModel as keyof typeof VERTEX_AI_MODELS
+                    ]?.name
+                  }
+                </span>
+                {VERTEX_AI_MODELS[
+                  selectedModel as keyof typeof VERTEX_AI_MODELS
+                ]?.capabilities?.includes("image-output" as never) && (
+                  <Badge variant="secondary" className="text-xs">
+                    <ImageIcon className="mr-1 h-3 w-3" />
+                    Images
+                  </Badge>
+                )}
+              </div>
             )}
           </SelectTrigger>
           <SelectContent>

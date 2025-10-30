@@ -39,7 +39,6 @@ A production-grade multimodal chat application built with Next.js 15, TypeScript
 
 ### 🧪 Testing & Quality
 
-- **E2E testing** with Playwright
 - **Unit/Integration tests** with Vitest
 - **Code quality** with ESLint, Prettier, and Husky
 - **Pre-commit hooks** for quality enforcement
@@ -138,11 +137,6 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 - `npm run test` - Run unit tests with Vitest
 - `npm run test:ui` - Run tests with interactive UI
 - `npm run test:coverage` - Generate test coverage report
-- `npm run test:e2e` - Run E2E tests with Playwright
-- `npm run test:e2e:headed` - Run E2E tests with browser UI
-- `npm run test:e2e:ui` - Run E2E tests with Playwright UI
-- `npm run test:e2e:debug` - Debug E2E tests
-- `npm run test:e2e:report` - Show E2E test report
 
 ### Utilities
 
@@ -160,7 +154,7 @@ This project includes comprehensive **VS Code workspace configuration**:
 
 - **TypeScript & React**: Full IntelliSense and refactoring
 - **Code Quality**: ESLint, Prettier, Error Lens
-- **Testing**: Vitest Explorer, Playwright support
+- **Testing**: Vitest Explorer
 - **AI Tools**: GitHub Copilot integration
 - **Styling**: Tailwind CSS IntelliSense
 
@@ -170,7 +164,6 @@ This project includes comprehensive **VS Code workspace configuration**:
 - **`Ctrl+Shift+P`** → **`Tasks: Run Task`**:
   - 🚀 Start Development Server
   - 🧪 Run Unit Tests (Watch Mode)
-  - 🎭 E2E Tests (Interactive UI)
   - 🔧 Fix Code Issues (Format + Lint)
   - 🚀 Deploy to Staging
 
@@ -178,7 +171,7 @@ This project includes comprehensive **VS Code workspace configuration**:
 
 - **Server-side**: Debug API routes and Server Components
 - **Client-side**: Chrome DevTools integration with source maps
-- **Testing**: Debug unit tests and E2E tests with breakpoints
+- **Testing**: Debug unit tests with breakpoints
 - **Compound configs**: Full-stack debugging sessions
 
 ### Zed Editor
@@ -241,7 +234,6 @@ chat/
 ├── 📁 tests/                    # Test files
 │   ├── 📁 unit/                 # Unit tests
 │   ├── 📁 integration/          # Integration tests
-│   └── 📁 e2e/                  # End-to-end tests
 ├── 📁 docs/                     # Documentation
 ├── 📁 .github/                  # GitHub workflows & templates
 ├── 📁 .husky/                   # Git hooks
@@ -303,18 +295,9 @@ npm run test
 npm run test:coverage  # With coverage report
 ```
 
-### E2E Tests
-
-```bash
-npm run test:e2e                    # Headless
-npm run test:e2e:headed             # With browser
-npm run test:e2e:ui                 # Interactive mode
-```
-
 ### Test Structure
 
 - **Unit/Integration**: `tests/unit/` and `tests/integration/`
-- **E2E**: `tests/e2e/`
 - **Coverage**: Aim for >80% on critical paths
 
 ## 🔐 Authentication
@@ -372,19 +355,7 @@ npx shadcn@latest add input
 
 Components are customizable and accessible out of the box.
 
-## 📚 Documentation
-
-### 📖 Complete Documentation
-
-- [**Documentation Index**](docs/README.md) - All available docs
-- [**Development Guide**](docs/DEVELOPMENT.md) - Detailed setup
-- [**API Documentation**](docs/API.md) - REST API reference
-- [**Deployment Guide**](docs/deployment/CLOUD-RUN-DEPLOYMENT.md) - Production deployment
-
-### 🧪 Testing Documentation
-
-- [**E2E Testing Guide**](docs/testing/E2E-TESTING-GUIDE.md) - Playwright setup
-- [**Testing Strategy**](docs/testing/E2E-TESTING-SUMMARY.md) - Testing approach
+### 📚 Documentation
 
 ### 🤖 AI Integration
 
@@ -413,7 +384,7 @@ We welcome contributions! Please follow these steps:
 1. **Fork the repository** on GitHub
 2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
 3. **Make your changes** following our [coding standards](.github/copilot-instructions.md)
-4. **Run tests**: `npm run test && npm run test:e2e`
+4. **Run tests**: `npm run test`
 5. **Submit a pull request** using our [PR template](.github/PULL_REQUEST_TEMPLATE.md)
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
@@ -441,7 +412,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 ### Development Tools
 
 - **Vitest** - Unit testing
-- **Playwright** - E2E testing
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
 - **Husky** - Git hooks
