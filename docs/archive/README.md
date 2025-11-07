@@ -29,10 +29,10 @@ archive/
 
 ## 🏷️ Archived Documents
 
-| Document                           | Archived Date | Reason                  | Current Alternative                                                          |
-| ---------------------------------- | ------------- | ----------------------- | ---------------------------------------------------------------------------- |
-| 2024-11-gemini-2.0-migration.md    | 2025-11-07    | Migration complete      | [GEMINI-2.5-IMPLEMENTATION.md](../migration/GEMINI-2.5-IMPLEMENTATION.md)    |
-| 2024-11-rate-limiting-migration.md | 2025-11-07    | Implementation complete | [MIDDLEWARE-SECURITY-SUMMARY.md](../features/MIDDLEWARE-SECURITY-SUMMARY.md) |
+| Document                                                                                       | Archived Date | Reason                                        | Current Alternative                                                          |
+| ---------------------------------------------------------------------------------------------- | ------------- | --------------------------------------------- | ---------------------------------------------------------------------------- |
+| [migrations/2024-11-gemini-2.0-migration.md](migrations/2024-11-gemini-2.0-migration.md)       | 2025-11-07    | Migration complete (superseded by Gemini 2.5) | [GEMINI-2.5-IMPLEMENTATION.md](../migration/GEMINI-2.5-IMPLEMENTATION.md)    |
+| [migrations/2024-11-rate-limiting-migration.md](migrations/2024-11-rate-limiting-migration.md) | 2025-11-07    | Implementation complete                       | [MIDDLEWARE-SECURITY-SUMMARY.md](../features/MIDDLEWARE-SECURITY-SUMMARY.md) |
 
 ## 🔄 Review Schedule
 
