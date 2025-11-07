@@ -18,9 +18,13 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Accept build arguments
+ARG NODE_ENV=production
+ARG ALLOWED_EMAILS
+
 # Set dummy environment variables for build time
 # These will be overridden by Cloud Run at runtime with actual secrets
-ENV NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXTAUTH_SECRET=build-time-dummy-secret-will-be-replaced-at-runtime
 ENV NEXTAUTH_URL=https://staging.chat.daza.ar
@@ -31,6 +35,7 @@ ENV GOOGLE_LOCATION=build-dummy
 ENV GOOGLE_VERTEX_AI_MODEL_ID=build-dummy
 ENV GOOGLE_CLIENT_ID=build-dummy
 ENV GOOGLE_CLIENT_SECRET=build-dummy
+ENV ALLOWED_EMAILS=${ALLOWED_EMAILS}
 
 # Build the application
 RUN npm run build

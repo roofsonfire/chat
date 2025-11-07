@@ -165,7 +165,7 @@ git reset --hard origin/develop
 ```
 
 Reason: Security improvement - moved allowlist to environment variables
-See: docs/adr/006-environment-based-allowlist.md
+See: adr/006-environment-based-allowlist.md
 
 ````
 
@@ -239,11 +239,11 @@ git push --force origin develop-restored:develop
 
 ---
 
-## 📚 Documentation References
+## References
 
-- [ADR 006: Environment-Based Allowlist](docs/adr/006-environment-based-allowlist.md)
-- [Git History Cleanup Guide](docs/GIT-HISTORY-CLEANUP.md)
-- [Security Audit](docs/SECURITY-AUDIT.md)
+- [ADR 006: Environment-Based Allowlist](adr/006-environment-based-allowlist.md)
+- [Git History Cleanup Guide](GIT-HISTORY-CLEANUP.md)
+- [Security Audit](SECURITY-AUDIT.md)
 
 ---
 

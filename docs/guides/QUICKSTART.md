@@ -371,7 +371,6 @@ Just commit normally, and hooks handle the rest.
 ### Common Resources
 
 - [Development Guide](../DEVELOPMENT.md) - Detailed setup instructions
-- [Troubleshooting Guide](../TROUBLESHOOTING.md) - Common issues and solutions
 - [OAuth Setup](../OAUTH-SETUP.md) - Authentication configuration
 - [API Documentation](../API.md) - Endpoint reference
 

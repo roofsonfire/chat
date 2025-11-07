@@ -160,7 +160,6 @@ Track these metrics:
 - [rate-limiter-flexible Documentation](https://github.com/animir/node-rate-limiter-flexible)
 - [Middleware Implementation](../../src/middleware.ts)
 - [Migration from Upstash PR](#) - Link to migration PR
-- [Rate Limiting Migration Doc](../migration/RATE-LIMITING-MIGRATION.md)
 
 ---
 
