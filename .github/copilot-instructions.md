@@ -17,9 +17,16 @@ This document provides context and guidelines for GitHub Copilot when working on
 - **Service**: Google Cloud Run
 - **Project ID**: `norse-breaker-474323-n8`
 - **Region**: `us-central1` (Iowa)
-- **Service Name**: `chat-staging`
-- **Domain**: https://staging.chat.daza.ar
+- **Service Name**: `chat-production`
+- **Domain**: https://chat.daza.ar
 - **Scaling**: 0-10 instances (serverless)
+
+### Branch Strategy
+
+- **`develop`** - Development branch for active development (local testing on `localhost:3000`)
+- **`main`** - Production branch (auto-deploys to `chat.daza.ar`)
+
+**Workflow**: `feature/* → develop → main`
 
 ## Project Overview
 
@@ -417,7 +424,7 @@ export default async function Page() {
 ### Project Resources
 
 - [GitHub Repository](https://github.com/roofsonfire/chat) - Source code and issues
-- [Live Staging Site](https://staging.chat.daza.ar) - Current deployment
+- [Live Production Site](https://chat.daza.ar) - Current deployment
 - [Project Documentation](../docs/README.md) - Comprehensive documentation
 
 ### Technology Documentation
@@ -499,5 +506,5 @@ export default async function Page() {
 ---
 
 **Repository**: https://github.com/roofsonfire/chat  
-**Live Demo**: https://staging.chat.daza.ar  
+**Live Demo**: https://chat.daza.ar  
 **Remember**: This is a production-grade application. Prioritize code quality, security, performance, and maintainability in all suggestions.
