@@ -53,7 +53,9 @@ export async function middleware(req: NextRequest) {
   logger.info("middleware: Request received", {
     url: req.url,
     method: req.method,
-    ip: req.ip,
+    ip: (req.headers.get("x-forwarded-for") ?? "127.0.0.1")
+      .split(",")[0]
+      .trim(),
   });
 
   const csrfResponse = handleCsrf(req);

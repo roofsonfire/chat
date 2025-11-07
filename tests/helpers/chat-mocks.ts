@@ -1,4 +1,49 @@
-import { Page, Route } from "@playwright/test";
+/**
+ * Options supported when fulfilling intercepted network requests.
+ */
+interface RouteFulfillOptions {
+  status?: number;
+  contentType?: string;
+  headers?: Record<string, string>;
+  body?: string;
+}
+
+/**
+ * Minimal shape of the Playwright `Route` object leveraged by these helpers.
+ */
+interface ChatRoute {
+  fulfill: (options: RouteFulfillOptions) => Promise<void>;
+}
+
+/**
+ * Minimal locator surface required by the chat test helpers.
+ */
+interface ChatLocator {
+  allTextContents: () => Promise<string[]>;
+  setInputFiles?: (files: string | string[]) => Promise<void>;
+}
+
+/**
+ * Reduced Playwright `Page` contract for the mocked chat flows.
+ */
+interface ChatPage {
+  route: (
+    match: string,
+    handler: (route: ChatRoute) => Promise<void>
+  ) => Promise<void>;
+  waitForSelector: (
+    selector: string,
+    options?: {
+      timeout?: number;
+    }
+  ) => Promise<void>;
+  locator: (selector: string) => ChatLocator;
+  getByTestId: (testId: string) => {
+    fill: (value: string) => Promise<void>;
+    click: () => Promise<void>;
+  };
+  unroute: (match: string) => Promise<void>;
+}
 
 /**
  * Mock configuration for chat API responses
@@ -39,8 +84,8 @@ function createStreamingBody(text: string, chunkSize: number = 10): string {
  * Mock the chat API endpoint for testing
  * Intercepts POST requests to /api/chat and returns mock responses
  */
-export async function mockChatAPI(page: Page, config: MockChatConfig) {
-  await page.route("**/api/chat", async (route: Route) => {
+export async function mockChatAPI(page: ChatPage, config: MockChatConfig) {
+  await page.route("**/api/chat", async (route: ChatRoute) => {
     const {
       response,
       chunkSize = 10,
@@ -75,8 +120,11 @@ export async function mockChatAPI(page: Page, config: MockChatConfig) {
 /**
  * Wait for a message with specific text to appear in the chat
  */
+/**
+ * Wait for a message with specific text to appear in the chat
+ */
 export async function waitForMessage(
-  page: Page,
+  page: ChatPage,
   text: string,
   role: "user" | "assistant" = "assistant",
   timeout: number = 10000
@@ -95,7 +143,13 @@ export async function waitForMessage(
 /**
  * Get all messages from the chat history
  */
-export async function getAllMessages(page: Page) {
+export interface ChatMessages {
+  user: string[];
+  assistant: string[];
+  all: string[];
+}
+
+export async function getAllMessages(page: ChatPage): Promise<ChatMessages> {
   const userMessages = await page
     .locator('[data-testid="message-user"] [data-testid="message-text"]')
     .allTextContents();
@@ -114,7 +168,7 @@ export async function getAllMessages(page: Page) {
 /**
  * Send a message in the chat
  */
-export async function sendMessage(page: Page, message: string) {
+export async function sendMessage(page: ChatPage, message: string) {
   await page.getByTestId("message-input").fill(message);
   await page.getByTestId("send-message-button").click();
 }
@@ -122,14 +176,18 @@ export async function sendMessage(page: Page, message: string) {
 /**
  * Upload an image to the chat
  */
-export async function uploadImage(page: Page, imagePath: string) {
-  const fileInput = await page.locator('[data-testid="image-upload-input"]');
+export async function uploadImage(page: ChatPage, imagePath: string) {
+  const fileInput = page.locator('[data-testid="image-upload-input"]');
+  if (!fileInput.setInputFiles) {
+    throw new Error("Current test environment does not support file uploads");
+  }
+
   await fileInput.setInputFiles(imagePath);
 }
 
 /**
  * Clear all mock routes
  */
-export async function clearMocks(page: Page) {
+export async function clearMocks(page: ChatPage) {
   await page.unroute("**/api/chat");
 }

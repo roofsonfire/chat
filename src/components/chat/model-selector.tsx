@@ -6,7 +6,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { useAvailableModels } from "@/lib/hooks/use-available-models";
 import { VERTEX_AI_MODELS } from "@/lib/constants/vertex-ai-models";

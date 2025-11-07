@@ -5,7 +5,6 @@ import { useChat } from "@/lib/hooks/use-chat";
 import { ChatHistory } from "./chat-history";
 import { MessageInput } from "./message-input";
 import { ModelSelector } from "./model-selector";
-import { Sparkles } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -14,11 +13,6 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
 import {
   Sidebar,
   SidebarContent,
@@ -61,7 +55,6 @@ import {
   Zap,
   Plus,
   Trash2,
-  Search,
 } from "lucide-react";
 
 export function Chat() {
