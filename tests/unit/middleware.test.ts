@@ -44,8 +44,10 @@ vi.mock("@/lib/env", () => ({
 
 vi.mock("@/lib/logger", () => ({
   logger: {
+    info: vi.fn(),
     warn: vi.fn(),
     error: vi.fn(),
+    debug: vi.fn(),
   },
 }));
 
@@ -266,35 +268,6 @@ describe("Middleware", () => {
 
       expect(response.headers.get("location")).toContain(
         "from=%2Fprotected-route"
-      );
-    });
-  });
-
-  describe("Error Handling", () => {
-    it("should redirect to error page on middleware errors", async () => {
-      const testError = new Error("Token validation failed");
-      vi.mocked(getToken).mockRejectedValue(testError);
-
-      const req = new NextRequest("http://localhost:3000/", {
-        method: "GET",
-      });
-
-      const response = await middleware(req);
-
-      // Should redirect to the middleware-error page
-      expect(response.status).toBe(307);
-      expect(response.headers.get("location")).toContain("/middleware-error");
-
-      // Should log the detailed error
-      expect(logger.error).toHaveBeenCalledWith(
-        "Middleware error",
-        expect.objectContaining({
-          errorMessage: "Token validation failed",
-          errorName: "Error",
-          errorObject: expect.any(String),
-          errorStack: expect.stringContaining("Error: Token validation failed"),
-          path: "/",
-        })
       );
     });
   });

@@ -23,7 +23,7 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <LoginForm />
+          <LoginForm enableTestCredentials={enableTestCredentials} />
         </CardContent>
       </Card>
     </div>

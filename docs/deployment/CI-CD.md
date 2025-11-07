@@ -21,14 +21,7 @@ The CI pipeline runs on every push and pull request to `main` and includes:
 - 45+ tests covering core utilities and services
 - Targets 80%+ code coverage
 
-#### 3. E2E Tests
-
-- Runs Playwright end-to-end tests
-- Tests in Chrome, Firefox, and Safari (CI: Chrome only)
-- Validates authentication flows and accessibility
-- Uploads test reports as artifacts
-
-#### 4. Build Check
+#### 3. Build Check
 
 - Verifies Next.js production build succeeds
 - Ensures no build-time errors
@@ -37,12 +30,6 @@ The CI pipeline runs on every push and pull request to `main` and includes:
 ## Required Secrets
 
 Configure these in GitHub repository settings (`Settings > Secrets and variables > Actions`):
-
-### Required for E2E Tests:
-
-- `GOOGLE_PROJECT_ID`: Google Cloud project ID
-- `GOOGLE_LOCATION`: Vertex AI location (e.g., `us-central1`)
-- `GOOGLE_VERTEX_AI_MODEL_ID`: Model name (e.g., `gemini-1.5-flash-002`)
 
 ### Optional:
 
@@ -63,9 +50,6 @@ npm test
 
 # Unit tests with coverage
 npm run test:coverage
-
-# E2E tests
-npm run test:e2e
 
 # Build check
 npm run build
@@ -97,12 +81,6 @@ For CD (deployment to production):
 3. **Docker**: Build and push images on tagged releases
 
 ## Troubleshooting
-
-### E2E Tests Failing in CI
-
-- Check environment variables are set in GitHub Secrets
-- Verify Playwright browser installation
-- Review uploaded test reports in GitHub Actions artifacts
 
 ### Build Failures
 

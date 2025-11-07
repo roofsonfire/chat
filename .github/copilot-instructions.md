@@ -41,18 +41,18 @@ This is a production-grade chat application built with Next.js 15, TypeScript, a
 - **Zod** for runtime validation
 - **bcrypt** for password hashing
 - **rate-limiter-flexible** for rate limiting
-- **shadcn/ui** with Radix UI components
+- **shadcn/ui v4** with complete Radix UI component library (Button, Card, Input, Dialog, Tabs, ScrollArea, Select, Tooltip, DropdownMenu, Sheet)
 - **lucide-react** for icons
 
 ### Testing & Quality
 
-- **Vitest** for unit/integration tests
-- **Playwright** for E2E testing
+- **Vitest** for unit, integration, and Storybook-driven component tests
+- **Storybook** for interactive documentation and visual regression checks
+- **Manual smoke scripts** in `tests/manual/` for Vertex AI and auth verification
+- **Playwright** E2E suite currently retired (folder reserved for future rebuild)
 - **ESLint** with Next.js config
 - **Prettier** with Tailwind plugin
-- **Husky** for Git hooks
-- **lint-staged** for pre-commit checks
-- **Storybook** for component documentation
+- **Husky** with **lint-staged** for pre-commit checks
 
 ## Project Structure
 
@@ -64,7 +64,20 @@ src/
 │   ├── layout.tsx         # Root layout with providers
 │   └── page.tsx           # Home page
 ├── components/            # React components
-│   ├── ui/                # shadcn/ui base components
+│   ├── ui/                # Complete shadcn/ui v4 component library
+│   │   ├── button.tsx     # Button component with variants
+│   │   ├── card.tsx       # Card components (Card, CardHeader, CardTitle, etc.)
+│   │   ├── input.tsx      # Input component
+│   │   ├── textarea.tsx   # Textarea component
+│   │   ├── label.tsx      # Label component
+│   │   ├── select.tsx     # Select dropdown components
+│   │   ├── dialog.tsx     # Modal dialog components
+│   │   ├── tabs.tsx       # Tab navigation components
+│   │   ├── scroll-area.tsx # Custom scrollbar component
+│   │   ├── tooltip.tsx    # Tooltip components
+│   │   ├── dropdown-menu.tsx # Dropdown menu components
+│   │   ├── sheet.tsx      # Slide-out panel components
+│   │   └── [other components...]
 │   ├── chat/              # Chat-specific components
 │   └── auth/              # Authentication components
 ├── lib/                   # Core utilities and services
@@ -193,44 +206,64 @@ export function ChatMessage({ message, role, timestamp }: ChatMessageProps) {
 - Add comprehensive error handling
 - Return consistent response structures
 
-### Security
+### UI Component Library (shadcn/ui v4)
 
-- **Middleware security headers**: X-Frame-Options, CSP, HSTS, etc.
-- **Rate limiting**: 5 requests per 10 seconds per IP
-- **Input validation**: Zod schemas for all external data
-- **Password hashing**: bcrypt with salt rounds
-- **Environment variables**: Validated with Zod on startup
-- **No sensitive data in logs**: Sanitize before logging
+- **Complete shadcn/ui v4 implementation** with modern `data-slot` attributes
+- **All components follow accessibility standards** and WCAG guidelines
+- **Consistent theming** with CSS variables and Tailwind CSS
+- **TypeScript-first** with proper type definitions
+- **Available components**: Button, Card, Input, Textarea, Label, Select, Dialog, Tabs, ScrollArea, Tooltip, DropdownMenu, Sheet
+
+### Recent Updates
+
+- **October 2025**: Completed repository-wide shadcn/ui migration to v4 patterns
+- Added missing components (DropdownMenu, Sheet) for complete UI library
+- Updated all existing components with modern `data-slot` attributes
+- Maintained backward compatibility and accessibility standards
 
 ## Testing Guidelines
 
 ### Unit Tests (Vitest)
 
-- Test files: `*.test.ts` or `*.test.tsx`
 - Location: `tests/unit/`
-- Mock external dependencies
-- Test edge cases and error conditions
-- Use Testing Library for React components
+- Files: `*.test.ts` or `*.test.tsx`
+- Tooling: React Testing Library + vi mocks
+- Shared setup in `tests/setup.ts` stubs router, fetch, ResizeObserver
 
-### Integration Tests
+### Integration Tests (Vitest)
 
 - Location: `tests/integration/`
-- Test interaction between modules
-- Mock external services (Vertex AI, etc.)
+- Files: `*.spec.ts`
+- Focus on end-to-end chat pipeline and cross-module flows
+- Mock external services like Vertex AI via shared helpers
 
-### E2E Tests (Playwright)
+### Storybook Test Project
 
-- Location: `tests/e2e/`
-- Test critical user journeys
-- Test authentication flows
-- Test accessibility with axe-core
-- Use page objects pattern
+- Configured via `@storybook/addon-vitest` in `vitest.config.ts`
+- Executes component assertions defined alongside stories
+- Uses `.storybook/vitest.setup.ts` to apply global annotations
 
-### Test Coverage
+### Manual Smoke Scripts
 
-- Run: `npm run test:coverage`
-- Aim for >80% coverage on critical paths
-- Focus on business logic and utilities
+- Located under `tests/manual/`
+- Exercise Vertex AI endpoints, auth flows, and multimodal uploads
+- Useful for staging validation when automated E2E is offline
+
+### E2E Automation
+
+- Playwright suite currently removed; `tests/e2e/` kept as placeholder
+- Rebuild planned with updated user journeys and accessibility checks
+
+### Test Commands & Coverage
+
+```bash
+npm run test          # Executes all Vitest projects
+npm run test:coverage # Generates HTML/JSON coverage output under coverage/
+npm run test:ui       # Launches Vitest UI for focused debugging
+```
+
+- Target >80% coverage on critical paths
+- Coverage artifacts served from `coverage/index.html`
 
 ## Environment Variables
 
@@ -244,27 +277,32 @@ AUTH_USER_EMAIL; // Authorized user email
 AUTH_USER_PASSWORD_HASH; // Bcrypt hashed password
 GOOGLE_PROJECT_ID; // GCP project ID
 GOOGLE_LOCATION; // Vertex AI region
-GOOGLE_VERTEX_AI_MODEL_ID; // Model ID (e.g., gemini-1.5-flash-002)
+GOOGLE_VERTEX_AI_MODEL_ID; // Model ID (e.g., gemini-2.5-flash-image)
+GOOGLE_CLIENT_ID; // OAuth client ID
+GOOGLE_CLIENT_SECRET; // OAuth client secret
+
+// Optional toggles:
+ENABLE_TEST_CREDENTIALS; // "true" to expose credentials provider locally
 ```
 
 ## Performance Considerations
 
 - Use React Server Components for better performance
 - Implement streaming responses for AI chat
-- Monitor Web Vitals with `web-vitals` package
-- Use `PerformanceMonitor` component
-- Lazy load heavy components
-- Optimize images with Next.js Image
+- Monitor Web Vitals with the `web-vitals` package
+- Use the `PerformanceMonitor` component for runtime metrics
+- Lazy load heavy components and leverage Suspense fallbacks
+- Optimize images with the Next.js Image component
 - Enable Turbopack for faster builds
 
 ## Accessibility
 
-- Use semantic HTML elements
-- Include ARIA labels where needed
-- Ensure keyboard navigation works
-- Test with Playwright accessibility scanner
-- Use shadcn/ui components (already accessible)
-- Maintain color contrast ratios
+- Use semantic HTML elements and shadcn/ui primitives
+- Provide ARIA attributes only when necessary
+- Ensure keyboard navigation covers all interactive elements
+- Validate with the Storybook a11y addon and (future) Playwright axe-core checks
+- Maintain WCAG-compliant color contrast ratios
+- Supply descriptive labels and focus management for dialogs and overlays
 
 ## Git & Development Workflow
 
@@ -366,11 +404,12 @@ export default async function Page() {
 
 - **README.md** - Project overview and quick start
 - **docs/** - Detailed documentation
+  - `PROJECT-STATUS.md` - Current health snapshot and deployment details
   - `DEVELOPMENT.md` - Development setup and guidelines
   - `API.md` - API documentation
   - `USER-MANAGEMENT.md` - Authentication details
   - `PERFORMANCE.md` - Performance optimization
-  - `E2E-TESTING-SUMMARY.md` - Testing strategies
+  - `OAUTH-SETUP.md` - Google OAuth configuration and troubleshooting
   - `FEATURE-FLAGS.md` - Feature flag implementation
 
 ## Additional Resources
@@ -410,6 +449,7 @@ export default async function Page() {
 8. **Consider security** implications
 9. **Optimize for performance** (Server Components, streaming, etc.)
 10. **Ensure accessibility** in UI components
+11. **Use shadcn/ui v4 components** - All components have been migrated to modern patterns with `data-slot` attributes
 
 ## Specific Guidance
 
@@ -431,11 +471,14 @@ export default async function Page() {
 
 ### When working with UI Components:
 
-- Use shadcn/ui components as base
-- Extend with Tailwind CSS utilities
-- Ensure responsive design (mobile-first)
-- Add loading and error states
-- Test accessibility with Playwright
+- Use **shadcn/ui v4 components** as the foundation for all UI elements
+- All components include modern `data-slot` attributes for proper styling
+- **Available components**: Button, Card, Input, Textarea, Label, Select, Dialog, Tabs, ScrollArea, Tooltip, DropdownMenu, Sheet
+- Extend with Tailwind CSS utilities for custom styling
+- Ensure responsive design (mobile-first approach)
+- Add loading and error states using existing patterns
+- Test accessibility with Playwright axe-core integration
+- Follow established component patterns and TypeScript conventions
 
 ### When working with API Routes:
 

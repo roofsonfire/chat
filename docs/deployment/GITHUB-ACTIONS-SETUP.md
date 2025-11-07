@@ -8,8 +8,7 @@ The CI/CD pipeline includes 4 parallel jobs:
 
 1. **Lint and Type Check**: ESLint, TypeScript, Prettier
 2. **Unit Tests**: Vitest unit tests with coverage
-3. **E2E Tests**: Playwright end-to-end tests
-4. **Build Check**: Next.js build verification
+3. **Build Check**: Next.js build verification
 
 ## Secret Configuration Warnings
 
@@ -29,34 +28,6 @@ To enable all features of the CI/CD pipeline, configure these secrets in your Gi
 
 ##### 1. CODECOV_TOKEN (Optional)
 
-**Purpose**: Upload test coverage reports to Codecov  
-**Where to get it**:
-
-1. Sign up at https://codecov.io
-2. Add your repository
-3. Copy the upload token
-
-**Note**: If not configured, coverage upload will be skipped (this is fine for most projects).
-
-##### 2. GOOGLE_PROJECT_ID (Required for E2E tests)
-
-**Purpose**: Google Cloud project for Vertex AI  
-**Where to get it**:
-
-1. Go to https://console.cloud.google.com
-2. Select or create a project
-3. Copy the Project ID
-
-##### 5. GOOGLE_LOCATION (Required for E2E tests)
-
-**Purpose**: Region for Vertex AI resources  
-**Common values**: `us-central1`, `us-east1`, `europe-west1`
-
-##### 6. GOOGLE_VERTEX_AI_MODEL_ID (Required for E2E tests)
-
-**Purpose**: Vertex AI model identifier  
-**Common values**: `gemini-1.5-flash-002`, `gemini-1.5-pro-002`
-
 ## Workflow Behavior Without Secrets
 
 ### Without CODECOV_TOKEN
@@ -64,14 +35,6 @@ To enable all features of the CI/CD pipeline, configure these secrets in your Gi
 - ✅ All tests run normally
 - ⚠️ Coverage reports not uploaded to Codecov
 - ✅ Build succeeds
-
-### Without Google Cloud Secrets
-
-- ✅ Lint and type check pass
-- ✅ Unit tests pass (mocked services)
-- ⚠️ E2E tests will fail if they require API calls
-- ✅ Build check uses dummy values and passes
-- ✅ Rate limiting uses in-memory storage (no Redis needed!)
 
 ## Local Development
 
@@ -101,7 +64,6 @@ GOOGLE_VERTEX_AI_MODEL_ID=gemini-1.5-flash-002
 # Run all checks that CI will run
 npm run lint
 npm test -- --run
-npm run test:e2e
 npm run build
 ```
 
@@ -119,13 +81,6 @@ npm run build
 **Problem**: Yellow warning icons in GitHub editor  
 **Solution**: These are informational only. Configure the secrets as described above, or ignore if not needed.  
 **Impact**: None - workflow runs successfully
-
-### E2E Tests Failing
-
-**Problem**: E2E tests fail with API errors  
-**Solution**: Configure Google Cloud secrets (GOOGLE_PROJECT_ID, GOOGLE_LOCATION, GOOGLE_VERTEX_AI_MODEL_ID)  
-**Note**: Rate limiting now uses in-memory storage - no Redis configuration needed!  
-**Workaround**: Skip E2E tests temporarily by adding `if: false` to the e2e-tests job
 
 ### Coverage Upload Failing
 
@@ -149,8 +104,8 @@ npm run build
 Add `if: false` to skip a job:
 
 ```yaml
-e2e-tests:
-  name: E2E Tests
+unit-tests:
+  name: Unit Tests
   if: false # Temporarily disabled
   runs-on: ubuntu-latest
   # ...
@@ -200,7 +155,6 @@ The workflow is already optimized with:
 - ✅ Dependency caching (`cache: "npm"`)
 - ✅ Parallel job execution (4 jobs run simultaneously)
 - ✅ Selective test running (unit tests don't rebuild app)
-- ✅ Reasonable timeouts (15 min for E2E tests)
 
 ## Support
 
@@ -213,11 +167,10 @@ If you encounter issues:
 
 ## Summary
 
-The warnings you see are informational and indicate secrets that should be configured for full functionality. The workflow will run successfully without them, but some features (like coverage upload and E2E tests with real APIs) will be limited.
+The warnings you see are informational and indicate secrets that should be configured for full functionality. The workflow will run successfully without them, but some features (like coverage upload) will be limited.
 
 **Priority**:
 
-- 🔴 High: GOOGLE secrets (for E2E tests with real AI API)
 - 🟡 Medium: CODECOV_TOKEN (for coverage tracking)
 - 🟢 Low: All jobs run locally without issues
 - ✅ Bonus: Rate limiting works out-of-the-box (no Redis needed!)

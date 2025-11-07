@@ -105,7 +105,7 @@ gh secret list
 2. Click "Settings" → "Secrets and variables" → "Actions"
 3. Click "New repository secret"
 4. Name: `GCP_SA_KEY`
-5. Value: Pega todo el contenido del archivo `github-actions-key.json`
+5. Value: Pega el contenido del archivo `github-actions-key.json`
 6. Click "Add secret"
 
 ## ✅ Paso 3: Verificar el Workflow
@@ -239,7 +239,7 @@ git push origin main
 PROJECT_ID="norse-breaker-474323-n8"
 SA_EMAIL="github-actions@${PROJECT_ID}.iam.gserviceaccount.com"
 
-# Re-agregar todos los permisos
+
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:${SA_EMAIL}" \
     --role="roles/run.admin"

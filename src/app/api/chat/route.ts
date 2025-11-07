@@ -64,6 +64,11 @@ function handleInvalidRequest(
  */
 export async function POST(req: NextRequest) {
   const requestId = Math.random().toString(36).substring(7);
+  logger.info("POST /api/chat: Request received", {
+    requestId,
+    method: req.method,
+    url: req.url,
+  });
 
   try {
     logger.info("Chat API request received", { requestId });
@@ -74,11 +79,13 @@ export async function POST(req: NextRequest) {
       hasMessages: !!body.messages,
       messageCount: body.messages?.length,
       hasModelId: !!body.modelId,
+      body: JSON.stringify(body, null, 2),
     });
 
     const parsedBody = chatRequestSchema.safeParse(body);
 
     if (!parsedBody.success) {
+      logger.warn("POST /api/chat: Invalid request body");
       return handleInvalidRequest(parsedBody.error, body, requestId);
     }
 
@@ -156,6 +163,10 @@ export async function POST(req: NextRequest) {
       error: errorMessage,
     };
 
+    logger.error("POST /api/chat: Returning error response", {
+      requestId,
+      errorResponse,
+    });
     return NextResponse.json(errorResponse, { status: 500 });
   }
 }

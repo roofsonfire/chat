@@ -1,6 +1,6 @@
 # Project Status Summary
 
-**Last Updated**: October 13, 2025  
+**Last Updated**: November 6, 2025  
 **Status**: ✅ Active Development & Production Ready
 
 ## 📍 Project Information
@@ -16,10 +16,10 @@
 
 ### Current Branch Status
 
-- **Main Branch**: `main` (up-to-date with origin)
-- **Last Commit**: `b026403` - "fix: correct NextAuth logger types to match expected interface"
-- **Recent Activity**: Active OAuth debugging and CI improvements
-- **Working Tree**: Clean (no uncommitted changes)
+- **Default Branch**: `main`
+- **Active Branch**: `copilot/vscode1760670852695` (documentation refresh and UI polish)
+- **Current HEAD**: `6569cbf` – `feat: improve UI and remove E2E tests`
+- **Recent Activity**: UI hardening, documentation refresh, and PR [#70](https://github.com/roofsonfire/chat/pull/70) tracking overlay fixes
 
 ## 🚀 Current Tech Stack
 
@@ -34,16 +34,15 @@
 
 - **Google Vertex AI SDK**: `1.10.0`
 - **NextAuth.js**: `4.24.11`
-- **Tailwind CSS**: `4.1.14`
-- **Zod**: `4.1.11`
+- **Tailwind CSS**: `4.1.16`
+- **Zod**: `4.1.12`
 - **bcrypt**: `6.0.0`
 - **rate-limiter-flexible**: `8.0.1`
 
 ### Development & Testing
 
 - **Vitest**: `3.2.4` (Unit testing)
-- **Playwright**: `1.55.1` (E2E testing)
-- **ESLint**: `9.37.0`
+- **ESLint**: `9.38.0`
 - **Prettier**: `3.6.2`
 - **Storybook**: `9.1.10`
 
@@ -65,10 +64,16 @@ Concurrency: 80 requests/instance
 
 ```
 NODE_ENV=production
+NEXTAUTH_URL=https://staging.chat.daza.ar
+NEXTAUTH_SECRET=***
+AUTH_USER_EMAIL=***
+AUTH_USER_PASSWORD_HASH=***
 GOOGLE_PROJECT_ID=norse-breaker-474323-n8
 GOOGLE_LOCATION=us-central1
 GOOGLE_VERTEX_AI_MODEL_ID=gemini-2.5-flash-image
-NEXTAUTH_URL=https://staging.chat.daza.ar
+GOOGLE_CLIENT_ID=***
+GOOGLE_CLIENT_SECRET=***
+ENABLE_TEST_CREDENTIALS=false # Optional toggle for local/manual testing
 ```
 
 ### Secrets (Google Cloud Secret Manager)
@@ -89,7 +94,6 @@ NEXTAUTH_URL=https://staging.chat.daza.ar
 - **Security Headers**: CSP, HSTS, X-Frame-Options via middleware
 - **Serverless Deployment**: Google Cloud Run with auto-scaling
 - **Custom Domain**: staging.chat.daza.ar with SSL
-- **Comprehensive Testing**: Unit tests (Vitest) + E2E tests (Playwright)
 - **Code Quality Tools**: ESLint, Prettier, Husky pre-commit hooks
 - **Performance Monitoring**: Web Vitals tracking
 - **Documentation**: Comprehensive docs in `/docs` directory
@@ -101,6 +105,8 @@ NEXTAUTH_URL=https://staging.chat.daza.ar
 - **Error Handling**: Enhanced middleware error handling and logging
 - **Type Safety**: Improved NextAuth logger types
 - **Security**: Relaxed CSP for Google authentication compatibility
+- **UI & Docs**: Updated shadcn/ui usage and refreshed documentation (November 2025)
+- **Testing**: Deprecated the legacy Playwright E2E suite pending a new automation strategy
 
 ### 🚧 In Development/Potential Improvements
 
@@ -109,25 +115,26 @@ NEXTAUTH_URL=https://staging.chat.daza.ar
 - **Production Deployment**: Multi-region setup considerations
 - **Monitoring**: Cloud Monitoring alerts and dashboards
 - **Performance**: Additional optimizations for cold starts
+- **E2E Automation**: Reintroduce Playwright coverage with updated journeys
 
 ## 🧪 Testing Status
 
 ### Test Coverage
 
-- **Unit Tests**: `tests/unit/` (Vitest)
-- **Integration Tests**: `tests/integration/` (Vitest)
-- **E2E Tests**: `tests/e2e/` (Playwright)
-- **Component Tests**: Storybook documentation
-- **Target Coverage**: >80% on critical paths
+- **Unit Tests** (`tests/unit/`): Vitest + Testing Library covering services, middleware, and UI helpers
+- **Integration Tests** (`tests/integration/chat.spec.ts`): End-to-end chat pipeline exercised via Vitest projects
+- **Storybook Visual Checks**: Component-level assertions executed with the Storybook Vitest plugin (`.storybook/vitest.setup.ts`)
+- **Manual Smoke Scripts** (`tests/manual/`): Node-based scripts for Vertex AI endpoints and auth flows
+- **E2E Automation**: Playwright suite currently removed; `tests/e2e/` retained as a placeholder for the rebuild
+- **Target Coverage**: >80% on critical paths (reports stored in `coverage/`)
 
-### Test Scripts Available
+### Test Tooling & Commands
 
 ```bash
-npm run test              # Unit tests
-npm run test:coverage     # With coverage report
-npm run test:e2e          # E2E tests (headless)
-npm run test:e2e:headed   # E2E tests (with browser)
-npm run test:e2e:ui       # Interactive E2E testing
+npm run test          # Executes all Vitest projects with shared setup
+npm run test:coverage # Generates HTML/JSON coverage reports under coverage/
+npm run test:ui       # Launches Vitest UI for focused debugging
+npm run storybook     # Interactive component regression review
 ```
 
 ## 📁 Current Project Structure
@@ -273,7 +280,6 @@ chat/
 - ✅ **Production Ready**: Deployed and accessible at staging.chat.daza.ar
 - ✅ **Well Documented**: Comprehensive documentation maintained
 - ✅ **High Code Quality**: ESLint, Prettier, TypeScript strict mode
-- ✅ **Tested**: Unit and E2E tests in place
 - ✅ **Secure**: Multiple security layers implemented
 - ✅ **Performant**: Modern tech stack with optimizations
 - ✅ **Maintainable**: Clean architecture and good practices

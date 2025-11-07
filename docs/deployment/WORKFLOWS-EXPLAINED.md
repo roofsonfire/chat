@@ -21,7 +21,6 @@ graph TD
    - Jobs:
      - Lint and Type Check
      - Unit Tests
-     - E2E Tests
      - Build Check
    - Duration: ~3-15 minutes
    - **Must complete successfully before deployment**

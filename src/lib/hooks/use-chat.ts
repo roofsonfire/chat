@@ -1,3 +1,5 @@
+"use client";
+
 import { Message } from "@/lib/types";
 import { useChatState } from "./use-chat-state";
 import { useChatAPI } from "./use-chat-api";
@@ -17,6 +19,7 @@ export function useChat() {
     setImage,
     selectedModel,
     setSelectedModel,
+    clearHistory,
   } = useChatState();
 
   const { sendChatRequest } = useChatAPI();
@@ -60,5 +63,6 @@ export function useChat() {
     setImage,
     selectedModel,
     setSelectedModel,
+    clearHistory,
   };
 }

@@ -4,8 +4,8 @@ A production-grade multimodal chat application built with Next.js 15, TypeScript
 
 [![Deploy to Cloud Run](https://img.shields.io/badge/Deploy-Cloud%20Run-blue?logo=googlecloud)](https://staging.chat.daza.ar)
 [![GitHub](https://img.shields.io/badge/GitHub-roofsonfire%2Fchat-black?logo=github)](https://github.com/roofsonfire/chat)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15.0-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5-black?logo=next.js)](https://nextjs.org/)
 
 ## 🌐 Live Demo
 
@@ -39,11 +39,11 @@ A production-grade multimodal chat application built with Next.js 15, TypeScript
 
 ### 🧪 Testing & Quality
 
-- **E2E testing** with Playwright
-- **Unit/Integration tests** with Vitest
-- **Code quality** with ESLint, Prettier, and Husky
-- **Pre-commit hooks** for quality enforcement
-- **Storybook** for component documentation
+- **Vitest projects** for unit, integration, and Storybook-driven component tests
+- **Manual smoke scripts** validating Vertex AI endpoints and auth flows
+- **Code quality** with ESLint, Prettier, Husky, and lint-staged
+- **Playwright E2E suite** currently retired while journeys are rebuilt
+- **Storybook** for interactive documentation and visual checks
 
 ### 🎨 Modern UI/UX
 
@@ -57,7 +57,7 @@ A production-grade multimodal chat application built with Next.js 15, TypeScript
 
 ### Prerequisites
 
-- **Node.js** 20.x or higher
+- **Node.js** 22.x (matches production image)
 - **npm** or **yarn**
 - **Google Cloud Platform** account with Vertex AI enabled
 - **Git**
@@ -92,13 +92,13 @@ AUTH_USER_PASSWORD_HASH="your-bcrypt-hash-here"
 # Google Cloud / Vertex AI
 GOOGLE_PROJECT_ID="your-gcp-project-id"
 GOOGLE_LOCATION="us-central1"
-GOOGLE_VERTEX_AI_MODEL_ID="gemini-2.0-flash-exp"
+GOOGLE_VERTEX_AI_MODEL_ID="gemini-2.5-flash-image"
 
-# Google OAuth (Optional - for Google Sign-In)
+# Google OAuth (Required for Google Sign-In)
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
-# Development/Testing
+# Development/Testing (optional)
 ENABLE_TEST_CREDENTIALS="true"
 ```
 
@@ -137,12 +137,8 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 - `npm run test` - Run unit tests with Vitest
 - `npm run test:ui` - Run tests with interactive UI
-- `npm run test:coverage` - Generate test coverage report
-- `npm run test:e2e` - Run E2E tests with Playwright
-- `npm run test:e2e:headed` - Run E2E tests with browser UI
-- `npm run test:e2e:ui` - Run E2E tests with Playwright UI
-- `npm run test:e2e:debug` - Debug E2E tests
-- `npm run test:e2e:report` - Show E2E test report
+- `npm run test:coverage` - Generate test coverage report (HTML/JSON under `coverage/`)
+- `npm run storybook` - Launch Storybook-driven component tests
 
 ### Utilities
 
@@ -160,7 +156,7 @@ This project includes comprehensive **VS Code workspace configuration**:
 
 - **TypeScript & React**: Full IntelliSense and refactoring
 - **Code Quality**: ESLint, Prettier, Error Lens
-- **Testing**: Vitest Explorer, Playwright support
+- **Testing**: Vitest Explorer
 - **AI Tools**: GitHub Copilot integration
 - **Styling**: Tailwind CSS IntelliSense
 
@@ -170,7 +166,6 @@ This project includes comprehensive **VS Code workspace configuration**:
 - **`Ctrl+Shift+P`** → **`Tasks: Run Task`**:
   - 🚀 Start Development Server
   - 🧪 Run Unit Tests (Watch Mode)
-  - 🎭 E2E Tests (Interactive UI)
   - 🔧 Fix Code Issues (Format + Lint)
   - 🚀 Deploy to Staging
 
@@ -178,7 +173,7 @@ This project includes comprehensive **VS Code workspace configuration**:
 
 - **Server-side**: Debug API routes and Server Components
 - **Client-side**: Chrome DevTools integration with source maps
-- **Testing**: Debug unit tests and E2E tests with breakpoints
+- **Testing**: Debug unit tests with breakpoints
 - **Compound configs**: Full-stack debugging sessions
 
 ### Zed Editor
@@ -235,13 +230,16 @@ chat/
 │   │   └── performance.ts       # Performance monitoring
 │   └── middleware.ts            # Next.js middleware
 ├── 📁 scripts/                  # Utility scripts
-│   ├── 📁 deployment/           # Deployment scripts
-│   ├── 📁 mcp/                  # MCP integration
-│   └── 📁 utils/                # Utility scripts
+│   ├── 📁 deployment/           # Deployment automation
+│   ├── 📁 utils/                # Shared script helpers
+│   ├── diagnose-oauth.sh       # OAuth troubleshooting helper
+│   ├── interactive-oauth-setup.sh
+│   └── setup-oauth-secrets.sh
 ├── 📁 tests/                    # Test files
 │   ├── 📁 unit/                 # Unit tests
 │   ├── 📁 integration/          # Integration tests
-│   └── 📁 e2e/                  # End-to-end tests
+│   ├── 📁 manual/               # Manual smoke scripts
+│   └── 📁 e2e/                  # Placeholder for future Playwright suite
 ├── 📁 docs/                     # Documentation
 ├── 📁 .github/                  # GitHub workflows & templates
 ├── 📁 .husky/                   # Git hooks
@@ -303,19 +301,13 @@ npm run test
 npm run test:coverage  # With coverage report
 ```
 
-### E2E Tests
-
-```bash
-npm run test:e2e                    # Headless
-npm run test:e2e:headed             # With browser
-npm run test:e2e:ui                 # Interactive mode
-```
-
 ### Test Structure
 
 - **Unit/Integration**: `tests/unit/` and `tests/integration/`
-- **E2E**: `tests/e2e/`
-- **Coverage**: Aim for >80% on critical paths
+- **Storybook Vitest Project**: `.storybook/` + linked stories for visual assertions
+- **Manual Scripts**: `tests/manual/` for Vertex AI and auth smoke tests (run via `node tests/manual/<script>.mjs`)
+- **E2E Automation**: `tests/e2e/` retained as placeholder while Playwright suite is rebuilt
+- **Coverage**: Aim for >80% on critical paths (reports in `coverage/`)
 
 ## 🔐 Authentication
 
@@ -329,7 +321,7 @@ npm run test:e2e:ui                 # Interactive mode
 
 - Enabled with `ENABLE_TEST_CREDENTIALS=true`
 - Uses email/password with bcrypt hashing
-- Only for testing and local development
+- Only for testing and local development (set to `false` in staging/production)
 
 ### Rate Limiting
 
@@ -341,9 +333,8 @@ npm run test:e2e:ui                 # Interactive mode
 
 ### Vertex AI Models
 
-- **Primary**: `gemini-2.0-flash-exp`
-- **Image Generation**: `gemini-2.5-flash-image`
-- **Dynamic Selection**: Fetches available models at runtime
+- **Default**: `gemini-2.5-flash-image` (multimodal text + image support)
+- **Dynamic Selection**: Fetches available models at runtime based on Vertex AI catalog
 
 ### Features
 
@@ -357,7 +348,7 @@ npm run test:e2e:ui                 # Interactive mode
 ```env
 GOOGLE_PROJECT_ID="your-gcp-project"
 GOOGLE_LOCATION="us-central1"
-GOOGLE_VERTEX_AI_MODEL_ID="gemini-2.0-flash-exp"
+GOOGLE_VERTEX_AI_MODEL_ID="gemini-2.5-flash-image"
 ```
 
 ## 🎨 UI Components
@@ -372,24 +363,15 @@ npx shadcn@latest add input
 
 Components are customizable and accessible out of the box.
 
-## 📚 Documentation
+### 📚 Documentation
 
-### 📖 Complete Documentation
-
-- [**Documentation Index**](docs/README.md) - All available docs
-- [**Development Guide**](docs/DEVELOPMENT.md) - Detailed setup
-- [**API Documentation**](docs/API.md) - REST API reference
-- [**Deployment Guide**](docs/deployment/CLOUD-RUN-DEPLOYMENT.md) - Production deployment
-
-### 🧪 Testing Documentation
-
-- [**E2E Testing Guide**](docs/testing/E2E-TESTING-GUIDE.md) - Playwright setup
-- [**Testing Strategy**](docs/testing/E2E-TESTING-SUMMARY.md) - Testing approach
-
-### 🤖 AI Integration
-
-- [**GitHub Copilot Instructions**](.github/copilot-instructions.md) - AI context
-- [**Model Selection**](docs/features/MODEL-SELECTION.md) - AI model config
+- [**Documentation Index**](docs/README.md) - Complete guides and navigation
+- [**Project Status Summary**](docs/PROJECT-STATUS.md) - Deployment snapshot and roadmap
+- [**Development Guide**](docs/DEVELOPMENT.md) - Local setup, workflows, and tooling
+- [**Cloud Run Deployment**](docs/deployment/CLOUD-RUN-DEPLOYMENT.md) - Production rollout steps
+- [**OAuth Setup**](docs/OAUTH-SETUP.md) - Google OAuth configuration & troubleshooting
+- [**GitHub Copilot Instructions**](.github/copilot-instructions.md) - AI pairing guidance
+- [**Model Selection**](docs/features/MODEL-SELECTION.md) - Dynamic Vertex AI configuration
 
 ## 🛡️ Security
 
@@ -413,7 +395,7 @@ We welcome contributions! Please follow these steps:
 1. **Fork the repository** on GitHub
 2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
 3. **Make your changes** following our [coding standards](.github/copilot-instructions.md)
-4. **Run tests**: `npm run test && npm run test:e2e`
+4. **Run tests**: `npm run test`
 5. **Submit a pull request** using our [PR template](.github/PULL_REQUEST_TEMPLATE.md)
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
@@ -441,7 +423,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 ### Development Tools
 
 - **Vitest** - Unit testing
-- **Playwright** - E2E testing
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
 - **Husky** - Git hooks
