@@ -23,8 +23,8 @@ echo ""
 # Get GCP project ID
 PROJECT_ID="norse-breaker-474323-n8"
 
-# Get OAuth Client ID from Secret Manager
-echo -e "${BLUE}→${NC} Fetching OAuth Client ID from Secret Manager..."
+# Get OAuth Client ID from Secret Manager (just to verify it exists)
+echo -e "${BLUE}→${NC} Verifying OAuth Client ID in Secret Manager..."
 CLIENT_ID=$(gcloud secrets versions access latest --secret="google-client-id" --project="$PROJECT_ID" 2>/dev/null | tr -d '\n')
 
 if [ -z "$CLIENT_ID" ]; then
@@ -32,7 +32,7 @@ if [ -z "$CLIENT_ID" ]; then
     exit 1
 fi
 
-echo -e "${GREEN}✓${NC} OAuth Client ID: ${CLIENT_ID:0:20}..."
+echo -e "${GREEN}✓${NC} OAuth Client ID found in Secret Manager"
 echo ""
 
 # Display required redirect URIs
@@ -49,8 +49,7 @@ echo ""
 echo "1. Open Google Cloud Console:"
 echo -e "   ${BLUE}https://console.cloud.google.com/apis/credentials?project=${PROJECT_ID}${NC}"
 echo ""
-echo "2. Find your OAuth 2.0 Client ID:"
-echo -e "   ${BLUE}${CLIENT_ID}${NC}"
+echo "2. Find your OAuth 2.0 Client ID (look for 'Web client' type)"
 echo ""
 echo "3. Click on it to edit"
 echo ""

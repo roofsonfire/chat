@@ -27,7 +27,7 @@ Run the automated helper script:
    - Or: APIs & Services → Credentials
 
 2. **Find Your OAuth 2.0 Client ID**:
-   - Look for: `1025958277405-dd54mmjpgq4ilopkt8h6d123e54npd3o.apps.googleusercontent.com`
+   - Look for the OAuth 2.0 Client with type "Web client"
    - Click on it to edit
 
 3. **Add Authorized Redirect URIs**:
