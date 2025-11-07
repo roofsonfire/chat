@@ -46,10 +46,10 @@ Chat modes are specialized configurations that:
 
 These chat modes are designed to work seamlessly with our existing documentation:
 
-- **[Security Policy](../SECURITY.md)** - Comprehensive security guidelines
+- **[Security Policy](../../docs/SECURITY.md)** - Comprehensive security guidelines
 - **[GitHub Copilot Instructions](copilot-instructions.md)** - General AI context
-- **[Middleware Security](../docs/features/MIDDLEWARE-SECURITY-SUMMARY.md)** - Implementation details
-- **[Contributing Guide](../CONTRIBUTING.md)** - Development standards
+- **[Middleware Security](../../docs/features/MIDDLEWARE-SECURITY-SUMMARY.md)** - Implementation details
+- **[Contributing Guide](../../docs/CONTRIBUTING.md)** - Development standards
 
 ## 🎯 Usage Guidelines
 
@@ -83,8 +83,8 @@ We may add additional specialized modes:
 
 - **[GitHub Copilot Documentation](https://docs.github.com/en/copilot)**
 - **[Chat Mode Best Practices](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot)**
-- **[Project Security Policy](../SECURITY.md)**
-- **[Development Guidelines](../docs/DEVELOPMENT.md)**
+- **[Project Security Policy](../../docs/SECURITY.md)**
+- **[Development Guidelines](../../docs/DEVELOPMENT.md)**
 
 ---
 
