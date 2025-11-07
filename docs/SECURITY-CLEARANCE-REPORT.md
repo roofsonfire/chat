@@ -31,7 +31,7 @@ All sensitive data is properly managed through:
 ### Search Patterns Validated
 
 1. **Credential Keywords**: `password`, `secret`, `key`, `token`, `credentials`
-2. **API Key Formats**: `sk-`, `pk_`, `AIza`, `gcp`, `AKIA`, `amazonaws`
+2. **API Key Formats**: `sk-`, `pk_`, `gcp`, `AIza`, `AKIA`, `amazonaws`
 3. **Database URLs**: `mongodb://`, `mysql://`, `postgres://`, `redis://`
 4. **Environment Files**: `.env`, `.env.local`, `.env.production`
 
@@ -286,10 +286,10 @@ Google OAuth credentials managed through:
 
 ## 📚 Related Documentation
 
-- [SECURITY-AUDIT.md](./SECURITY-AUDIT.md) - Detailed security audit
-- [SECURITY.md](./SECURITY.md) - Security policy and reporting
-- [OAUTH-SETUP.md](./docs/OAUTH-SETUP.md) - OAuth configuration guide
-- [DEPLOYMENT-TRANSITION-PLAN.md](./DEPLOYMENT-TRANSITION-PLAN.md) - Post-public deployment steps
+- [SECURITY-AUDIT.md](SECURITY-AUDIT.md) - Detailed security audit
+- [SECURITY.md](SECURITY.md) - Security policy and reporting
+- [OAUTH-SETUP.md](OAUTH-SETUP.md) - OAuth configuration guide
+- [DEPLOYMENT-TRANSITION-PLAN.md](DEPLOYMENT-TRANSITION-PLAN.md) - Post-public deployment steps
 
 ---
 

@@ -247,7 +247,7 @@ chat/
 
 ### Contributing
 
-- **Guidelines**: [CONTRIBUTING.md](../CONTRIBUTING.md)
+- **Guidelines**: [CONTRIBUTING.md](CONTRIBUTING.md)
 - **Code Standards**: [.github/copilot-instructions.md](../.github/copilot-instructions.md)
 - **Issues**: [GitHub Issues](https://github.com/roofsonfire/chat/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/roofsonfire/chat/discussions)

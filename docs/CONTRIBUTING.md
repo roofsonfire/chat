@@ -257,7 +257,7 @@ Before opening a pull request:
 
 ### 2. PR Description
 
-Use our [PR template](.github/PULL_REQUEST_TEMPLATE.md) and include:
+Use our [PR template](../.github/PULL_REQUEST_TEMPLATE.md) and include:
 
 - **Clear description** of what changed and why
 - **Related issues** (use `Fixes #123` to auto-close)
@@ -307,14 +307,14 @@ We welcome contributions in these areas:
 
 ### 📚 Resources
 
-- **[Development Guide](docs/DEVELOPMENT.md)** - Comprehensive setup and workflows
-- **[API Documentation](docs/API.md)** - REST API reference
-- **[GitHub Copilot Instructions](.github/copilot-instructions.md)** - AI context and patterns
-- **[Architecture Overview](docs/README.md)** - System design and structure
+- **[Development Guide](DEVELOPMENT.md)** - Comprehensive setup and workflows
+- **[API Documentation](API.md)** - REST API reference
+- **[GitHub Copilot Instructions](../.github/copilot-instructions.md)** - AI context and patterns
+- **[Documentation Index](README.md)** - System design and structure
 
 ### 🤖 AI-Assisted Development
 
-This project is optimized for GitHub Copilot! Review our [Copilot instructions](.github/copilot-instructions.md) to understand:
+This project is optimized for GitHub Copilot! Review our [Copilot instructions](../.github/copilot-instructions.md) to understand:
 
 - Code patterns and conventions
 - Architecture decisions

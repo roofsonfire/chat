@@ -146,108 +146,23 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 - `npm run storybook` - Start Storybook component docs
 - `npm run build-storybook` - Build Storybook for production
 
-## 🛠️ Editor Setup
+## � Documentation
 
-### VS Code (Recommended)
+- **Quick orientation**: Start with the [Documentation Index](docs/README.md) for the full table of contents.
+- **Daily development workflows**: [Development Guide](docs/DEVELOPMENT.md).
+- **Architecture & services**: [Project Navigation](docs/PROJECT-NAVIGATION.md) and the Architecture section in the documentation index.
+- **Operations & deployment**: Cloud Run guides under `docs/deployment/`.
+- **Security & IAM**: [USER-MANAGEMENT.md](docs/USER-MANAGEMENT.md) and the Security section in the documentation index.
 
-This project includes comprehensive **VS Code workspace configuration**:
+If you add or move docs, follow [docs/CONTRIBUTING-DOCS.md](docs/CONTRIBUTING-DOCS.md) to keep everything linked.
 
-#### 📦 Auto-Install Extensions
+## �️ Architecture Snapshot
 
-- **TypeScript & React**: Full IntelliSense and refactoring
-- **Code Quality**: ESLint, Prettier, Error Lens
-- **Testing**: Vitest Explorer
-- **AI Tools**: GitHub Copilot integration
-- **Styling**: Tailwind CSS IntelliSense
-
-#### 🎯 One-Click Actions
-
-- **`F5`** - Debug Next.js (full-stack debugging)
-- **`Ctrl+Shift+P`** → **`Tasks: Run Task`**:
-  - 🚀 Start Development Server
-  - 🧪 Run Unit Tests (Watch Mode)
-  - 🔧 Fix Code Issues (Format + Lint)
-  - 🚀 Deploy to Staging
-
-#### 🐛 Debugging Features
-
-- **Server-side**: Debug API routes and Server Components
-- **Client-side**: Chrome DevTools integration with source maps
-- **Testing**: Debug unit tests with breakpoints
-- **Compound configs**: Full-stack debugging sessions
-
-### Zed Editor
-
-**Fast, modern alternative** with built-in configuration:
-
-#### 🚀 Features
-
-- **Native performance** with Rust-based architecture
-- **Built-in LSP** for TypeScript, React, Tailwind CSS
-- **AI integration** with GitHub Copilot
-- **Project tasks** pre-configured for common workflows
-- **Collaborative editing** features
-
-#### ⚡ Quick Setup
-
-```bash
-# Project settings automatically loaded from .zed/settings.json
-# Includes formatting, linting, and task configuration
-```
-
-### 📚 Complete Setup Guide
-
-See **[Editor Setup Guide](docs/EDITOR-SETUP.md)** for detailed configuration, debugging setup, and performance optimization tips.
-
-## 🏗️ Project Structure
-
-```
-chat/
-├── 📁 src/
-│   ├── 📁 app/                   # Next.js App Router
-│   │   ├── 📁 api/              # API routes (chat, auth, models)
-│   │   ├── 📁 login/            # Authentication pages
-│   │   ├── layout.tsx           # Root layout with providers
-│   │   ├── page.tsx             # Home page (chat interface)
-│   │   └── globals.css          # Global styles
-│   ├── 📁 components/           # React components
-│   │   ├── 📁 ui/               # shadcn/ui base components
-│   │   ├── 📁 chat/             # Chat-specific components
-│   │   ├── 📁 auth/             # Authentication components
-│   │   └── performance-monitor.tsx
-│   ├── 📁 lib/                  # Core utilities and services
-│   │   ├── 📁 auth/             # Authentication logic
-│   │   ├── 📁 services/         # Service layer (ChatService, etc.)
-│   │   ├── 📁 hooks/            # Custom React hooks
-│   │   ├── 📁 utils/            # Utility functions
-│   │   ├── 📁 types/            # TypeScript type definitions
-│   │   ├── 📁 validation/       # Zod schemas
-│   │   ├── 📁 streaming/        # Streaming utilities
-│   │   ├── 📁 features/         # Feature flags
-│   │   ├── env.ts               # Environment validation
-│   │   ├── logger.ts            # Centralized logging
-│   │   ├── errors.ts            # Custom error classes
-│   │   └── performance.ts       # Performance monitoring
-│   └── middleware.ts            # Next.js middleware
-├── 📁 scripts/                  # Utility scripts
-│   ├── 📁 deployment/           # Deployment automation
-│   ├── 📁 utils/                # Shared script helpers
-│   ├── diagnose-oauth.sh       # OAuth troubleshooting helper
-│   ├── interactive-oauth-setup.sh
-│   └── setup-oauth-secrets.sh
-├── 📁 tests/                    # Test files
-│   ├── 📁 unit/                 # Unit tests
-│   ├── 📁 integration/          # Integration tests
-│   ├── 📁 manual/               # Manual smoke scripts
-│   └── 📁 e2e/                  # Placeholder for future Playwright suite
-├── 📁 docs/                     # Documentation
-├── 📁 .github/                  # GitHub workflows & templates
-├── 📁 .husky/                   # Git hooks
-├── 📁 .storybook/               # Storybook configuration
-├── Dockerfile                   # Container configuration
-├── next.config.ts               # Next.js configuration
-└── package.json                 # Dependencies & scripts
-```
+- **Runtime**: Next.js 15 (App Router) on Google Cloud Run, scaling 0-10 instances.
+- **Frontend**: React 19, Tailwind CSS 4, shadcn/ui v4 components with `data-slot` styling.
+- **AI**: Vertex AI Gemini models with streaming responses and image generation.
+- **Security**: NextAuth.js with Google OAuth invite list, rate limiting middleware, bcrypt test credentials.
+- **Testing**: Vitest (unit, integration, Storybook projects) plus manual smoke scripts for Vertex AI.
 
 ## 🌐 Deployment
 
@@ -410,7 +325,7 @@ Components are customizable and accessible out of the box.
 
 ### Security Policy
 
-See [SECURITY.md](SECURITY.md) for vulnerability reporting.
+See [SECURITY.md](docs/SECURITY.md) for vulnerability reporting.
 
 ## 🤝 Contributing
 
@@ -422,7 +337,7 @@ We welcome contributions! Please follow these steps:
 4. **Run tests**: `npm run test`
 5. **Submit a pull request** using our [PR template](.github/PULL_REQUEST_TEMPLATE.md)
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
 
 ## 📊 Tech Stack
 
@@ -485,7 +400,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 - **🐛 [Report Issues](https://github.com/roofsonfire/chat/issues/new/choose)** - Bug reports & feature requests
 - **💬 [Discussions](https://github.com/roofsonfire/chat/discussions)** - Questions & ideas
 - **📚 [Documentation](docs/README.md)** - Comprehensive guides
-- **🛡️ [Security](SECURITY.md)** - Security policy
+- **🛡️ [Security](docs/SECURITY.md)** - Security policy
 
 ## 📄 License
 

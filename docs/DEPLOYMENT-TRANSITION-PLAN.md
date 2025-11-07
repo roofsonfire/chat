@@ -65,8 +65,6 @@
 
 ## 🔄 Next Steps - Manual Configuration Required
 
-## 🔄 Next Steps - Manual Configuration Required
-
 ### ~~Step 1: GitHub Branch Protection~~ ✅ COMPLETED
 
 Branch protection rules successfully configured via GitHub API:
@@ -322,8 +320,8 @@ If anything goes wrong:
 - **Google Cloud Console**: https://console.cloud.google.com
 - **GitHub Repository**: https://github.com/roofsonfire/chat
 - **Cloud Run Docs**: https://cloud.google.com/run/docs
-- **OAuth Setup Guide**: `docs/OAUTH-SETUP.md`
-- **Deployment Guide**: `docs/deployment/CLOUD-RUN-DEPLOYMENT.md`
+- **OAuth Setup Guide**: `OAUTH-SETUP.md`
+- **Deployment Guide**: `deployment/CLOUD-RUN-DEPLOYMENT.md`
 
 ---
 
