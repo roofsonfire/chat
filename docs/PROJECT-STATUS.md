@@ -9,10 +9,15 @@
 
 - **GitHub Repository**: [roofsonfire/chat](https://github.com/roofsonfire/chat)
 - **Clone URL**: `git@github.com:roofsonfire/chat.git`
-- **Live Staging**: [https://staging.chat.daza.ar](https://staging.chat.daza.ar)
+- **Live Production**: [https://chat.daza.ar](https://chat.daza.ar)
 - **Platform**: Google Cloud Run (Serverless)
 - **Project ID**: `norse-breaker-474323-n8`
 - **Region**: `us-central1` (Iowa)
+
+### Branch Strategy
+
+- **`develop`** - Development branch (local testing only)
+- **`main`** - Production branch (auto-deploys to chat.daza.ar)
 
 ### Current Branch Status
 
@@ -51,8 +56,8 @@
 ### Production Environment
 
 ```
-Service Name: chat-staging
-Domain: https://staging.chat.daza.ar
+Service Name: chat-production
+Domain: https://chat.daza.ar
 Memory: 1GB
 CPU: 1 vCPU
 Scaling: 0-10 instances (serverless)
@@ -64,7 +69,7 @@ Concurrency: 80 requests/instance
 
 ```
 NODE_ENV=production
-NEXTAUTH_URL=https://staging.chat.daza.ar
+NEXTAUTH_URL=https://chat.daza.ar
 NEXTAUTH_SECRET=***
 AUTH_USER_EMAIL=***
 AUTH_USER_PASSWORD_HASH=***

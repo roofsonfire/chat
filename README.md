@@ -2,14 +2,14 @@
 
 A production-grade multimodal chat application built with Next.js 15, TypeScript, and Google Vertex AI. Features real-time streaming responses, image generation capabilities, and secure authentication.
 
-[![Deploy to Cloud Run](https://img.shields.io/badge/Deploy-Cloud%20Run-blue?logo=googlecloud)](https://staging.chat.daza.ar)
+[![Deploy to Cloud Run](https://img.shields.io/badge/Deploy-Cloud%20Run-blue?logo=googlecloud)](https://chat.daza.ar)
 [![GitHub](https://img.shields.io/badge/GitHub-roofsonfire%2Fchat-black?logo=github)](https://github.com/roofsonfire/chat)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15.5-black?logo=next.js)](https://nextjs.org/)
 
 ## 🌐 Live Demo
 
-**Staging**: [https://staging.chat.daza.ar](https://staging.chat.daza.ar)
+**Production**: [https://chat.daza.ar](https://chat.daza.ar)
 
 ## ✨ Features
 
@@ -255,8 +255,32 @@ chat/
 
 - **Platform**: Google Cloud Run
 - **Region**: us-central1 (Iowa)
-- **Domain**: [staging.chat.daza.ar](https://staging.chat.daza.ar)
+- **Domain**: [chat.daza.ar](https://chat.daza.ar)
 - **Scaling**: 0-10 instances (serverless)
+
+### Git Workflow
+
+This project uses a **two-branch strategy**:
+
+- **`develop`** - Active development branch (local testing on `localhost:3000`)
+- **`main`** - Production branch (auto-deploys to `chat.daza.ar`)
+
+**Development workflow:**
+
+```bash
+# Create feature branch from develop
+git checkout develop
+git checkout -b feature/my-feature
+
+# Make changes and test locally
+npm run dev
+
+# Push and create PR to develop
+git push origin feature/my-feature
+
+# After merge to develop, test locally
+# Then create PR from develop to main for production deployment
+```
 
 ### Deploy to Cloud Run
 
@@ -278,14 +302,14 @@ chat/
 3. **Deploy**:
 
    ```bash
-   chmod +x scripts/deployment/deploy-staging.sh
-   ./scripts/deployment/deploy-staging.sh
+   chmod +x scripts/deployment/deploy-production.sh
+   ./scripts/deployment/deploy-production.sh
    ```
 
 4. **Configure DNS** (for custom domain):
    ```
    Type: CNAME
-   Name: staging.chat
+   Name: chat
    Value: ghs.googlehosted.com
    TTL: 3600
    ```
