@@ -15,10 +15,15 @@ Welcome to the comprehensive documentation for the Next.js AI Chat Assistant. Th
 
 - [🏠 Repository Home](https://github.com/roofsonfire/chat)
 - [🌐 Live Demo](https://staging.chat.daza.ar)
-- [🐛 Report Issues](https://github.com/roofsonfire/chat/issues)
+- [� Project Status](PROJECT-STATUS.md)
+- [�🐛 Report Issues](https://github.com/roofsonfire/chat/issues)
 - [💬 Discussions](https://github.com/roofsonfire/chat/discussions)
 
-## 🚀 Quick Start
+## � Status & Planning
+
+- [**Project Status Summary**](PROJECT-STATUS.md) - Current health snapshot, roadmap, and deployment details
+
+## �🚀 Quick Start
 
 | Document                                                      | Description                      | Audience   |
 | ------------------------------------------------------------- | -------------------------------- | ---------- |
@@ -48,6 +53,7 @@ Welcome to the comprehensive documentation for the Next.js AI Chat Assistant. Th
 - [**Feature Flags**](features/FEATURE-FLAGS.md) - Feature toggle system
 - [**Middleware Security**](features/MIDDLEWARE-SECURITY-SUMMARY.md) - Security implementation details
 - [**Model Selection**](features/MODEL-SELECTION.md) - AI model configuration
+- [**OAuth Setup**](OAUTH-SETUP.md) - Google OAuth configuration and troubleshooting
 - [**Database Integration**](features/DATABASE-INTEGRATION.md) - Database setup and usage
 
 ## 🚀 Deployment & Operations
@@ -149,7 +155,7 @@ This documentation follows these principles:
 - **Framework**: Next.js 15 + TypeScript 5
 - **AI Provider**: Google Vertex AI
 
-**Last Updated**: October 2025  
+**Last Updated**: November 2025  
 **Maintained by**: Development Team  
 **Review Schedule**: Monthly
 

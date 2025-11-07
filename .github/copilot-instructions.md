@@ -46,13 +46,13 @@ This is a production-grade chat application built with Next.js 15, TypeScript, a
 
 ### Testing & Quality
 
-- **Vitest** for unit/integration tests
-- **Playwright** for E2E testing
+- **Vitest** for unit, integration, and Storybook-driven component tests
+- **Storybook** for interactive documentation and visual regression checks
+- **Manual smoke scripts** in `tests/manual/` for Vertex AI and auth verification
+- **Playwright** E2E suite currently retired (folder reserved for future rebuild)
 - **ESLint** with Next.js config
 - **Prettier** with Tailwind plugin
-- **Husky** for Git hooks
-- **lint-staged** for pre-commit checks
-- **Storybook** for component documentation
+- **Husky** with **lint-staged** for pre-commit checks
 
 ## Project Structure
 
@@ -225,31 +225,45 @@ export function ChatMessage({ message, role, timestamp }: ChatMessageProps) {
 
 ### Unit Tests (Vitest)
 
-- Test files: `*.test.ts` or `*.test.tsx`
 - Location: `tests/unit/`
-- Mock external dependencies
-- Test edge cases and error conditions
-- Use Testing Library for React components
+- Files: `*.test.ts` or `*.test.tsx`
+- Tooling: React Testing Library + vi mocks
+- Shared setup in `tests/setup.ts` stubs router, fetch, ResizeObserver
 
-### Integration Tests
+### Integration Tests (Vitest)
 
 - Location: `tests/integration/`
-- Test interaction between modules
-- Mock external services (Vertex AI, etc.)
+- Files: `*.spec.ts`
+- Focus on end-to-end chat pipeline and cross-module flows
+- Mock external services like Vertex AI via shared helpers
 
-### E2E Tests (Playwright)
+### Storybook Test Project
 
-- Location: `tests/e2e/`
-- Test critical user journeys
-- Test authentication flows
-- Test accessibility with axe-core
-- Use page objects pattern
+- Configured via `@storybook/addon-vitest` in `vitest.config.ts`
+- Executes component assertions defined alongside stories
+- Uses `.storybook/vitest.setup.ts` to apply global annotations
 
-### Test Coverage
+### Manual Smoke Scripts
 
-- Run: `npm run test:coverage`
-- Aim for >80% coverage on critical paths
-- Focus on business logic and utilities
+- Located under `tests/manual/`
+- Exercise Vertex AI endpoints, auth flows, and multimodal uploads
+- Useful for staging validation when automated E2E is offline
+
+### E2E Automation
+
+- Playwright suite currently removed; `tests/e2e/` kept as placeholder
+- Rebuild planned with updated user journeys and accessibility checks
+
+### Test Commands & Coverage
+
+```bash
+npm run test          # Executes all Vitest projects
+npm run test:coverage # Generates HTML/JSON coverage output under coverage/
+npm run test:ui       # Launches Vitest UI for focused debugging
+```
+
+- Target >80% coverage on critical paths
+- Coverage artifacts served from `coverage/index.html`
 
 ## Environment Variables
 
@@ -263,27 +277,32 @@ AUTH_USER_EMAIL; // Authorized user email
 AUTH_USER_PASSWORD_HASH; // Bcrypt hashed password
 GOOGLE_PROJECT_ID; // GCP project ID
 GOOGLE_LOCATION; // Vertex AI region
-GOOGLE_VERTEX_AI_MODEL_ID; // Model ID (e.g., gemini-1.5-flash-002)
+GOOGLE_VERTEX_AI_MODEL_ID; // Model ID (e.g., gemini-2.5-flash-image)
+GOOGLE_CLIENT_ID; // OAuth client ID
+GOOGLE_CLIENT_SECRET; // OAuth client secret
+
+// Optional toggles:
+ENABLE_TEST_CREDENTIALS; // "true" to expose credentials provider locally
 ```
 
 ## Performance Considerations
 
 - Use React Server Components for better performance
 - Implement streaming responses for AI chat
-- Monitor Web Vitals with `web-vitals` package
-- Use `PerformanceMonitor` component
-- Lazy load heavy components
-- Optimize images with Next.js Image
+- Monitor Web Vitals with the `web-vitals` package
+- Use the `PerformanceMonitor` component for runtime metrics
+- Lazy load heavy components and leverage Suspense fallbacks
+- Optimize images with the Next.js Image component
 - Enable Turbopack for faster builds
 
 ## Accessibility
 
-- Use semantic HTML elements
-- Include ARIA labels where needed
-- Ensure keyboard navigation works
-- Test with Playwright accessibility scanner
-- Use shadcn/ui components (already accessible)
-- Maintain color contrast ratios
+- Use semantic HTML elements and shadcn/ui primitives
+- Provide ARIA attributes only when necessary
+- Ensure keyboard navigation covers all interactive elements
+- Validate with the Storybook a11y addon and (future) Playwright axe-core checks
+- Maintain WCAG-compliant color contrast ratios
+- Supply descriptive labels and focus management for dialogs and overlays
 
 ## Git & Development Workflow
 
@@ -385,11 +404,12 @@ export default async function Page() {
 
 - **README.md** - Project overview and quick start
 - **docs/** - Detailed documentation
+  - `PROJECT-STATUS.md` - Current health snapshot and deployment details
   - `DEVELOPMENT.md` - Development setup and guidelines
   - `API.md` - API documentation
   - `USER-MANAGEMENT.md` - Authentication details
   - `PERFORMANCE.md` - Performance optimization
-  - `E2E-TESTING-SUMMARY.md` - Testing strategies
+  - `OAUTH-SETUP.md` - Google OAuth configuration and troubleshooting
   - `FEATURE-FLAGS.md` - Feature flag implementation
 
 ## Additional Resources

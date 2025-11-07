@@ -2,7 +2,6 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { fileURLToPath } from "node:url";
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 const dirname =
   typeof __dirname !== "undefined"
     ? __dirname
@@ -64,33 +63,8 @@ export default defineConfig({
           },
         },
       },
-      // Storybook tests project
-      {
-        plugins: [
-          react(),
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-          storybookTest({
-            configDir: path.join(dirname, ".storybook"),
-          }),
-        ],
-        test: {
-          globals: true,
-          name: "storybook",
-          browser: {
-            enabled: true,
-            headless: true,
-            provider: "playwright",
-            instances: [
-              {
-                browser: "chromium",
-              },
-            ],
-          },
-          setupFiles: [".storybook/vitest.setup.ts"],
-          exclude: ["**/node_modules/**", "**/dist/**"],
-        },
-      },
+      // Storybook Vitest project intentionally disabled while Playwright/browser support is offline.
+      // Reintroduce by reinstating the project block with storybookTest(...) when Playwright returns.
     ],
   },
   resolve: {
