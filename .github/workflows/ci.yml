@@ -125,6 +125,7 @@ jobs:
           NEXTAUTH_URL: http://localhost:3000
           AUTH_USER_EMAIL: ${{ secrets.TEST_AUTH_USER_EMAIL }}
           AUTH_USER_PASSWORD_HASH: ${{ secrets.TEST_AUTH_PASSWORD_HASH }}
+          ALLOWED_EMAILS: ${{ secrets.TEST_AUTH_USER_EMAIL }}
           GOOGLE_CLIENT_ID: ${{ secrets.TEST_GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.TEST_GOOGLE_CLIENT_SECRET }}
           GOOGLE_PROJECT_ID: dummy-project-id
