@@ -92,6 +92,7 @@ jobs:
             google-vertex-ai-model-id
             google-client-id
             google-client-secret
+            allowed-emails
           )
           for SECRET in "${SECRETS[@]}"; do
             echo "Binding $SECRET"
@@ -103,11 +104,14 @@ jobs:
 
       - name: Build and push Docker image
         id: docker-build
+        env:
+          ALLOWED_EMAILS: ${{ secrets.TEST_AUTH_USER_EMAIL }}
         run: |
           IMAGE_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }}"
 
           docker build \
             --build-arg NODE_ENV=production \
+            --build-arg ALLOWED_EMAILS="${ALLOWED_EMAILS}" \
             --tag "${IMAGE_TAG}" \
             --tag "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest" \
             .
@@ -134,7 +138,7 @@ jobs:
             --concurrency=80
             --port=3000
             --set-env-vars="ENABLE_TEST_CREDENTIALS=false,NEXTAUTH_URL=https://${{ env.DOMAIN }}"
-            --set-secrets="NEXTAUTH_SECRET=nextauth-secret:latest,AUTH_USER_EMAIL=auth-email:latest,AUTH_USER_PASSWORD_HASH=auth-password-hash:latest,GOOGLE_PROJECT_ID=google-project-id:latest,GOOGLE_LOCATION=google-location:latest,GOOGLE_VERTEX_AI_MODEL_ID=google-vertex-ai-model-id:latest,GOOGLE_CLIENT_ID=google-client-id:latest,GOOGLE_CLIENT_SECRET=google-client-secret:latest"
+            --set-secrets="NEXTAUTH_SECRET=nextauth-secret:latest,AUTH_USER_EMAIL=auth-email:latest,AUTH_USER_PASSWORD_HASH=auth-password-hash:latest,GOOGLE_PROJECT_ID=google-project-id:latest,GOOGLE_LOCATION=google-location:latest,GOOGLE_VERTEX_AI_MODEL_ID=google-vertex-ai-model-id:latest,GOOGLE_CLIENT_ID=google-client-id:latest,GOOGLE_CLIENT_SECRET=google-client-secret:latest,ALLOWED_EMAILS=allowed-emails:latest"
 
       - name: Map domain
         continue-on-error: true # El mapping puede ya existir
