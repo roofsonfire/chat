@@ -141,7 +141,7 @@ Free tier includes:
 
 ## 📚 Full Documentation
 
-See `docs/CLOUD-RUN-DEPLOYMENT.md` for complete details.
+See [CLOUD-RUN-DEPLOYMENT.md](CLOUD-RUN-DEPLOYMENT.md) for complete details.
 
 ---
 

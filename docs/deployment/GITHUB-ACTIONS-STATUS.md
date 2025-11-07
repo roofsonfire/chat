@@ -178,10 +178,10 @@ Automated Cloud Run deployment with:
 
 ## 📚 Documentation
 
-- [GitHub Actions Deployment Guide](docs/GITHUB-ACTIONS-DEPLOYMENT.md)
+- [GitHub Actions Deployment Guide](GITHUB-ACTIONS-DEPLOYMENT.md)
 - [Manual Deploy Commands](MANUAL-DEPLOY-COMMANDS.md)
 - [Deployment Checklist](DEPLOYMENT-CHECKLIST.md)
-- [Cloud Run Deployment](docs/CLOUD-RUN-DEPLOYMENT.md)
+- [Cloud Run Deployment](CLOUD-RUN-DEPLOYMENT.md)
 
 ## ✅ Success Criteria
 

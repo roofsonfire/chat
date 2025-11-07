@@ -50,13 +50,12 @@ What other options did we consider?
 
 ## Index of ADRs
 
-| #                                        | Title                       | Status   | Date    |
-| ---------------------------------------- | --------------------------- | -------- | ------- |
-| [001](001-use-nextjs-app-router.md)      | Use Next.js App Router      | Accepted | 2024-10 |
-| [002](002-google-vertex-ai-selection.md) | Select Google Vertex AI     | Accepted | 2024-10 |
-| [003](003-serverless-deployment.md)      | Deploy on Google Cloud Run  | Accepted | 2024-10 |
-| [004](004-nextauth-with-oauth.md)        | Use NextAuth.js with OAuth  | Accepted | 2024-10 |
-| [005](005-in-memory-rate-limiting.md)    | Use In-Memory Rate Limiting | Accepted | 2024-11 |
+| #                                         | Title                       | Status   | Date    |
+| ----------------------------------------- | --------------------------- | -------- | ------- |
+| [001](001-use-nextjs-app-router.md)       | Use Next.js App Router      | Accepted | 2024-10 |
+| [002](002-google-vertex-ai-selection.md)  | Select Google Vertex AI     | Accepted | 2024-10 |
+| [005](005-in-memory-rate-limiting.md)     | Use In-Memory Rate Limiting | Accepted | 2024-11 |
+| [006](006-environment-based-allowlist.md) | Environment-Based Allowlist | Accepted | 2024-11 |
 
 ## Creating a New ADR
 
