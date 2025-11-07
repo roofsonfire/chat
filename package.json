@@ -90,7 +90,7 @@
     "@next/env": "^15.5.4",
     "@storybook/addon-a11y": "^9.1.10",
     "@storybook/addon-docs": "^9.1.10",
-    "@storybook/addon-onboarding": "^9.1.10",
+    "@storybook/addon-onboarding": "^10.0.5",
     "@storybook/addon-vitest": "^9.1.10",
     "@storybook/nextjs-vite": "^9.1.10",
     "@tailwindcss/postcss": "^4",
