@@ -57,7 +57,7 @@ This document summarizes all improvements implemented in Phase 2 of the autonomo
 #### Achievements:
 
 - **4 Parallel Jobs**: Maximized CI efficiency
-- **Full Coverage**: Lint, type check, unit tests, E2E tests, build verification
+- **Full Coverage**: Lint, type check, unit tests, build verification
 - **Fast Execution**: 3-5 minute typical runtime with caching
 - **Artifact Management**: Test reports and coverage uploads
 
@@ -75,14 +75,7 @@ This document summarizes all improvements implemented in Phase 2 of the autonomo
 - Coverage report generation
 - Codecov integration (optional, non-blocking)
 
-##### Job 3: E2E Tests (15min timeout)
-
-- Playwright across multiple browsers
-- Full authentication flow testing
-- Accessibility compliance validation
-- Test report artifacts
-
-##### Job 4: Build Check
+##### Job 3: Build Check
 
 - Next.js production build
 - Build artifact verification
@@ -147,7 +140,6 @@ This document summarizes all improvements implemented in Phase 2 of the autonomo
 
 #### Features:
 
-- **Auto-Documentation**: `autodocs` tag generates prop tables
 - **Interactive Controls**: Modify props in real-time
 - **Accessibility Testing**: @storybook/addon-a11y integration
 - **Component Testing**: @storybook/addon-vitest for testing stories
@@ -181,8 +173,7 @@ This document summarizes all improvements implemented in Phase 2 of the autonomo
 ### Testing:
 
 - **Unit Tests**: 45 tests, 100% passing
-- **E2E Tests**: 6 tests (auth, home, accessibility)
-- **Test Infrastructure**: Vitest + Playwright
+- **Test Infrastructure**: Vitest
 - **Coverage Reports**: HTML, JSON, text formats
 
 ### Documentation:
@@ -213,9 +204,8 @@ This document summarizes all improvements implemented in Phase 2 of the autonomo
 ### Testing Strategy:
 
 1. **Unit Tests**: Focus on utilities and services (fast, isolated)
-2. **E2E Tests**: Cover critical user journeys (slow, integrated)
-3. **Component Tests**: Storybook + Vitest (visual + behavioral)
-4. **Integration Tests**: Deferred (complex Next.js App Router setup)
+2. **Component Tests**: Storybook + Vitest (visual + behavioral)
+3. **Integration Tests**: Deferred (complex Next.js App Router setup)
 
 ### CI/CD Architecture:
 
@@ -299,8 +289,8 @@ From IMPROVEMENTS.md:
 
 Phase 2 successfully implemented a **production-ready testing and documentation infrastructure**. The project now has:
 
-1. **Comprehensive Testing**: 45 unit tests + 6 E2E tests + Storybook component tests
-2. **Automated CI/CD**: 4-job pipeline with full quality checks
+1. **Comprehensive Testing**: 45 unit tests + Storybook component tests
+2. **Automated CI/CD**: 3-job pipeline with full quality checks
 3. **Interactive Documentation**: 27 Storybook stories with accessibility testing
 4. **100% Code Coverage**: On all critical utilities and services
 

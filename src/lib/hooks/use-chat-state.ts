@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Message } from "@/lib/types";
 import { DEFAULT_MODEL_ID } from "@/lib/constants/vertex-ai-models";
@@ -12,6 +14,11 @@ export function useChatState() {
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
   };
+
+  const clearHistory = () => {
+    setMessages([]);
+  };
+
   return {
     messages,
     setMessages,
@@ -24,5 +31,6 @@ export function useChatState() {
     setImage,
     selectedModel,
     setSelectedModel,
+    clearHistory,
   };
 }

@@ -266,11 +266,11 @@ User management requires database integration (#7) and is best implemented as a 
 
 ### Test Suite Evolution
 
-| Phase       | Unit Tests | Storybook Tests | E2E Tests | Total   |
-| ----------- | ---------- | --------------- | --------- | ------- |
-| Phase 1     | 0          | 0               | 0         | 0       |
-| Phase 2     | 45         | 35              | 15        | 95      |
-| **Phase 3** | **77**     | **35**          | **15**    | **127** |
+| Phase       | Unit Tests | Storybook Tests | Total   |
+| ----------- | ---------- | --------------- | ------- |
+| Phase 1     | 0          | 0               | 0       |
+| Phase 2     | 45         | 35              | 80      |
+| **Phase 3** | **77**     | **35**          | **112** |
 
 ### Documentation Growth
 

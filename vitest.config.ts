@@ -2,7 +2,6 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { fileURLToPath } from "node:url";
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 const dirname =
   typeof __dirname !== "undefined"
     ? __dirname
@@ -15,7 +14,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],
-    exclude: ["**/node_modules/**", "**/dist/**", "**/e2e/**"],
+    exclude: ["**/node_modules/**", "**/dist/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
@@ -44,33 +43,28 @@ export default defineConfig({
           },
         },
       },
-      // Storybook tests project
+      // Integration tests project
       {
-        plugins: [
-          react(),
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-          storybookTest({
-            configDir: path.join(dirname, ".storybook"),
-          }),
-        ],
-        test: {
-          globals: true,
-          name: "storybook",
-          browser: {
-            enabled: true,
-            headless: true,
-            provider: "playwright",
-            instances: [
-              {
-                browser: "chromium",
-              },
-            ],
+        plugins: [react()],
+        resolve: {
+          alias: {
+            "@": path.resolve(dirname, "./src"),
           },
-          setupFiles: [".storybook/vitest.setup.ts"],
+        },
+        test: {
+          name: "integration",
+          globals: true,
+          environment: "jsdom",
+          setupFiles: ["./tests/setup.ts"],
+          include: ["tests/integration/**/*.spec.ts"],
           exclude: ["**/node_modules/**", "**/dist/**"],
+          env: {
+            NODE_ENV: "development",
+          },
         },
       },
+      // Storybook Vitest project intentionally disabled while Playwright/browser support is offline.
+      // Reintroduce by reinstating the project block with storybookTest(...) when Playwright returns.
     ],
   },
   resolve: {

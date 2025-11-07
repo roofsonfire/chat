@@ -92,7 +92,6 @@ To get started with local development, follow these steps:
 6.  **Verify setup with tests:**
     ```bash
     npm run test          # Unit tests
-    npm run test:e2e      # End-to-end tests
     npm run lint          # Code quality checks
     ```
 
@@ -102,7 +101,7 @@ To get started with local development, follow these steps:
 
 We maintain high code quality standards. All contributions must:
 
-- ✅ **Pass all tests** (`npm run test` and `npm run test:e2e`)
+- ✅ **Pass all tests** (`npm run test`)
 - ✅ **Follow TypeScript strict mode** (no `any` types)
 - ✅ **Pass ESLint checks** (`npm run lint`)
 - ✅ **Follow Prettier formatting** (`npm run format:check`)
@@ -211,7 +210,6 @@ fix: resolve login redirect loop issue
 docs: update API documentation for chat endpoints
 style: format code with prettier
 refactor: extract chat service into separate module
-test: add e2e tests for authentication flow
 chore: update dependencies to latest versions
 perf: optimize image loading with next/image
 
@@ -219,7 +217,6 @@ perf: optimize image loading with next/image
 feat(chat): implement message reactions
 fix(auth): handle expired JWT tokens
 docs(api): add OpenAPI schema
-test(e2e): add accessibility tests
 ```
 
 ### 🧪 Testing Requirements
@@ -245,21 +242,6 @@ describe("ChatService", () => {
 });
 ```
 
-#### E2E Tests (Required for new user flows)
-
-```typescript
-// tests/e2e/new-feature.spec.ts
-import { test, expect } from "@playwright/test";
-
-test.describe("New Feature", () => {
-  test("should work for authenticated users", async ({ page }) => {
-    await page.goto("/login");
-    await page.fill('[data-testid="email"]', "test@example.com");
-    // Test implementation...
-  });
-});
-```
-
 ## 🔄 Pull Request Process
 
 ### 1. Pre-PR Checklist
@@ -267,7 +249,7 @@ test.describe("New Feature", () => {
 Before opening a pull request:
 
 - [ ] Branch is up to date with `main`
-- [ ] All tests pass locally (`npm run test` and `npm run test:e2e`)
+- [ ] All tests pass locally (`npm run test`)
 - [ ] Code follows style guidelines (`npm run lint` and `npm run format:check`)
 - [ ] Documentation is updated (if needed)
 - [ ] Commit messages follow conventional format

@@ -1,5 +1,4 @@
 "use client";
-import { env } from "@/lib/env";
 
 import * as React from "react";
 import { signIn } from "next-auth/react";
@@ -10,17 +9,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 
-type LoginFormProps = React.HTMLAttributes<HTMLDivElement>;
+type LoginFormProps = React.HTMLAttributes<HTMLDivElement> & {
+  enableTestCredentials?: boolean;
+};
 
-export function LoginForm({ className, ...props }: LoginFormProps) {
+export function LoginForm({
+  className,
+  enableTestCredentials = false,
+  ...props
+}: LoginFormProps) {
   const router = useRouter();
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false);
   const [isCredentialsLoading, setIsCredentialsLoading] =
     React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
-  const showTestCredentials = env.ENABLE_TEST_CREDENTIALS === "true";
+  const [rememberMe, setRememberMe] = React.useState<boolean>(false);
+  const [acceptTerms, setAcceptTerms] = React.useState<boolean>(false);
+  const showTestCredentials = enableTestCredentials;
 
   const handleGoogleLogin = async () => {
     try {
@@ -97,6 +106,34 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
                   onChange={(event) => setPassword(event.target.value)}
                 />
               </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="remember-me"
+                checked={rememberMe}
+                onCheckedChange={setRememberMe}
+                disabled={isCredentialsLoading}
+              />
+              <Label htmlFor="remember-me" className="text-sm">
+                Remember me
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="accept-terms"
+                checked={acceptTerms}
+                onCheckedChange={(checked) => setAcceptTerms(checked === true)}
+                disabled={isCredentialsLoading}
+              />
+              <Label htmlFor="accept-terms" className="text-sm">
+                I accept the{" "}
+                <a
+                  href="#"
+                  className="hover:text-primary underline underline-offset-4"
+                >
+                  Terms and Conditions
+                </a>
+              </Label>
             </div>
             <Button
               type="submit"

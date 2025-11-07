@@ -135,14 +135,6 @@ export const chatRequestSchema = z.object({
    - Tests fallback to default model
    - Tests model parameter passing
 
-### Integration Testing
-
-The E2E tests (`tests/e2e/chat.spec.ts`) should be updated to test:
-
-- Model selector visibility
-- Model switching functionality
-- Message sending with different models
-
 ### Storybook
 
 The ModelSelector component has Storybook stories for:

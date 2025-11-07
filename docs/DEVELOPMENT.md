@@ -140,57 +140,6 @@ The project uses Husky for pre-commit hooks that automatically:
 
 This ensures code quality before committing.
 
-### Testing
-
-```bash
-# Run E2E tests
-npm run test:e2e
-
-# Run tests in UI mode (interactive)
-npm run test:e2e:ui
-
-# Run tests in debug mode
-npm run test:e2e:debug
-```
-
-## Project Structure
-
-```
-chat/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── api/               # API routes
-│   │   │   ├── auth/          # NextAuth endpoints
-│   │   │   └── chat/          # Chat streaming endpoint
-│   │   ├── login/             # Login page
-│   │   ├── layout.tsx         # Root layout
-│   │   ├── page.tsx           # Home page
-│   │   ├── loading.tsx        # Loading state
-│   │   ├── error.tsx          # Error boundary
-│   │   └── globals.css        # Global styles
-│   ├── components/            # React components
-│   │   ├── ui/                # Reusable UI components
-│   │   ├── chat/              # Chat-specific components
-│   │   ├── auth/              # Authentication components
-│   │   └── error-boundary.tsx # Error boundary component
-│   └── lib/                   # Core library code
-│       ├── auth/              # Authentication logic
-│       ├── hooks/             # Custom React hooks
-│       ├── services/          # Service layer
-│       ├── streaming/         # Stream processing utilities
-│       ├── types/             # TypeScript types
-│       ├── utils/             # Utility functions
-│       ├── validation/        # Zod schemas
-│       ├── env.ts             # Environment validation
-│       ├── errors.ts          # Custom error classes
-│       └── logger.ts          # Logging utility
-├── tests/
-│   └── e2e/                   # Playwright E2E tests
-├── scripts/                   # Utility scripts
-├── docs/                      # Documentation
-└── public/                    # Static assets
-```
-
 ## Architecture Principles
 
 This project follows **SOLID principles** and **Clean Code** practices:
