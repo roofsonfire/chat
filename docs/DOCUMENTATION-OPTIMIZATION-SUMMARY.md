@@ -327,8 +327,8 @@ This is a living document. Please:
 
 - [Full Optimization Plan](DOCUMENTATION-OPTIMIZATION-PLAN.md)
 - [Archive Policy](archive/README.md)
-- [Quick Reference](.github/copilot-quick-reference.md)
-- [Pattern Library](.github/patterns/README.md)
+- [Quick Reference](../.github/copilot-quick-reference.md)
+- [Pattern Library](../.github/patterns/README.md)
 - [Contributing to Docs](CONTRIBUTING-DOCS.md)
 
 ---
