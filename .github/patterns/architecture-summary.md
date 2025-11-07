@@ -142,6 +142,39 @@ sequenceDiagram
     end
 ```
 
+### Deployment Flow
+
+```mermaid
+graph LR
+    A[Developer Push] --> B[GitHub Actions]
+    B --> C{Tests Pass?}
+    C -->|Yes| D[Build Docker Image]
+    C -->|No| E[Notify Failure]
+    D --> F[Push to Artifact Registry]
+    F --> G[Deploy to Cloud Run]
+    G --> H{Health Check}
+    H -->|Pass| I[Route Traffic]
+    H -->|Fail| J[Rollback]
+    I --> K[Production Live]
+```
+
+### Component Hierarchy
+
+```mermaid
+graph TD
+    A[RootLayout] --> B[Header]
+    A --> C[Providers]
+    C --> D[ChatPage]
+    D --> E[ChatInterface]
+    E --> F[ChatHistory]
+    E --> G[ChatInput]
+    E --> H[ChatMessages]
+    H --> I[ChatMessage]
+    I --> J[ImageDisplay]
+    I --> K[MarkdownRenderer]
+    G --> L[ImageUpload]
+```
+
 ## Key Technologies
 
 ### Frontend

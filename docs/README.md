@@ -37,6 +37,7 @@ We're currently optimizing our documentation for the AI-assisted development era
 ## Build & Architecture
 
 - [API.md](API.md) – HTTP and streaming endpoints with request/response contracts.
+- [adr/](adr/) – Architecture Decision Records (ADRs) documenting major technical decisions.
 - [PERFORMANCE.md](PERFORMANCE.md) – Runtime metrics, optimizations, and monitoring hooks.
 - [USER-MANAGEMENT.md](USER-MANAGEMENT.md) – Authentication model, session flow, and account policies.
 - [features/FEATURE-FLAGS.md](features/FEATURE-FLAGS.md) – Flag inventory and rollout guidance.

@@ -1,0 +1,202 @@
+name: Documentation Quality Checks
+
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+      - "README.md"
+      - ".github/**/*.md"
+      - ".github/workflows/docs-quality.yml"
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - "docs/**"
+      - "README.md"
+      - ".github/**/*.md"
+
+jobs:
+  check-links:
+    name: Check Markdown Links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: "yes"
+          use-verbose-mode: "yes"
+          config-file: ".github/markdown-link-check.json"
+          folder-path: "docs/, .github/patterns/"
+          file-path: "README.md"
+
+  check-formatting:
+    name: Check Markdown Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install markdownlint
+        run: npm install -g markdownlint-cli
+
+      - name: Run markdownlint
+        run: markdownlint "**/*.md" --ignore node_modules --ignore .next --config .markdownlint.json
+        continue-on-error: true
+
+  check-spelling:
+    name: Check Spelling
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check spelling
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          locale: "US"
+          reporter: github-pr-review
+          level: warning
+          filter_mode: diff_context
+
+  detect-stale:
+    name: Detect Stale Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for stale docs
+        run: |
+          echo "Checking for documentation files not updated in 6+ months..."
+          
+          # Find markdown files older than 180 days
+          stale_files=$(find docs -name "*.md" -type f -mtime +180 2>/dev/null || echo "")
+          
+          if [ -n "$stale_files" ]; then
+            echo "⚠️ Found potentially stale documentation:"
+            echo "$stale_files" | while read -r file; do
+              last_modified=$(git log -1 --format="%ai" -- "$file" 2>/dev/null || echo "unknown")
+              echo "  - $file (last modified: $last_modified)"
+            done
+            echo ""
+            echo "📝 These files may need review. Consider:"
+            echo "  1. Updating content if outdated"
+            echo "  2. Moving to docs/archive/ if deprecated"
+            echo "  3. Adding 'Last Updated' date if still current"
+          else
+            echo "✅ No stale documentation detected"
+          fi
+
+  check-structure:
+    name: Validate Documentation Structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check required files
+        run: |
+          echo "Checking for required documentation files..."
+          
+          required_files=(
+            "README.md"
+            "docs/README.md"
+            "docs/DEVELOPMENT.md"
+            "docs/CONTRIBUTING.md"
+            "docs/SECURITY.md"
+            "docs/guides/QUICKSTART.md"
+            ".github/copilot-instructions.md"
+            ".github/copilot-quick-reference.md"
+            ".github/patterns/README.md"
+          )
+          
+          missing_files=()
+          
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              missing_files+=("$file")
+            fi
+          done
+          
+          if [ ${#missing_files[@]} -gt 0 ]; then
+            echo "❌ Missing required files:"
+            printf '  - %s\n' "${missing_files[@]}"
+            exit 1
+          else
+            echo "✅ All required documentation files present"
+          fi
+
+      - name: Check pattern library completeness
+        run: |
+          echo "Checking pattern library..."
+          
+          pattern_count=$(find .github/patterns -name "*.md" -not -name "README.md" | wc -l)
+          
+          echo "Found $pattern_count pattern files"
+          
+          if [ "$pattern_count" -lt 6 ]; then
+            echo "⚠️ Pattern library seems incomplete (expected at least 6 patterns)"
+            exit 1
+          else
+            echo "✅ Pattern library looks good ($pattern_count patterns)"
+          fi
+
+  check-references:
+    name: Check Cross-References
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check internal links
+        run: |
+          echo "Checking for broken internal documentation links..."
+          
+          # Simple check for common broken link patterns
+          broken_refs=$(grep -rn "\](docs/" docs/ README.md .github/ 2>/dev/null | grep -v "\.md:" || echo "")
+          
+          if [ -n "$broken_refs" ]; then
+            echo "⚠️ Found potentially incorrect relative links:"
+            echo "$broken_refs"
+            echo ""
+            echo "💡 Internal links should use relative paths from file location"
+          else
+            echo "✅ No obvious broken internal links detected"
+          fi
+
+  summary:
+    name: Documentation Quality Summary
+    runs-on: ubuntu-latest
+    needs: [check-links, check-formatting, check-spelling, detect-stale, check-structure, check-references]
+    if: always()
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 📚 Documentation Quality Check Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All documentation quality checks completed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Checks Run:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Markdown link validation" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Formatting standards" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Spelling check" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Stale content detection" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Documentation structure" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Cross-reference validation" >> $GITHUB_STEP_SUMMARY
