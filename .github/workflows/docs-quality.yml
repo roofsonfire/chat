@@ -80,10 +80,10 @@ jobs:
       - name: Check for stale docs
         run: |
           echo "Checking for documentation files not updated in 6+ months..."
-          
+
           # Find markdown files older than 180 days
           stale_files=$(find docs -name "*.md" -type f -mtime +180 2>/dev/null || echo "")
-          
+
           if [ -n "$stale_files" ]; then
             echo "⚠️ Found potentially stale documentation:"
             echo "$stale_files" | while read -r file; do
@@ -109,7 +109,7 @@ jobs:
       - name: Check required files
         run: |
           echo "Checking for required documentation files..."
-          
+
           required_files=(
             "README.md"
             "docs/README.md"
@@ -121,15 +121,15 @@ jobs:
             ".github/copilot-quick-reference.md"
             ".github/patterns/README.md"
           )
-          
+
           missing_files=()
-          
+
           for file in "${required_files[@]}"; do
             if [ ! -f "$file" ]; then
               missing_files+=("$file")
             fi
           done
-          
+
           if [ ${#missing_files[@]} -gt 0 ]; then
             echo "❌ Missing required files:"
             printf '  - %s\n' "${missing_files[@]}"
@@ -141,11 +141,11 @@ jobs:
       - name: Check pattern library completeness
         run: |
           echo "Checking pattern library..."
-          
+
           pattern_count=$(find .github/patterns -name "*.md" -not -name "README.md" | wc -l)
-          
+
           echo "Found $pattern_count pattern files"
-          
+
           if [ "$pattern_count" -lt 6 ]; then
             echo "⚠️ Pattern library seems incomplete (expected at least 6 patterns)"
             exit 1
@@ -168,10 +168,10 @@ jobs:
       - name: Check internal links
         run: |
           echo "Checking for broken internal documentation links..."
-          
+
           # Simple check for common broken link patterns
           broken_refs=$(grep -rn "\](docs/" docs/ README.md .github/ 2>/dev/null | grep -v "\.md:" || echo "")
-          
+
           if [ -n "$broken_refs" ]; then
             echo "⚠️ Found potentially incorrect relative links:"
             echo "$broken_refs"
@@ -184,7 +184,15 @@ jobs:
   summary:
     name: Documentation Quality Summary
     runs-on: ubuntu-latest
-    needs: [check-links, check-formatting, check-spelling, detect-stale, check-structure, check-references]
+    needs:
+      [
+        check-links,
+        check-formatting,
+        check-spelling,
+        detect-stale,
+        check-structure,
+        check-references,
+      ]
     if: always()
     steps:
       - name: Generate summary
