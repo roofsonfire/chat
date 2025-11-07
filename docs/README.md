@@ -29,9 +29,10 @@ We're currently optimizing our documentation for the AI-assisted development era
 
 ## Getting Started
 
-- [DEVELOPMENT.md](DEVELOPMENT.md) – Initial setup, environment configuration, and local workflows.
-- [EDITOR-SETUP.md](EDITOR-SETUP.md) – VS Code and Zed configuration for a productive dev setup.
-- [PROJECT-NAVIGATION.md](PROJECT-NAVIGATION.md) – Tips for finding files, commands, and patterns quickly.
+- [guides/QUICKSTART.md](guides/QUICKSTART.md) – **5-minute setup guide** for getting started fast ⚡
+- [DEVELOPMENT.md](DEVELOPMENT.md) – Comprehensive setup, environment configuration, and local workflows
+- [EDITOR-SETUP.md](EDITOR-SETUP.md) – VS Code and Zed configuration for a productive dev setup
+- [PROJECT-NAVIGATION.md](PROJECT-NAVIGATION.md) – Tips for finding files, commands, and patterns quickly
 
 ## Build & Architecture
 
