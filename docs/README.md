@@ -48,7 +48,6 @@ We're currently optimizing our documentation for the AI-assisted development era
 
 - [features/MODEL-SELECTION.md](features/MODEL-SELECTION.md) – How models are chosen at runtime.
 - [migration/DYNAMIC-MODEL-FETCHING.md](migration/DYNAMIC-MODEL-FETCHING.md) – Fetching logic for Vertex AI catalogs.
-- [migration/GEMINI-2.0-MIGRATION.md](migration/GEMINI-2.0-MIGRATION.md) – Previous upgrade notes.
 - [migration/GEMINI-2.5-IMPLEMENTATION.md](migration/GEMINI-2.5-IMPLEMENTATION.md) – Current Gemini deployment details.
 - [features/image-generation/](features/image-generation/) – Image pipeline documentation and assets.
 
@@ -92,9 +91,7 @@ We're currently optimizing our documentation for the AI-assisted development era
 
 ## Tooling & Utilities
 
-- [../scripts/README.md](../scripts/README.md) – Overview of available scripts.
-- [../scripts/utils/hash-password.js](../scripts/utils/hash-password.js) – Password hashing helper.
-- [../scripts/utils/diagnose-vertex-ai.sh](../scripts/utils/diagnose-vertex-ai.sh) – Vertex AI diagnostics.
+- [../scripts/cleanup-git-history.sh](../scripts/cleanup-git-history.sh) – Git history cleanup script.
 
 ## Maintaining This Index
 
