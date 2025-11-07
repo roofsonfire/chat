@@ -1,11 +1,11 @@
-# Cloud Run Deployment Guide for Staging
+# Cloud Run Deployment Guide for Production
 
 ## 🌐 Project Information
 
 **Repository**: [roofsonfire/chat](https://github.com/roofsonfire/chat)  
-**Live Demo**: [https://staging.chat.daza.ar](https://staging.chat.daza.ar)  
+**Live Demo**: [https://chat.daza.ar](https://chat.daza.ar)  
 **Platform**: Google Cloud Run  
-**Target URL**: https://staging.chat.daza.ar
+**Target URL**: https://chat.daza.ar
 
 ## 📋 Prerequisites
 
@@ -41,10 +41,10 @@ echo -n "PASTE_BCRYPT_HASH_HERE" | gcloud secrets create auth-password-hash --da
 cd scripts/deployment
 
 # Make executable
-chmod +x deploy-staging.sh
+chmod +x deploy-production.sh
 
 # Deploy
-./deploy-staging.sh
+./deploy-production.sh
 ```
 
 ### 3. Configure DNS
@@ -53,7 +53,7 @@ Add this CNAME record to your DNS provider for `daza.ar`:
 
 ```
 Type: CNAME
-Name: staging.chat
+Name: chat
 Value: ghs.googlehosted.com
 TTL: 3600
 ```
@@ -62,7 +62,7 @@ TTL: 3600
 
 1. Go to [Google Cloud Run - Custom Domains](https://console.cloud.google.com/run/domains)
 2. Click "Add Mapping" button
-3. Enter domain: `staging.chat.daza.ar`
+3. Enter domain: `chat.daza.ar`
 4. If domain not verified, you'll be redirected to Google Search Console
 5. Add TXT record shown to your DNS provider
 6. Wait for verification (5-10 minutes)
@@ -75,7 +75,7 @@ If you prefer manual control:
 # Set variables
 PROJECT_ID="norse-breaker-474323-n8"
 REGION="us-central1"
-SERVICE_NAME="chat-staging"
+SERVICE_NAME="chat-production"
 
 # Deploy from project root
 gcloud run deploy $SERVICE_NAME \
@@ -93,8 +93,8 @@ gcloud run deploy $SERVICE_NAME \
   --set-env-vars "NODE_ENV=production" \
   --set-env-vars "GOOGLE_PROJECT_ID=$PROJECT_ID" \
   --set-env-vars "GOOGLE_LOCATION=$REGION" \
-  --set-env-vars "GOOGLE_VERTEX_AI_MODEL_ID=gemini-2.0-flash-exp" \
-  --set-env-vars "NEXTAUTH_URL=https://staging.chat.daza.ar" \
+  --set-env-vars "GOOGLE_VERTEX_AI_MODEL_ID=gemini-2.5-flash-image" \
+  --set-env-vars "NEXTAUTH_URL=https://chat.daza.ar" \
   --update-secrets "NEXTAUTH_SECRET=nextauth-secret:latest" \
   --update-secrets "AUTH_USER_EMAIL=auth-email:latest" \
   --update-secrets "AUTH_USER_PASSWORD_HASH=auth-password-hash:latest"
@@ -102,7 +102,7 @@ gcloud run deploy $SERVICE_NAME \
 # Map domain
 gcloud run domain-mappings create \
   --service $SERVICE_NAME \
-  --domain staging.chat.daza.ar \
+  --domain chat.daza.ar \
   --region $REGION
 ```
 
@@ -113,8 +113,8 @@ gcloud run domain-mappings create \
 - `NODE_ENV`: production
 - `GOOGLE_PROJECT_ID`: norse-breaker-474323-n8
 - `GOOGLE_LOCATION`: us-central1
-- `GOOGLE_VERTEX_AI_MODEL_ID`: gemini-2.0-flash-exp
-- `NEXTAUTH_URL`: https://staging.chat.daza.ar
+- `GOOGLE_VERTEX_AI_MODEL_ID`: gemini-2.5-flash-image
+- `NEXTAUTH_URL`: https://chat.daza.ar
 
 ### Secrets (from Secret Manager)
 
@@ -150,10 +150,10 @@ gcloud run logs read chat-staging --region=us-central1 --log-filter='severity>=E
 
 ```bash
 # Service details
-gcloud run services describe chat-staging --region=us-central1
+gcloud run services describe chat-production --region=us-central1
 
 # Domain mapping status
-gcloud run domain-mappings describe --domain=staging.chat.daza.ar --region=us-central1
+gcloud run domain-mappings describe --domain=chat.daza.ar --region=us-central1
 ```
 
 ### Monitor in Console
@@ -193,7 +193,7 @@ echo -n "new-value" | gcloud secrets versions add secret-name --data-file=-
 
 ### Domain Not Working
 
-1. Check DNS propagation: `dig staging.chat.daza.ar`
+1. Check DNS propagation: `dig chat.daza.ar`
 2. Verify domain mapping: `gcloud run domain-mappings list --region=us-central1`
 3. Check SSL certificate status (can take 15-60 minutes)
 
@@ -259,7 +259,7 @@ echo -n "new-value" | gcloud secrets versions add secret-name --data-file=-
 
 ## 🎯 Next Steps After Deployment
 
-1. **Test the deployment**: Visit https://staging.chat.daza.ar
+1. **Test the deployment**: Visit https://chat.daza.ar
 2. **Test authentication**: Try logging in with configured credentials
 3. **Test AI chat**: Send a text message to the AI assistant
 4. **Test multimodal**: Upload an image and ask about it

@@ -7,16 +7,16 @@ Welcome to the comprehensive documentation for the Next.js AI Chat Assistant. Th
 ### Repository & Hosting
 
 - **GitHub Repository**: [roofsonfire/chat](https://github.com/roofsonfire/chat)
-- **Live Staging**: [https://staging.chat.daza.ar](https://staging.chat.daza.ar)
+- **Live Production**: [https://chat.daza.ar](https://chat.daza.ar)
 - **Platform**: Google Cloud Run (serverless)
 - **Region**: us-central1 (Iowa)
 
 ### Quick Links
 
 - [🏠 Repository Home](https://github.com/roofsonfire/chat)
-- [🌐 Live Demo](https://staging.chat.daza.ar)
-- [� Project Status](PROJECT-STATUS.md)
-- [�🐛 Report Issues](https://github.com/roofsonfire/chat/issues)
+- [🌐 Live Demo](https://chat.daza.ar)
+- [📊 Project Status](PROJECT-STATUS.md)
+- [🐛 Report Issues](https://github.com/roofsonfire/chat/issues)
 - [💬 Discussions](https://github.com/roofsonfire/chat/discussions)
 
 ## � Status & Planning
@@ -150,7 +150,7 @@ This documentation follows these principles:
 ## 📍 Project Details
 
 - **Repository**: [github.com/roofsonfire/chat](https://github.com/roofsonfire/chat)
-- **Live Demo**: [staging.chat.daza.ar](https://staging.chat.daza.ar)
+- **Live Demo**: [chat.daza.ar](https://chat.daza.ar)
 - **Platform**: Google Cloud Run
 - **Framework**: Next.js 15 + TypeScript 5
 - **AI Provider**: Google Vertex AI

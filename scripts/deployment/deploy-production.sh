@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Cloud Run Staging Deployment Script
-# Deploy to: https://staging.chat.daza.ar
+# Cloud Run Production Deployment Script
+# Deploy to: https://chat.daza.ar
 
 set -e
 
 # Configuration
 PROJECT_ID="norse-breaker-474323-n8"
 REGION="us-central1"
-SERVICE_NAME="chat-staging"
-DOMAIN="staging.chat.daza.ar"
+SERVICE_NAME="chat-production"
+DOMAIN="chat.daza.ar"
 
-echo "🚀 Deploying Chat Application to Cloud Run (Staging)"
+echo "🚀 Deploying Chat Application to Cloud Run (Production)"
 echo "=================================================="
 echo "Project: $PROJECT_ID"
 echo "Region: $REGION"
