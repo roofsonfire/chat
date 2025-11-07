@@ -23,16 +23,16 @@
     },
     {
       "comment": "Ignore problematic external docs (404s or redirects)",
-      "pattern": "^https://nextjs\\.org/docs/advanced-features/debugging"
+      "pattern": "https://nextjs\\.org/docs/advanced-features/debugging"
     },
     {
-      "pattern": "^https://nodejs\\.org/en/docs/guides/error-handling/"
+      "pattern": "https://nodejs\\.org/en/docs/guides/error-handling"
     },
     {
-      "pattern": "^https://cloud\\.google\\.com/vertex-ai/docs/model-garden/explore-models"
+      "pattern": "https://cloud\\.google\\.com/vertex-ai/docs/model-garden/explore-models"
     },
     {
-      "pattern": "^https://ai\\.google\\.dev/gemini-api/docs/image-generation"
+      "pattern": "https://ai\\.google\\.dev/gemini-api/docs/image-generation"
     }
   ],
   "replacementPatterns": [],
