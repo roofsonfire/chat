@@ -8,6 +8,18 @@
     },
     {
       "pattern": "^https://staging.chat.daza.ar"
+    },
+    {
+      "pattern": "^http://192\\.168\\."
+    },
+    {
+      "pattern": "^https://github\\.com/roofsonfire/chat/settings/"
+    },
+    {
+      "pattern": "^https://github\\.com/roofsonfire/chat/discussions"
+    },
+    {
+      "pattern": "^https://chat-staging-.*\\.run\\.app"
     }
   ],
   "replacementPatterns": [],
