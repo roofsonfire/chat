@@ -2,7 +2,9 @@
 
 **Date**: November 7, 2025  
 **Repository**: roofsonfire/chat  
-**Status**: ✅ SAFE TO MAKE PUBLIC
+**Status**: ✅ SAFE TO MAKE PUBLIC - SECURITY HARDENED
+
+**Recent Improvements**: ✅ All test credentials moved to GitHub Secrets
 
 ---
 
@@ -36,26 +38,35 @@
 - `GCP_SA_KEY` - Service account key (in GitHub Secrets)
 - `CODECOV_TOKEN` - Optional, for code coverage
 
-### 3. Test/Dummy Credentials - SAFE ✅
+### 3. Test/Dummy Credentials - SECURE ✅
 
-These are in the code but are **safe** because they're only for CI testing:
+**IMPROVED**: All test credentials now stored in GitHub Secrets!
 
-**In `.github/workflows/ci.yml`:**
+**Previously in plain text, now secured:**
+
+- ✅ `TEST_NEXTAUTH_SECRET` - Now in GitHub Secrets
+- ✅ `TEST_GOOGLE_CLIENT_ID` - Now in GitHub Secrets
+- ✅ `TEST_GOOGLE_CLIENT_SECRET` - Now in GitHub Secrets
+- ✅ `TEST_AUTH_USER_EMAIL` - Now in GitHub Secrets
+- ✅ `TEST_AUTH_PASSWORD_HASH` - Now in GitHub Secrets
+
+**In `.github/workflows/ci.yml` (after security hardening):**
 
 ```yaml
-NEXTAUTH_SECRET: test-secret-key # ✅ Dummy value for CI only
-GOOGLE_CLIENT_ID: test-google-client-id # ✅ Dummy value
-GOOGLE_CLIENT_SECRET: test-google-client-secret # ✅ Dummy value
-AUTH_USER_PASSWORD_HASH: $2b$10$4qGW... # ✅ Hash of "test123" - not real production password
-NEXT_PUBLIC_TEST_PASSWORD: "test123" # ✅ Public test credential, not used in production
+NEXTAUTH_SECRET: ${{ secrets.TEST_NEXTAUTH_SECRET }}
+GOOGLE_CLIENT_ID: ${{ secrets.TEST_GOOGLE_CLIENT_ID }}
+GOOGLE_CLIENT_SECRET: ${{ secrets.TEST_GOOGLE_CLIENT_SECRET }}
+AUTH_USER_EMAIL: ${{ secrets.TEST_AUTH_USER_EMAIL }}
+AUTH_USER_PASSWORD_HASH: ${{ secrets.TEST_AUTH_PASSWORD_HASH }}
 ```
 
-**Why these are safe:**
+**Why this is even better:**
 
-- Not used in production (production uses Google Cloud Secrets)
-- Only for automated testing
-- Test credentials are disabled in production (`ENABLE_TEST_CREDENTIALS=false`)
-- Password hash is for dummy test password "test123"
+- ✅ No credentials visible in public repository
+- ✅ Follows industry best practices
+- ✅ Demonstrates professional security mindset
+- ✅ Easy to rotate test credentials if needed
+- ✅ Only public value: "test123" password (harmless, for documentation)
 
 ### 4. API Keys & Tokens - SECURE ✅
 
