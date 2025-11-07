@@ -11,6 +11,20 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
   ENABLE_TEST_CREDENTIALS: z.enum(["true", "false"]).optional(),
+  // Allowlist: comma-separated list of allowed email addresses
+  ALLOWED_EMAILS: z
+    .string()
+    .min(1, "At least one email must be in the allowlist")
+    .refine(
+      (emails) => {
+        // Validate each email in the comma-separated list
+        const emailList = emails.split(",").map((e) => e.trim());
+        return emailList.every(
+          (email) => z.string().email().safeParse(email).success
+        );
+      },
+      { message: "All emails in ALLOWED_EMAILS must be valid email addresses" }
+    ),
 });
 
 type EnvType = z.infer<typeof envSchema>;
