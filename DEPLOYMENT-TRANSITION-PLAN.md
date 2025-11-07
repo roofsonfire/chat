@@ -46,6 +46,23 @@
   - Allows direct pushes (for rapid development)
   - Non-strict status checks
 
+### 5. GitHub Security Features ✓
+
+- [x] **Secret scanning** enabled - detects accidentally committed secrets
+- [x] **Secret scanning push protection** enabled - prevents commits with secrets
+- [x] **Dependabot vulnerability alerts** enabled - monitors dependencies
+- [x] **Automated security fixes** enabled - creates PRs for security updates
+- [x] **Dependabot configuration** added (`.github/dependabot.yml`):
+  - Weekly npm dependency updates (Mondays 9 AM ART)
+  - GitHub Actions workflow updates
+  - Docker base image updates
+  - Grouped minor/patch updates
+- [x] **CodeQL security scanning** added (`.github/workflows/codeql.yml`):
+  - Runs on push to main/develop
+  - Runs on PRs to main
+  - Weekly scheduled scan (Mondays 3:30 AM UTC)
+  - JavaScript/TypeScript analysis
+
 ## 🔄 Next Steps - Manual Configuration Required
 
 ## 🔄 Next Steps - Manual Configuration Required
