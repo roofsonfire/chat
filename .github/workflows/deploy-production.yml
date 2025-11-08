@@ -118,7 +118,7 @@ jobs:
 
           docker build \
             --build-arg NODE_ENV=production \
-            --build-arg ALLOWED_EMAILS="${ALLOWED_EMAILS}" \
+            --build-arg ALLOWED_EMAILS="$ALLOWED_EMAILS" \
             --tag "${IMAGE_TAG}" \
             --tag "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest" \
             .
