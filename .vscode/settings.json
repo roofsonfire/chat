@@ -15,5 +15,19 @@
 
   // Suppress specific diagnostics for GitHub Actions secrets
   "yaml.schemaStore.enable": true,
-  "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json"
+  "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json",
+
+  // Suppress warnings for production deployment secrets (configured in GitHub, not locally)
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": [
+      ".github/workflows/*.yml",
+      ".github/workflows/*.yaml"
+    ]
+  },
+
+  // Disable GitHub Actions expression validation warnings for deployment secrets
+  "github-actions.suppress-workflow-warnings": [
+    "GCP_WORKLOAD_IDENTITY_PROVIDER",
+    "GCP_SERVICE_ACCOUNT_EMAIL"
+  ]
 }
