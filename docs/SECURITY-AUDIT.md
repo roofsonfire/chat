@@ -35,7 +35,8 @@
 
 **GitHub Secrets Required (not in code):**
 
-- `GCP_SA_KEY` - Service account key (in GitHub Secrets)
+- `GCP_WORKLOAD_IDENTITY_PROVIDER` – Workload Identity Federation provider resource
+- `GCP_SERVICE_ACCOUNT_EMAIL` – Delegated deployment service account
 - `CODECOV_TOKEN` - Optional, for code coverage
 
 ### 3. Test/Dummy Credentials - SECURE ✅
@@ -140,13 +141,14 @@ These are **NOT** in the repository and stay secure:
 - Real AUTH_USER_PASSWORD_HASH
 - Real GOOGLE_CLIENT_ID (production)
 - Real GOOGLE_CLIENT_SECRET (production)
-- GCP Service Account Key
+- Workload Identity Provider resource ID
+- Deployment Service Account email
 - Any user data or chat history
 
 ❌ **Stored securely in:**
 
 - Google Cloud Secret Manager (production secrets)
-- GitHub Repository Secrets (GCP_SA_KEY)
+- GitHub Repository Secrets (GCP_WORKLOAD_IDENTITY_PROVIDER / GCP_SERVICE_ACCOUNT_EMAIL)
 - Local `.env.local` files (developer machines only)
 
 ---

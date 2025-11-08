@@ -1,4 +1,13 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+  vi,
+} from "vitest";
 import { logger } from "@/lib/logger";
 
 describe("Logger", () => {
@@ -7,6 +16,14 @@ describe("Logger", () => {
     warn: ReturnType<typeof vi.spyOn>;
     error: ReturnType<typeof vi.spyOn>;
   };
+
+  beforeAll(() => {
+    vi.stubEnv("NODE_ENV", "development");
+  });
+
+  afterAll(() => {
+    vi.unstubAllEnvs();
+  });
 
   beforeEach(() => {
     consoleSpy = {
@@ -70,7 +87,31 @@ describe("Logger", () => {
       expect(consoleSpy.error).toHaveBeenCalledWith(
         "[ERROR]",
         "Error occurred",
-        context
+        {
+          error: expect.objectContaining({
+            name: "Error",
+            message: "Test error",
+            stack: expect.any(String),
+          }),
+        }
+      );
+    });
+
+    it("should redact sensitive values in context", () => {
+      logger.error("Sensitive context", {
+        password: "super-secret",
+        authToken: "Bearer abc123",
+        email: "user@example.com",
+      });
+
+      expect(consoleSpy.error).toHaveBeenCalledWith(
+        "[ERROR]",
+        "Sensitive context",
+        {
+          password: "[REDACTED]",
+          authToken: "[REDACTED]",
+          email: "[REDACTED]",
+        }
       );
     });
   });
@@ -83,6 +124,22 @@ describe("Logger", () => {
         expect.stringContaining("[DEBUG]"),
         "Debug message",
         ""
+      );
+    });
+  });
+
+  describe("context sanitization", () => {
+    it("should truncate overly long string values", () => {
+      const longString = "a".repeat(400);
+
+      logger.warn("Truncate message", { payload: longString });
+
+      expect(consoleSpy.warn).toHaveBeenCalledWith(
+        "[WARN]",
+        "Truncate message",
+        {
+          payload: expect.stringMatching(/…\(truncated\)$/),
+        }
       );
     });
   });

@@ -7,23 +7,36 @@ import { allowlist } from "@/lib/auth/allowlist";
 import { validateCredentials } from "@/lib/auth/provider";
 import { logger } from "@/lib/logger";
 
+function maskEmail(email?: string | null): string {
+  if (!email) {
+    return "unknown";
+  }
+  const [localPart, domain] = email.split("@");
+  if (!localPart || !domain) {
+    return "redacted";
+  }
+  const visible = localPart.slice(0, 2);
+  const maskedLocal =
+    localPart.length <= 2
+      ? `${visible}*`
+      : `${visible}${"*".repeat(localPart.length - 2)}`;
+  return `${maskedLocal}@${domain}`;
+}
+
 // --- Auth Callback Functions ---
 
 async function handleSignIn({
   user,
   account,
-  profile,
 }: {
   user: User;
   account: Account | null;
   profile?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }) {
   logger.info("[NextAuth][signIn] Callback triggered", {
-    userEmail: user?.email,
+    userEmail: maskEmail(user?.email),
     provider: account?.provider,
-    allowlist,
     isInAllowlist: user?.email ? allowlist.includes(user.email) : false,
-    profile,
   });
 
   if (!user?.email) {
@@ -35,13 +48,14 @@ async function handleSignIn({
 
   if (!isAllowed) {
     logger.warn("[NextAuth][signIn] User not in allowlist", {
-      email: user.email,
-      allowlist,
+      email: maskEmail(user.email),
     });
     return false;
   }
 
-  logger.info("[NextAuth][signIn] User allowed", { email: user.email });
+  logger.info("[NextAuth][signIn] User allowed", {
+    email: maskEmail(user.email),
+  });
   return true;
 }
 
@@ -49,7 +63,6 @@ async function populateJwt({
   token,
   user,
   account,
-  profile,
 }: {
   token: JWT;
   user?: User;
@@ -57,13 +70,9 @@ async function populateJwt({
   profile?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }) {
   logger.info("[NextAuth][jwt] Callback triggered", {
-    hasToken: !!token,
     hasUser: !!user,
-    userEmail: user?.email || token?.email,
-    token: JSON.stringify(token, null, 2),
-    user: JSON.stringify(user, null, 2),
-    account: JSON.stringify(account, null, 2),
-    profile: JSON.stringify(profile, null, 2),
+    tokenHasEmail: Boolean(token?.email),
+    accountProvider: account?.provider,
   });
 
   if (user) {
@@ -77,20 +86,14 @@ async function populateJwt({
 async function createSession({
   session,
   token,
-  user,
 }: {
   session: Session;
   token: JWT;
   user: User;
 }) {
   logger.info("[NextAuth][session] Callback triggered", {
-    hasSession: !!session,
-    hasToken: !!token,
-    sessionUserEmail: session?.user?.email,
-    tokenEmail: token?.email,
-    session: JSON.stringify(session, null, 2),
-    token: JSON.stringify(token, null, 2),
-    user: JSON.stringify(user, null, 2),
+    hasSessionUser: Boolean(session?.user),
+    tokenHasEmail: Boolean(token?.email),
   });
 
   if (token?.email && session.user) {
@@ -124,15 +127,16 @@ if (env.ENABLE_TEST_CREDENTIALS === "true") {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        logger.info("[NextAuth][authorize] Credentials provided", {
-          credentials: JSON.stringify(credentials, null, 2),
-        });
         const validatedUser = await validateCredentials(
           credentials ?? undefined
         );
-        logger.info("[NextAuth][authorize] Credentials validation result", {
-          validatedUser: JSON.stringify(validatedUser, null, 2),
-        });
+        if (validatedUser) {
+          logger.info("[NextAuth][authorize] Credentials validated", {
+            email: maskEmail(validatedUser.email),
+          });
+        } else {
+          logger.warn("[NextAuth][authorize] Invalid credentials provided");
+        }
         return validatedUser;
       },
     })

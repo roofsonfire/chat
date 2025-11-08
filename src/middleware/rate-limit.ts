@@ -21,6 +21,30 @@ const chatAPIRateLimiter = new RateLimiterMemory({
   blockDuration: 0,
 });
 
+export function extractClientIp(req: NextRequest): string {
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) {
+    return realIp;
+  }
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (!forwarded) {
+    return "127.0.0.1";
+  }
+  const clientIp = forwarded
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)[0];
+  if (!clientIp) {
+    return "127.0.0.1";
+  }
+  const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+  const ipv6Regex = /^[0-9a-fA-F:]+$/;
+  if (ipv4Regex.test(clientIp) || ipv6Regex.test(clientIp)) {
+    return clientIp;
+  }
+  return "127.0.0.1";
+}
+
 export async function rateLimitMiddleware(
   req: NextRequest
 ): Promise<NextResponse | RateLimiterRes> {
@@ -28,7 +52,7 @@ export async function rateLimitMiddleware(
     return new RateLimiterRes();
   }
 
-  const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  const ip = extractClientIp(req);
   const { pathname } = req.nextUrl;
   const isChatAPI = pathname.startsWith("/api/chat");
 
@@ -71,4 +95,15 @@ export async function rateLimitMiddleware(
     }
     throw rateLimitError;
   }
+}
+
+export async function clearRateLimitStateForTesting(ip: string): Promise<void> {
+  if (process.env.NODE_ENV !== "test") {
+    return;
+  }
+
+  await Promise.allSettled([
+    rateLimiter.delete(ip),
+    chatAPIRateLimiter.delete(ip),
+  ]);
 }

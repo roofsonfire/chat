@@ -3,7 +3,10 @@ import type { NextRequest } from "next/server";
 import { logger } from "@/lib/logger";
 import { authMiddleware } from "./middleware/auth";
 import { rateLimitMiddleware } from "./middleware/rate-limit";
-import { securityHeadersMiddleware } from "./middleware/security";
+import {
+  createCspNonce,
+  securityHeadersMiddleware,
+} from "./middleware/security";
 
 // --- Middleware Helper Functions ---
 
@@ -77,7 +80,16 @@ export async function middleware(req: NextRequest) {
     return authResponse;
   }
 
-  const response = NextResponse.next();
+  const nonce = createCspNonce();
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-csp-nonce", nonce);
+  requestHeaders.set("x-nonce", nonce);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
   logger.debug("middleware: NextResponse.next() called");
 
   const isChatAPI = req.nextUrl.pathname.startsWith("/api/chat");
@@ -99,7 +111,7 @@ export async function middleware(req: NextRequest) {
   );
   logger.debug("middleware: Rate limit headers set");
 
-  const finalResponse = securityHeadersMiddleware(response);
+  const finalResponse = securityHeadersMiddleware(response, nonce);
   logger.info("middleware: Request processed successfully");
   return finalResponse;
 }

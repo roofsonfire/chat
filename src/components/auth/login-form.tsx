@@ -14,11 +14,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 type LoginFormProps = React.HTMLAttributes<HTMLDivElement> & {
   enableTestCredentials?: boolean;
+  googleSignInEnabled?: boolean;
+  googleDisabledMessage?: string;
 };
 
 export function LoginForm({
   className,
   enableTestCredentials = false,
+  googleSignInEnabled = true,
+  googleDisabledMessage,
   ...props
 }: LoginFormProps) {
   const router = useRouter();
@@ -30,6 +34,7 @@ export function LoginForm({
   const [rememberMe, setRememberMe] = React.useState<boolean>(false);
   const [acceptTerms, setAcceptTerms] = React.useState<boolean>(false);
   const showTestCredentials = enableTestCredentials;
+  const isGoogleDisabled = !googleSignInEnabled;
 
   const handleGoogleLogin = async () => {
     try {
@@ -62,12 +67,17 @@ export function LoginForm({
       <Button
         type="button"
         onClick={handleGoogleLogin}
-        disabled={isGoogleLoading}
+        disabled={isGoogleLoading || isGoogleDisabled}
         className="w-full"
       >
         {isGoogleLoading ? <Spinner size="sm" className="mr-2" /> : null}
         Sign in with Google
       </Button>
+      {isGoogleDisabled && googleDisabledMessage ? (
+        <p className="text-muted-foreground text-center text-sm">
+          {googleDisabledMessage}
+        </p>
+      ) : null}
 
       {showTestCredentials ? (
         <div className="grid gap-3">

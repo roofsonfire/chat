@@ -59,6 +59,11 @@ We're currently optimizing our documentation for the AI-assisted development era
 - [USER-MANAGEMENT.md](USER-MANAGEMENT.md) – Identity and access controls (also linked under Build & Architecture).
 - [SECURITY-AUDIT.md](SECURITY-AUDIT.md) – Recent external audit findings and remediation status.
 - [SECURITY-CLEARANCE-REPORT.md](SECURITY-CLEARANCE-REPORT.md) – Vendor access and clearance tracking.
+- [security/LOGGING-RUNBOOK.md](security/LOGGING-RUNBOOK.md) – Log retention, sinks, metrics, and alerting procedures.
+- [security/LOGGING-RUNBOOK-EXECUTION.md](security/LOGGING-RUNBOOK-EXECUTION.md) – Evidence of production runbook execution (Nov 2025).
+- [security/THREAT-MODEL.md](security/THREAT-MODEL.md) – Assets, trust boundaries, threats, and tabletop exercise plan.
+- [security/TABLETOP-PLAN.md](security/TABLETOP-PLAN.md) – Incident response tabletop agenda, roles, and success criteria.
+- [security/TABLETOP-REPORT.md](security/TABLETOP-REPORT.md) – Exercise outcomes, action items, and lessons learned (Jan 2026).
 
 ## Testing & Quality
 
