@@ -168,8 +168,42 @@ export const authOptions: AuthOptions = {
       );
     },
   },
+  // ✅ SECURITY FIX: Explicit cookie security configuration
+  cookies: {
+    sessionToken: {
+      name: `${env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.session-token`,
+      options: {
+        httpOnly: true, // Prevents JavaScript access (XSS protection)
+        sameSite: "lax", // CSRF protection
+        path: "/",
+        secure: env.NODE_ENV === "production", // HTTPS only in production
+        domain: env.NODE_ENV === "production" ? ".daza.ar" : undefined,
+      },
+    },
+    callbackUrl: {
+      name: `${env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.callback-url`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: env.NODE_ENV === "production",
+      },
+    },
+    csrfToken: {
+      name: `${env.NODE_ENV === "production" ? "__Host-" : ""}next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: env.NODE_ENV === "production",
+      },
+    },
+  },
+  // ✅ SECURITY FIX: Session timeout configuration
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 hours
+    updateAge: 60 * 60, // Update every hour
   },
   pages: {
     signIn: "/login",

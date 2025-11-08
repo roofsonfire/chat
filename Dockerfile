@@ -5,7 +5,8 @@ FROM node:22-alpine@sha256:ef30b897b4b924010aab656801cb44fe27589b5d0724ba080b191
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Pin package version for reproducible builds (Hadolint DL3018)
+RUN apk add --no-cache gcompat=1.1.0-r4
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -47,15 +48,14 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
 # Create public directory (Next.js may not have a public folder if no static assets)
-RUN mkdir -p ./public
-
 # Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+# Create user and group for security
+# Consolidated RUN commands to reduce Docker layers (Finding #7 - LOW)
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs && \
+    mkdir -p ./public .next && \
+    chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing

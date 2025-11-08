@@ -82,7 +82,7 @@ Key features we're leveraging:
 
 - [Next.js App Router Documentation](https://nextjs.org/docs/app)
 - [React Server Components](https://react.dev/reference/rsc/server-components)
-- [Initial Setup PR](#) - Link to first implementation
+- Initial Setup PR - _Historical reference, predates current repository_
 
 ---
 
