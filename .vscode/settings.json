@@ -1,0 +1,19 @@
+{
+  "github-actions.workflows.pinned.workflows": [],
+  "github-actions.workflows.pinned.refresh.enabled": true,
+
+  // Suppress false positive warnings for repository secrets
+  // These secrets are configured in GitHub repository settings
+  "yaml.validate": true,
+  "yaml.customTags": ["!secret scalar"],
+
+  // GitHub Actions specific settings
+  "files.associations": {
+    "*.yml": "yaml",
+    "*.yaml": "yaml"
+  },
+
+  // Suppress specific diagnostics for GitHub Actions secrets
+  "yaml.schemaStore.enable": true,
+  "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json"
+}

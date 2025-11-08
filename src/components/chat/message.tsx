@@ -92,7 +92,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
               {message.content && (
                 <p
                   className={cn(
-                    "leading-relaxed break-words whitespace-pre-wrap",
+                    "leading-relaxed wrap-break-word whitespace-pre-wrap",
                     isUser ? "font-medium" : "font-normal"
                   )}
                   data-testid="message-text"

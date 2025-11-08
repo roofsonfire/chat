@@ -57,14 +57,9 @@ jobs:
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
 
-      - name: Export Workload Identity configuration
-        run: |
-          echo "GCP_WORKLOAD_IDENTITY_PROVIDER=${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" >> "$GITHUB_ENV"
-          echo "GCP_SERVICE_ACCOUNT_EMAIL=${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}" >> "$GITHUB_ENV"
-
       - name: Validate Workload Identity configuration
         run: |
-          if [ -z "${GCP_WORKLOAD_IDENTITY_PROVIDER}" ] || [ -z "${GCP_SERVICE_ACCOUNT_EMAIL}" ]; then
+          if [ -z "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" ] || [ -z "${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}" ]; then
             echo "::error::Missing Workload Identity Federation configuration. Set GCP_WORKLOAD_IDENTITY_PROVIDER and GCP_SERVICE_ACCOUNT_EMAIL secrets."
             exit 1
           fi
@@ -73,8 +68,9 @@ jobs:
         id: auth
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
         with:
-          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ env.GCP_SERVICE_ACCOUNT_EMAIL }}
+          # yamllint disable-line rule:line-length
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # Secrets configured in repository settings
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }} # Secrets configured in repository settings
           access_token_scopes: https://www.googleapis.com/auth/cloud-platform
 
       - name: Set up Cloud SDK
@@ -217,16 +213,11 @@ jobs:
       id-token: write
 
     steps:
-      - name: Export Workload Identity configuration
-        run: |
-          echo "GCP_WORKLOAD_IDENTITY_PROVIDER=${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" >> "$GITHUB_ENV"
-          echo "GCP_SERVICE_ACCOUNT_EMAIL=${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}" >> "$GITHUB_ENV"
-
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
         with:
-          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ env.GCP_SERVICE_ACCOUNT_EMAIL }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
           access_token_scopes: https://www.googleapis.com/auth/cloud-platform
 
       - name: Set up Cloud SDK
