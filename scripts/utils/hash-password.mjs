@@ -3,9 +3,9 @@
 /**
  * Password hashing utility script
  * Generates a bcrypt hash for user passwords
- * 
+ *
  * Usage: npm run hash-password
- * 
+ *
  * This script uses the same SALT_ROUNDS as the application (12 rounds)
  * to ensure consistency in production.
  */
@@ -35,8 +35,10 @@ rl.question("Enter password to hash: ", async (password) => {
   }
 
   try {
-    console.log("\n⏳ Generating hash (this may take a few seconds with 12 rounds)...\n");
-    
+    console.log(
+      "\n⏳ Generating hash (this may take a few seconds with 12 rounds)...\n"
+    );
+
     const salt = await bcrypt.genSalt(SALT_ROUNDS);
     const hash = await bcrypt.hash(password, salt);
 
@@ -47,7 +49,9 @@ rl.question("Enter password to hash: ", async (password) => {
     console.log("─".repeat(60));
     console.log("\nExample .env.local entry:");
     console.log(`AUTH_USER_PASSWORD_HASH="${hash}"`);
-    console.log("\n💡 Tip: Restart your development server after updating .env.local\n");
+    console.log(
+      "\n💡 Tip: Restart your development server after updating .env.local\n"
+    );
   } catch (error) {
     console.error("❌ Error generating hash:", error.message);
     process.exit(1);
