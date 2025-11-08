@@ -123,9 +123,10 @@ jobs:
             --tag "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest" \
             .
           docker push "${IMAGE_TAG}"
-          docker push "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest"
+          LATEST_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest"
+          docker push "${LATEST_TAG}"
 
-          echo "image_url=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+          echo "image_url=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to Cloud Run
         id: deploy
