@@ -2,6 +2,10 @@ import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 
+// Load environment variables for testing
+import { config } from "dotenv";
+config({ path: ".env.test" });
+
 // Cleanup after each test
 afterEach(() => {
   cleanup();
