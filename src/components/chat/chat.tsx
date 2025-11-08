@@ -139,7 +139,7 @@ export function Chat() {
               <ChatHistory messages={messages} isLoading={isLoading} />
             </div>
           </div>
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <MessageInput
               input={input}
               handleInputChange={handleInputChange}

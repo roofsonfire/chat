@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+const BASE64_IMAGE_PATTERN =
+  /^data:(image\/(?:jpeg|jpg|png|webp|gif));base64,([A-Za-z0-9+/=]+)$/;
+const MAX_BASE64_IMAGE_BYTES = 5 * 1024 * 1024; // 5MB
+
 /**
  * Validation schema for chat API requests.
  * Ensures messages have proper structure and reasonable constraints.
@@ -15,7 +19,25 @@ export const chatRequestSchema = z.object({
             .max(10000, "Message content is too long")
             .optional()
             .default(""),
-          image: z.string().optional(),
+          image: z
+            .string()
+            .regex(BASE64_IMAGE_PATTERN, {
+              message:
+                "Image must be a base64-encoded data URL with an allowed MIME type",
+            })
+            .refine((value) => {
+              const matches = value.match(BASE64_IMAGE_PATTERN);
+              if (!matches || matches.length < 3) {
+                return false;
+              }
+              const data = matches[2] ?? "";
+              if (!data) {
+                return false;
+              }
+              const estimatedBytes = Math.ceil((data.length * 3) / 4);
+              return estimatedBytes <= MAX_BASE64_IMAGE_BYTES;
+            }, "Image exceeds maximum allowed size of 5MB")
+            .optional(),
           timestamp: z
             .union([z.date(), z.string()])
             .optional()

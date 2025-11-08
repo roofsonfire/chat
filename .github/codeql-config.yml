@@ -1,0 +1,35 @@
+# CodeQL Configuration
+# Excludes test files from security scanning to reduce false positives
+# Addresses Findings #8-9 (INFO) - Test files triggering security alerts
+
+name: "CodeQL Config"
+
+# Paths to exclude from analysis
+paths-ignore:
+  - "tests/**"
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.spec.ts"
+  - "**/*.spec.tsx"
+  - "**/test-*.mjs"
+  - "**/test-*.js"
+  - "**/__tests__/**"
+  - "**/__mocks__/**"
+  - "**/vitest.*.ts"
+  - "**/setup.ts"
+  - "**/*.stories.tsx"
+  - "**/storybook/**"
+  - ".storybook/**"
+
+# Paths to include (source code only)
+paths:
+  - "src/**"
+  - "app/**"
+  - "lib/**"
+  - "components/**"
+  - "middleware.ts"
+
+# Query suites to run
+queries:
+  - uses: security-extended
+  - uses: security-and-quality

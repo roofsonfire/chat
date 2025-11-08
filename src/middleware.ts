@@ -3,48 +3,129 @@ import type { NextRequest } from "next/server";
 import { logger } from "@/lib/logger";
 import { authMiddleware } from "./middleware/auth";
 import { rateLimitMiddleware } from "./middleware/rate-limit";
-import { securityHeadersMiddleware } from "./middleware/security";
+import {
+  createCspNonce,
+  securityHeadersMiddleware,
+} from "./middleware/security";
 
 // --- Middleware Helper Functions ---
 
+/**
+ * Validates Origin header against allowlist
+ */
+function isAllowedOrigin(origin: string): boolean {
+  const ALLOWED_ORIGINS = [
+    "https://chat.daza.ar",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+  ];
+
+  return ALLOWED_ORIGINS.includes(origin);
+}
+
+/**
+ * Validates Referer header against allowlist
+ */
+function isAllowedReferer(referer: string): boolean {
+  const ALLOWED_DOMAINS = ["chat.daza.ar", "localhost:3000", "127.0.0.1:3000"];
+
+  try {
+    const url = new URL(referer);
+    return ALLOWED_DOMAINS.includes(url.host);
+  } catch {
+    // Invalid URL format
+    return false;
+  }
+}
+
+/**
+ * CSRF protection middleware
+ * Requires Origin OR Referer header for state-changing requests
+ * Validates both against allowlist
+ */
 function handleCsrf(req: NextRequest): NextResponse | void {
   logger.debug("handleCsrf: Request received", {
     method: req.method,
     url: req.url,
   });
-  if (req.method === "GET" || req.method === "HEAD") {
-    logger.debug("handleCsrf: Skipping for GET/HEAD request");
+
+  // Skip CSRF check for safe methods
+  if (["GET", "HEAD", "OPTIONS"].includes(req.method)) {
+    logger.debug("handleCsrf: Skipping for safe method", {
+      method: req.method,
+    });
     return;
   }
 
   const origin = req.headers.get("origin");
-  const host = req.headers.get("host");
-  logger.debug("handleCsrf: Origin and Host", { origin, host });
+  const referer = req.headers.get("referer");
 
-  if (origin && host) {
-    const originUrl = new URL(origin);
-    const expectedOrigin = originUrl.hostname;
-    const actualHost = host.split(":")[0];
-    logger.debug("handleCsrf: Parsed Origin and Host", {
-      expectedOrigin,
-      actualHost,
+  logger.debug("handleCsrf: Headers received", {
+    origin,
+    referer,
+    method: req.method,
+    path: req.nextUrl.pathname,
+  });
+
+  // REQUIRE at least one header for state-changing requests
+  if (!origin && !referer) {
+    logger.warn("CSRF check failed: Missing Origin and Referer headers", {
+      method: req.method,
+      path: req.nextUrl.pathname,
+      ip:
+        (req.headers.get("x-forwarded-for") ?? "127.0.0.1")
+          .split(",")[0]
+          ?.trim() ?? "127.0.0.1",
     });
 
-    if (expectedOrigin !== actualHost && expectedOrigin !== "localhost") {
-      logger.warn("CSRF protection: Origin mismatch", {
-        origin: expectedOrigin,
-        host: actualHost,
-        method: req.method,
-        path: req.nextUrl.pathname,
-      });
-
-      return new NextResponse(JSON.stringify({ error: "Invalid origin" }), {
+    return new NextResponse(
+      JSON.stringify({ error: "Missing required security headers" }),
+      {
         status: 403,
         headers: { "Content-Type": "application/json" },
-      });
-    }
+      }
+    );
   }
-  logger.debug("handleCsrf: CSRF check passed");
+
+  // Validate Origin if present
+  if (origin && !isAllowedOrigin(origin)) {
+    logger.warn("CSRF check failed: Invalid Origin", {
+      origin,
+      method: req.method,
+      path: req.nextUrl.pathname,
+      ip:
+        (req.headers.get("x-forwarded-for") ?? "127.0.0.1")
+          .split(",")[0]
+          ?.trim() ?? "127.0.0.1",
+    });
+
+    return new NextResponse(JSON.stringify({ error: "Invalid origin" }), {
+      status: 403,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  // Validate Referer if Origin is missing
+  if (!origin && referer && !isAllowedReferer(referer)) {
+    logger.warn("CSRF check failed: Invalid Referer", {
+      referer,
+      method: req.method,
+      path: req.nextUrl.pathname,
+      ip:
+        (req.headers.get("x-forwarded-for") ?? "127.0.0.1")
+          .split(",")[0]
+          ?.trim() ?? "127.0.0.1",
+    });
+
+    return new NextResponse(JSON.stringify({ error: "Invalid referer" }), {
+      status: 403,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  logger.debug("handleCsrf: CSRF check passed", {
+    validatedHeader: origin ? "origin" : "referer",
+  });
 }
 
 // --- Main Middleware ---
@@ -77,7 +158,16 @@ export async function middleware(req: NextRequest) {
     return authResponse;
   }
 
-  const response = NextResponse.next();
+  const nonce = createCspNonce();
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-csp-nonce", nonce);
+  requestHeaders.set("x-nonce", nonce);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
   logger.debug("middleware: NextResponse.next() called");
 
   const isChatAPI = req.nextUrl.pathname.startsWith("/api/chat");
@@ -99,7 +189,7 @@ export async function middleware(req: NextRequest) {
   );
   logger.debug("middleware: Rate limit headers set");
 
-  const finalResponse = securityHeadersMiddleware(response);
+  const finalResponse = securityHeadersMiddleware(response, nonce);
   logger.info("middleware: Request processed successfully");
   return finalResponse;
 }

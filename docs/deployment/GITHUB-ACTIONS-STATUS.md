@@ -1,216 +1,98 @@
-# ✅ GitHub Actions Setup Complete
+# ✅ GitHub Actions Status (Nov 2025)
 
-## 🎉 Status: WORKING!
-
-Both GitHub Actions workflows are now configured and working correctly.
-
-## 📊 Current Setup
-
-### Workflows
-
-1. **CI/CD Pipeline** (`ci.yml`)
-   - Runs on: Push to `main`, Pull Requests
-   - Jobs:
-     - Lint and Type Check
-     - Unit Tests (with coverage)
-     - Build Check
-   - Duration: ~6-15 minutes
-
-2. **Deploy to Cloud Run (Staging)** (`deploy-staging.yml`)
-   - Runs on: Push to `main`, Manual trigger
-   - Jobs:
-     - Build Docker image
-     - Push to Artifact Registry
-     - Deploy to Cloud Run
-     - Map custom domain
-     - Verify deployment
-   - Duration: ~2-3 minutes
-   - ✅ Auto-rollback on failure
-
-## 🔧 Configuration
-
-### GitHub Secrets
-
-- ✅ `GCP_SA_KEY` - Service account credentials for GCP
-
-### Service Account (google-actions@norse-breaker-474323-n8.iam.gserviceaccount.com)
-
-Permissions:
-
-- ✅ Cloud Run Admin
-- ✅ Storage Admin
-- ✅ Service Account User
-- ✅ Artifact Registry Admin
-- ✅ Cloud Build Builder
-
-### Environment Variables (CI)
-
-All jobs have necessary dummy values for builds:
-
-- `NEXTAUTH_SECRET`
-- `NEXTAUTH_URL`
-- `AUTH_USER_EMAIL`
-- `AUTH_USER_PASSWORD_HASH`
-- `GOOGLE_PROJECT_ID`
-- `GOOGLE_LOCATION`
-- `GOOGLE_VERTEX_AI_MODEL_ID`
-
-## 🚀 Deployment Info
-
-### Latest Successful Deployment
-
-- **Service**: chat-staging
-- **Region**: us-central1
-- **URL**: https://chat-staging-v2xv6gugxa-uc.a.run.app
-- **Custom Domain**: staging.chat.daza.ar (configured)
-- **Revision**: chat-staging-00002-mdp
-- **Status**: ✅ Active and responding
-
-### Deployment Trigger
-
-Any push to `main` branch automatically:
-
-1. Runs CI checks (lint, tests, build)
-2. Builds Docker image
-3. Deploys to Cloud Run
-4. Verifies deployment
-
-## 🧪 Testing
-
-### Manual Deployment
-
-```bash
-# Trigger deployment from CLI
-gh workflow run deploy-staging.yml
-
-# Or from GitHub UI:
-# https://github.com/roofsonfire/chat/actions/workflows/deploy-staging.yml
-# Click "Run workflow"
-```
-
-### Monitor Workflows
-
-```bash
-# List recent runs
-gh run list --limit 5
-
-# Watch a specific run
-gh run watch <RUN_ID>
-
-# View logs
-gh run view <RUN_ID> --log
-```
-
-### Check Deployment
-
-```bash
-# Service status
-gcloud run services describe chat-staging --region=us-central1
-
-# Live logs
-gcloud run logs tail chat-staging --region=us-central1
-
-# Test service
-curl -I https://chat-staging-v2xv6gugxa-uc.a.run.app
-```
-
-## 📝 Workflow Files
-
-### `.github/workflows/ci.yml`
-
-Complete CI/CD pipeline with:
-
-- Linting (ESLint, Prettier)
-- Type checking (TypeScript)
-- Unit tests (Vitest)
-- Build verification
-- Code coverage upload
-
-### `.github/workflows/deploy-staging.yml`
-
-Automated Cloud Run deployment with:
-
-- Docker build and push
-- Cloud Run deployment
-- Domain mapping
-- Health check verification
-- Automatic rollback on failure
-- PR comments with deployment info
-
-## 🔍 Issues Fixed
-
-### Issue 1: CI Build Failures
-
-**Problem**: Missing `AUTH_USER_EMAIL` and `AUTH_USER_PASSWORD_HASH` in build jobs  
-**Solution**: Added dummy values to all build steps in CI workflow  
-**Status**: ✅ Fixed
-
-### Issue 2: Deployment Verification Failures
-
-**Problem**: HTTP 307 (redirect) not recognized as valid response  
-**Solution**: Added 307 to accepted HTTP status codes  
-**Status**: ✅ Fixed
-
-## 🎯 Next Steps
-
-### Optional Improvements
-
-1. **Add Build Caching**
-   - Speed up CI by caching node_modules
-   - Speed up Docker builds with layer caching
-
-2. **Add Environments**
-   - Create "staging" environment in GitHub
-   - Add protection rules (required reviewers)
-
-3. **Add Notifications**
-   - Slack/Discord notifications on deployment
-   - Email notifications on failures
-
-4. **Add Preview Deployments**
-   - Deploy temporary instances for PRs
-   - Auto-cleanup after PR merge/close
-
-5. **Production Setup**
-   - Create production workflow
-   - Add manual approval gates
-   - Separate production secrets
-
-## 📚 Documentation
-
-- [GitHub Actions Deployment Guide](GITHUB-ACTIONS-DEPLOYMENT.md)
-- [Manual Deploy Commands](MANUAL-DEPLOY-COMMANDS.md)
-- [Deployment Checklist](DEPLOYMENT-CHECKLIST.md)
-- [Cloud Run Deployment](CLOUD-RUN-DEPLOYMENT.md)
-
-## ✅ Success Criteria
-
-- [x] GitHub Actions workflows created
-- [x] Service account configured with correct permissions
-- [x] Secrets added to GitHub repository
-- [x] CI workflow passing (lint, tests, build)
-- [x] Deployment workflow passing
-- [x] Service deployed and accessible
-- [x] Automatic deployment on push to main
-- [x] Health checks working
-- [x] Documentation complete
-
-## 🎉 Result
-
-**GitHub Actions CI/CD is now fully operational!**
-
-Every push to `main` will:
-
-1. ✅ Run all tests
-2. ✅ Build the application
-3. ✅ Deploy to Cloud Run (staging)
-4. ✅ Verify deployment health
-5. ✅ Rollback automatically if something fails
-
-**Staging URL**: https://chat-staging-v2xv6gugxa-uc.a.run.app  
-**Custom Domain**: https://staging.chat.daza.ar (once DNS configured)
+Our automation stack now covers linting, testing, and production deployments with supply-chain safeguards.
 
 ---
 
-**Last Updated**: October 6, 2025  
-**Commit**: 55f1b1c
+## 📊 Workflows in Production
+
+### 1. CI/CD Pipeline (`.github/workflows/ci.yml`)
+
+- **Triggers**: Push/PR against `main` or `develop`.
+- **Jobs** (in order):
+  1. `Workflow Lint` – Runs `actionlint` v1.7.6 downloaded from a pinned release URL.
+  2. `Lint and Type Check` – ESLint (no autofix), Prettier check, TypeScript `--noEmit`.
+  3. `Unit Tests` – Vitest unit suite + coverage uploaded to Codecov.
+  4. `Build Check` – `next build` with dummy secrets to ensure production builds work.
+- **Guardrails**:
+  - All third-party actions pinned to commit SHAs.
+  - Test secrets pulled from repo-level secrets (`TEST_*`).
+  - Rate limiting and Vertex model validation disabled for CI via env flags.
+
+### 2. Deploy to Cloud Run (Production) (`.github/workflows/deploy-production.yml`)
+
+- **Triggers**: Automatic after a successful CI run on `main` (`workflow_run`) or manual dispatch.
+- **Authentication**: Workload Identity Federation via secrets `GCP_WORKLOAD_IDENTITY_PROVIDER` and `GCP_SERVICE_ACCOUNT_EMAIL` (JSON key removed).
+- **Key Steps**:
+  - Checkout exact commit from CI run.
+  - Build & push Docker image (base image pinned to digest).
+  - Deploy to Cloud Run with secret bindings, domain mapping, and health verification.
+  - Rollback job available if deployment fails.
+- **Outputs**: Deployment URL, custom domain confirmation, optional PR comment when triggered by PR.
+
+---
+
+## 🔐 Required Secrets & Variables
+
+| Name                             | Scope      | Purpose                               |
+| -------------------------------- | ---------- | ------------------------------------- |
+| `TEST_*` secrets                 | Repository | Dummy values for lint/test/build jobs |
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | Repository | WIF provider resource string          |
+| `GCP_SERVICE_ACCOUNT_EMAIL`      | Repository | Service account used by WIF           |
+| `CODECOV_TOKEN` (optional)       | Repository | Coverage uploads                      |
+
+> ✅ `GCP_SA_KEY` is deprecated and no longer read by any workflow.
+
+---
+
+## 🚀 Deployment Snapshot
+
+- **Service**: `chat-production`
+- **Region**: `us-central1`
+- **Domain**: `https://chat.daza.ar`
+- **Latest flow**: CI → production deploy via WIF
+- **Validation**: `curl` health check accepts 200/302/307/401 responses.
+
+---
+
+## 🧪 How to Interact with Workflows
+
+```bash
+# Trigger production deploy manually
+gh workflow run deploy-production.yml
+
+# Run actionlint locally (mirrors CI)
+ACTIONLINT_VERSION=1.7.6
+TMP_DIR=$(mktemp -d)
+curl -sSL "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
+  | tar -xz --directory "$TMP_DIR"
+"$TMP_DIR/actionlint"
+
+# Inspect recent workflow runs
+gh run list --limit 5
+```
+
+---
+
+## ✅ Current State
+
+- [x] All workflows pin external actions to SHAs.
+- [x] CI enforces workflow linting before other jobs.
+- [x] Production deploy uses Workload Identity Federation (no long-lived keys).
+- [x] Docker base image locked to digest.
+- [x] Documentation updated (this file + deployment guide).
+
+---
+
+## 🎯 Next Enhancements
+
+1. Cache npm dependencies to shave CI runtime.
+2. Add Slack/Discord notifications for deployment outcomes.
+3. Introduce preview environments for PRs.
+4. Gate production deploy with required reviewers via GitHub environments.
+5. Instrument log retention & alerting policies (ties into security Task 6).
+
+---
+
+**Last Updated**: November 7, 2025  
+**Related Docs**: [`GITHUB-ACTIONS-DEPLOYMENT.md`](GITHUB-ACTIONS-DEPLOYMENT.md), [`MANUAL-DEPLOY-COMMANDS.md`](MANUAL-DEPLOY-COMMANDS.md), [`SECURITY-AUDIT.md`](../SECURITY-AUDIT.md)

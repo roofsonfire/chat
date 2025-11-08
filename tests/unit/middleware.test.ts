@@ -140,12 +140,14 @@ describe("Middleware", () => {
       expect(response.status).toBe(403);
       const body = await response.json();
       expect(body.error).toBe("Invalid origin");
+      // Our new CSRF implementation logs with this message
       expect(logger.warn).toHaveBeenCalledWith(
-        "CSRF protection: Origin mismatch",
+        "CSRF check failed: Invalid Origin",
         expect.objectContaining({
-          origin: "malicious-site.com",
-          host: "localhost",
+          origin: "http://malicious-site.com",
           method: "POST",
+          path: "/api/chat",
+          ip: "127.0.0.1",
         })
       );
     });
@@ -168,7 +170,7 @@ describe("Middleware", () => {
       expect(response.status).not.toBe(403);
     });
 
-    it("should allow POST requests without origin header", async () => {
+    it("should allow POST requests without origin header if referer is valid", async () => {
       vi.mocked(getToken).mockResolvedValue({
         email: "test@example.com",
       } as unknown as Awaited<ReturnType<typeof getToken>>);
@@ -177,6 +179,8 @@ describe("Middleware", () => {
         method: "POST",
         headers: {
           host: "localhost:3000",
+          // Our new CSRF implementation requires Origin OR Referer
+          referer: "http://localhost:3000/",
         },
       });
 

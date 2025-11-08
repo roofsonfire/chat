@@ -11,6 +11,10 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
   ENABLE_TEST_CREDENTIALS: z.enum(["true", "false"]).optional(),
+  // ✅ SECURITY FIX: Add NODE_ENV for cookie security configuration
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
   // Allowlist: comma-separated list of allowed email addresses
   ALLOWED_EMAILS: z
     .string()

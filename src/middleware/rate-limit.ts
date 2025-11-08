@@ -4,6 +4,28 @@ import { RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible";
 import { logger } from "@/lib/logger";
 
 // --- Rate Limiting Configuration ---
+
+/**
+ * NOTE: In-memory rate limiting is suitable for single-instance deployments.
+ *
+ * CURRENT STATUS: ✅ Working correctly for current deployment (0-1 Cloud Run instances)
+ *
+ * LIMITATIONS:
+ * - Rate limits reset on server restart
+ * - Each Cloud Run instance maintains independent counters
+ * - Ineffective when scaling beyond 3+ instances (attacker can bypass by hitting different instances)
+ *
+ * MIGRATION TRIGGER:
+ * - When Cloud Run regularly scales to 3+ instances during normal traffic
+ * - When rate limit bypass attempts detected in production logs
+ * - When account-level rate limiting required (not just IP-based)
+ *
+ * SOLUTION: Migrate to Upstash Redis for distributed rate limiting
+ * See: docs/features/RATE-LIMITING-MIGRATION.md
+ *
+ * Security Assessment: Finding #4 (MEDIUM) - Documented and accepted for current scale
+ */
+
 const RATE_LIMIT_REQUESTS = 10;
 const RATE_LIMIT_WINDOW_SECONDS = 15;
 const CHAT_API_RATE_LIMIT_REQUESTS = 3;
@@ -21,6 +43,30 @@ const chatAPIRateLimiter = new RateLimiterMemory({
   blockDuration: 0,
 });
 
+export function extractClientIp(req: NextRequest): string {
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) {
+    return realIp;
+  }
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (!forwarded) {
+    return "127.0.0.1";
+  }
+  const clientIp = forwarded
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)[0];
+  if (!clientIp) {
+    return "127.0.0.1";
+  }
+  const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+  const ipv6Regex = /^[0-9a-fA-F:]+$/;
+  if (ipv4Regex.test(clientIp) || ipv6Regex.test(clientIp)) {
+    return clientIp;
+  }
+  return "127.0.0.1";
+}
+
 export async function rateLimitMiddleware(
   req: NextRequest
 ): Promise<NextResponse | RateLimiterRes> {
@@ -28,7 +74,7 @@ export async function rateLimitMiddleware(
     return new RateLimiterRes();
   }
 
-  const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  const ip = extractClientIp(req);
   const { pathname } = req.nextUrl;
   const isChatAPI = pathname.startsWith("/api/chat");
 
@@ -71,4 +117,15 @@ export async function rateLimitMiddleware(
     }
     throw rateLimitError;
   }
+}
+
+export async function clearRateLimitStateForTesting(ip: string): Promise<void> {
+  if (process.env.NODE_ENV !== "test") {
+    return;
+  }
+
+  await Promise.allSettled([
+    rateLimiter.delete(ip),
+    chatAPIRateLimiter.delete(ip),
+  ]);
 }

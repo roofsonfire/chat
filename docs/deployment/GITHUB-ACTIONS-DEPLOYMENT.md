@@ -4,9 +4,9 @@ Esta guía te ayudará a configurar el deployment automático a Cloud Run usando
 
 ## 📋 Overview
 
-El workflow de GitHub Actions (`deploy-staging.yml`) se ejecuta automáticamente cuando:
+El workflow de GitHub Actions (`deploy-production.yml`) se ejecuta automáticamente cuando:
 
-- Haces push a la rama `main`
+- La rama `main` pasa el workflow de CI con éxito (`workflow_run`)
 - Ejecutas manualmente desde la UI de GitHub
 
 El workflow hace:
@@ -18,7 +18,67 @@ El workflow hace:
 5. ✅ Verifies deployment
 6. ✅ Rollback automático si falla
 
-## 🔐 Paso 1: Crear Service Account en Google Cloud
+> **Importante (Nov 2025)**: la autenticación del workflow ya no usa llaves JSON. Ahora es obligatorio configurar [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) y exponer **dos secretos** en GitHub:
+>
+> - `GCP_WORKLOAD_IDENTITY_PROVIDER`: recurso del proveedor (`projects/<project-number>/locations/global/workloadIdentityPools/<pool>/providers/<provider>`)
+> - `GCP_SERVICE_ACCOUNT_EMAIL`: servicio que asumirá el workflow (`github-actions@<project-id>.iam.gserviceaccount.com`)
+>
+> El secreto `GCP_SA_KEY` es legado y debe eliminarse una vez migrado.
+
+## 🔐 Paso 1: Crear Workload Identity Federation + Service Account
+
+### 1. Crear el Workload Identity Pool y Provider (CLI)
+
+```bash
+PROJECT_ID="norse-breaker-474323-n8"
+POOL_ID="github-actions"
+PROVIDER_ID="github-oidc"
+
+gcloud iam workload-identity-pools create "$POOL_ID" \
+    --project="$PROJECT_ID" \
+    --location="global" \
+    --display-name="GitHub Actions"
+
+gcloud iam workload-identity-pools providers create-oidc "$PROVIDER_ID" \
+    --project="$PROJECT_ID" \
+    --location="global" \
+    --workload-identity-pool="$POOL_ID" \
+    --display-name="GitHub OIDC" \
+    --issuer-uri="https://token.actions.githubusercontent.com" \
+    --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository,attribute.ref=assertion.ref"
+
+gcloud iam service-accounts create github-actions \
+    --project="$PROJECT_ID" \
+    --description="Service account for GitHub deployments" \
+    --display-name="GitHub Actions"
+
+gcloud iam service-accounts add-iam-policy-binding \
+    github-actions@$PROJECT_ID.iam.gserviceaccount.com \
+    --project="$PROJECT_ID" \
+    --role="roles/iam.workloadIdentityUser" \
+    --member="principalSet://iam.googleapis.com/projects/$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')/locations/global/workloadIdentityPools/$POOL_ID/attribute.repository/roofsonfire/chat"
+```
+
+### 2. Asignar permisos a la Service Account
+
+Utiliza los mismos bindings descritos en la sección anterior (`roles/run.admin`, `roles/storage.admin`, etc.) sobre `github-actions@$PROJECT_ID.iam.gserviceaccount.com`.
+
+### 3. Obtén los valores a cargar como secretos
+
+```bash
+PROJECT_NUMBER="$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')"
+echo "Provider: projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/$POOL_ID/providers/$PROVIDER_ID"
+echo "Service Account: github-actions@$PROJECT_ID.iam.gserviceaccount.com"
+```
+
+Guarda ambos valores; los usaremos en el Paso 2.
+
+> ⚠️ **¿Aún necesitas llaves JSON?**
+> Solo mantenlas de forma temporal durante la migración. El nuevo workflow fallará si `GCP_WORKLOAD_IDENTITY_PROVIDER` o `GCP_SERVICE_ACCOUNT_EMAIL` no están configurados.
+
+---
+
+### (Legacy) Crear Service Account con llaves JSON
 
 ### Opción A: Usar gcloud CLI (Recomendado)
 
@@ -82,7 +142,16 @@ cat github-actions-key.json
 
 ## 🔑 Paso 2: Agregar Secret a GitHub
 
-### Opción A: Usando GitHub CLI
+### Secrets requeridos (Workload Identity Federation)
+
+```bash
+gh secret set GCP_WORKLOAD_IDENTITY_PROVIDER --body "projects/<project-number>/locations/global/workloadIdentityPools/<pool>/providers/<provider>"
+gh secret set GCP_SERVICE_ACCOUNT_EMAIL --body "github-actions@<project-id>.iam.gserviceaccount.com"
+```
+
+> 💡 Recomendado: mantener `PROJECT_ID`, `REGION` y otros parámetros estáticos como **Repository Variables** (`Settings → Environments → Variables`).
+
+### Opción Legacy (solo mientras migras): usar GitHub CLI
 
 ```bash
 # Instalar GitHub CLI si no lo tienes
@@ -99,7 +168,7 @@ gh secret set GCP_SA_KEY < github-actions-key.json
 gh secret list
 ```
 
-### Opción B: Usando GitHub UI
+### Opción Legacy B: Usando GitHub UI
 
 1. Ve a tu repositorio: https://github.com/roofsonfire/chat
 2. Click "Settings" → "Secrets and variables" → "Actions"
@@ -113,13 +182,13 @@ gh secret list
 ### Verificar que existe el workflow
 
 ```bash
-cat .github/workflows/deploy-staging.yml
+cat .github/workflows/deploy-production.yml
 ```
 
 ### Trigger manual (primera vez)
 
 1. Ve a: https://github.com/roofsonfire/chat/actions
-2. Click en "Deploy to Cloud Run (Staging)"
+2. Click en "Deploy to Cloud Run (Production)"
 3. Click "Run workflow" → "Run workflow"
 4. Espera y monitorea el progreso
 
@@ -148,25 +217,25 @@ git push origin main
 
 ```bash
 # Ver logs del servicio
-gcloud run logs tail chat-staging --region=us-central1
+gcloud run logs tail chat-production --region=us-central1
 
 # Ver detalles del servicio
-gcloud run services describe chat-staging --region=us-central1
+gcloud run services describe chat-production --region=us-central1
 
 # Ver revisiones (deployments)
-gcloud run revisions list --service=chat-staging --region=us-central1
+gcloud run revisions list --service=chat-production --region=us-central1
 ```
 
 ## 🔧 Configuración del Workflow
 
-El workflow está en `.github/workflows/deploy-staging.yml` y tiene esta configuración:
+El workflow está en `.github/workflows/deploy-production.yml` y tiene esta configuración:
 
 ```yaml
 env:
   PROJECT_ID: norse-breaker-474323-n8
   REGION: us-central1
-  SERVICE_NAME: chat-staging
-  DOMAIN: staging.chat.daza.ar
+    SERVICE_NAME: chat-production
+    DOMAIN: chat.daza.ar
 ```
 
 ### Modificar recursos del servicio
@@ -209,7 +278,7 @@ gcloud projects get-iam-policy norse-breaker-474323-n8 \
 ```bash
 # Usando GitHub CLI
 gh secret list
-# Deberías ver: GCP_SA_KEY
+# Deberías ver: GCP_WORKLOAD_IDENTITY_PROVIDER, GCP_SERVICE_ACCOUNT_EMAIL
 ```
 
 ### Test 3: Dry Run del Workflow
@@ -261,15 +330,15 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
     --role="roles/cloudbuild.builds.builder"
 ```
 
-### Error: "Secret GCP_SA_KEY not found"
+### Error: "Secret GCP_WORKLOAD_IDENTITY_PROVIDER not found"
 
-**Problema**: Secret no está configurado en GitHub
+**Problema**: Falta el secreto requerido para Workload Identity Federation.
 
 **Solución**:
 
 1. Ve a: https://github.com/roofsonfire/chat/settings/secrets/actions
-2. Verifica que existe `GCP_SA_KEY`
-3. Si no existe, créalo con el contenido del JSON
+2. Confirma que existen `GCP_WORKLOAD_IDENTITY_PROVIDER` y `GCP_SERVICE_ACCOUNT_EMAIL`
+3. Copia los valores con los comandos del Paso 1 y vuelve a crear los secretos si están vacíos
 
 ### Error: "Failed to push image"
 
@@ -294,7 +363,7 @@ gcloud artifacts repositories create cloud-run-source-deploy \
 
 **Solución**:
 
-1. Verifica que el archivo existe: `.github/workflows/deploy-staging.yml`
+1. Verifica que el archivo existe: `.github/workflows/deploy-production.yml`
 2. Verifica que la sintaxis YAML es correcta
 3. Ve a GitHub Actions y verifica si hay errores
 4. Asegúrate de hacer push a `main` (no otra rama)
@@ -304,12 +373,12 @@ gcloud artifacts repositories create cloud-run-source-deploy \
 ### Mejores Prácticas
 
 1. ✅ **Service Account con permisos mínimos**: Solo dar los roles necesarios
-2. ✅ **Rotar keys regularmente**: Crear nueva key cada 90 días
-3. ✅ **No commitear el JSON key**: Está en `.gitignore`
-4. ✅ **Usar Workload Identity** (alternativa más segura):
+2. ✅ **Sin llaves permanentes**: Usa Workload Identity Federation y elimina `GCP_SA_KEY`
+3. ✅ **No commitear credenciales**: Mantén las configuraciones en Secrets/Variables
+4. ✅ **Workload Identity Federation habilitada**:
 
 ```yaml
-# En deploy-staging.yml, reemplazar:
+# En deploy-production.yml, reemplazar:
 - name: Authenticate to Google Cloud
   uses: google-github-actions/auth@v2
   with:
@@ -333,7 +402,7 @@ gcloud iam service-accounts delete $SA_EMAIL
 
 Ve a: https://github.com/roofsonfire/chat/settings/environments
 
-1. Crear environment "staging"
+1. Crear environment "production" (o el que prefieras proteger)
 2. Agregar "Required reviewers" si quieres aprobación manual
 3. Agregar "Wait timer" para delays antes de deployment
 
@@ -342,7 +411,7 @@ Luego en el workflow:
 ```yaml
 jobs:
   deploy:
-    environment: staging # Requiere configuración en GitHub
+    environment: production # Requiere configuración en GitHub
 ```
 
 ### 2. Agregar Notificaciones
@@ -360,7 +429,7 @@ Agregar step para notificar en Slack/Discord:
 
 ### 3. Deployment Preview para PRs
 
-Crear staging temporal por cada PR (más avanzado)
+Crear entornos temporales por cada PR (más avanzado)
 
 ## 📚 Recursos
 
@@ -376,11 +445,12 @@ Crear staging temporal por cada PR (más avanzado)
 - [ ] Service account creado en Google Cloud
 - [ ] Permisos agregados al service account
 - [ ] JSON key descargado
-- [ ] Secret `GCP_SA_KEY` agregado en GitHub
-- [ ] Workflow file existe: `.github/workflows/deploy-staging.yml`
+- [ ] Secretos `GCP_WORKLOAD_IDENTITY_PROVIDER` y `GCP_SERVICE_ACCOUNT_EMAIL` agregados en GitHub
+- [ ] (Legacy) Secret `GCP_SA_KEY` eliminado una vez terminada la migración
+- [ ] Workflow file existe: `.github/workflows/deploy-production.yml`
 - [ ] Test deployment ejecutado
 - [ ] Deployment exitoso verificado
-- [ ] Service accesible en: https://staging.chat.daza.ar
+- [ ] Service accesible en: https://chat.daza.ar
 - [ ] JSON key eliminado localmente (seguridad)
 
 **¿Listo para empezar?** Ejecuta los comandos del Paso 1! 🚀
