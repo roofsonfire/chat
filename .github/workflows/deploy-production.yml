@@ -238,8 +238,8 @@ jobs:
           if [ -n "$PREVIOUS_REVISION" ]; then
             echo "Rolling back to revision: $PREVIOUS_REVISION"
             gcloud run services update-traffic "${{ env.SERVICE_NAME }}" \
-              --region=${{ env.REGION }} \
-              --to-revisions=$PREVIOUS_REVISION=100
+              --region="${{ env.REGION }}" \
+              --to-revisions="$PREVIOUS_REVISION=100"
             echo "✅ Rollback complete"
           else
             echo "⚠️ No previous revision found for rollback"
