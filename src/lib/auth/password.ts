@@ -1,6 +1,13 @@
 import bcrypt from "bcrypt";
 
-const SALT_ROUNDS = 10;
+/**
+ * SALT_ROUNDS determines the computational cost of hashing.
+ * 12 rounds provides strong security while maintaining acceptable performance.
+ * Each increment doubles the computation time.
+ *
+ * Security Finding #6 (LOW): Increased from 10 to 12 rounds
+ */
+const SALT_ROUNDS = 12;
 
 export async function hashPassword(password: string): Promise<string> {
   const salt = await bcrypt.genSalt(SALT_ROUNDS);

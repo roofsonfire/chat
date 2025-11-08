@@ -16,7 +16,7 @@
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "hash-password": "node scripts/utils/hash-password.js",
+    "hash-password": "node scripts/utils/hash-password.mjs",
     "type-check": "tsc --noEmit",
     "lint:check": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
