@@ -5,7 +5,8 @@ FROM node:22-alpine@sha256:ef30b897b4b924010aab656801cb44fe27589b5d0724ba080b191
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Pin package version for reproducible builds (Hadolint DL3018)
+RUN apk add --no-cache gcompat=1.1.0-r4
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
