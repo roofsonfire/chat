@@ -200,14 +200,16 @@ jobs:
     steps:
       - name: Generate summary
         run: |
-          echo "## 📚 Documentation Quality Check Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "All documentation quality checks completed!" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Checks Run:" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Markdown link validation" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Formatting standards" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Spelling check" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Stale content detection" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Documentation structure" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Cross-reference validation" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "## 📚 Documentation Quality Check Summary"
+            echo ""
+            echo "All documentation quality checks completed!"
+            echo ""
+            echo "### Checks Run:"
+            echo "- ✅ Markdown link validation"
+            echo "- ✅ Formatting standards"
+            echo "- ✅ Spelling check"
+            echo "- ✅ Stale content detection"
+            echo "- ✅ Documentation structure"
+            echo "- ✅ Cross-reference validation"
+          } >> "$GITHUB_STEP_SUMMARY"

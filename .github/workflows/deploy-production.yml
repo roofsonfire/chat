@@ -122,7 +122,6 @@ jobs:
             --tag "${IMAGE_TAG}" \
             --tag "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest" \
             .
-
           docker push "${IMAGE_TAG}"
           docker push "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest"
 
@@ -231,14 +230,14 @@ jobs:
 
           # Obtener la penúltima revisión
           PREVIOUS_REVISION=$(gcloud run revisions list \
-            --service=${{ env.SERVICE_NAME }} \
-            --region=${{ env.REGION }} \
+            --service="${{ env.SERVICE_NAME }}" \
+            --region="${{ env.REGION }}" \
             --format='value(name)' \
             --limit=2 | tail -n 1)
 
           if [ -n "$PREVIOUS_REVISION" ]; then
             echo "Rolling back to revision: $PREVIOUS_REVISION"
-            gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
+            gcloud run services update-traffic "${{ env.SERVICE_NAME }}" \
               --region=${{ env.REGION }} \
               --to-revisions=$PREVIOUS_REVISION=100
             echo "✅ Rollback complete"
