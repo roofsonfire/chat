@@ -26,10 +26,13 @@ import { logger } from "@/lib/logger";
  * Security Assessment: Finding #4 (MEDIUM) - Documented and accepted for current scale
  */
 
-const RATE_LIMIT_REQUESTS = 10;
-const RATE_LIMIT_WINDOW_SECONDS = 15;
-const CHAT_API_RATE_LIMIT_REQUESTS = 3;
-const CHAT_API_RATE_LIMIT_WINDOW_SECONDS = 30;
+// General rate limit: Allow for OAuth login flow (10+ requests) plus normal browsing
+const RATE_LIMIT_REQUESTS = 30;
+const RATE_LIMIT_WINDOW_SECONDS = 60;
+
+// Chat API rate limit: More restrictive for AI generation
+const CHAT_API_RATE_LIMIT_REQUESTS = 5;
+const CHAT_API_RATE_LIMIT_WINDOW_SECONDS = 60;
 
 const rateLimiter = new RateLimiterMemory({
   points: RATE_LIMIT_REQUESTS,
