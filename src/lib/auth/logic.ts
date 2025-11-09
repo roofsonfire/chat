@@ -3,7 +3,7 @@ import type { AuthOptions, Account, User, Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { allowlist } from "@/lib/auth/allowlist";
+import { getAllowlist } from "@/lib/auth/allowlist";
 import { validateCredentials } from "@/lib/auth/provider";
 import { logger } from "@/lib/logger";
 
@@ -33,6 +33,7 @@ async function handleSignIn({
   account: Account | null;
   profile?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }) {
+  const allowlist = getAllowlist(); // Get allowlist at runtime
   logger.info("[NextAuth][signIn] Callback triggered", {
     userEmail: maskEmail(user?.email),
     provider: account?.provider,
