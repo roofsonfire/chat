@@ -1,8 +1,8 @@
 # Tabletop Exercise Report – January 16, 2026
 
-**Scenario:** Compromised GitHub Actions workflow deploying malicious container to Cloud Run  
-**Participants:** Engineering Lead (IC), Security Officer (Lead), Product Manager (Comms), DevOps Engineer (Scribe), CTO (Observer)  
-**Duration:** 2 hours  
+**Scenario:** Compromised GitHub Actions workflow deploying malicious container to Cloud Run
+**Participants:** Engineering Lead (IC), Security Officer (Lead), Product Manager (Comms), DevOps Engineer (Scribe), CTO (Observer)
+**Duration:** 2 hours
 **Facilitator:** Security Officer
 
 ## Timeline

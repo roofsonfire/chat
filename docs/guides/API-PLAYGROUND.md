@@ -6,7 +6,7 @@ Interactive sandbox for testing API endpoints without writing code. Perfect for 
 
 ### Access the Playground
 
-**Development:** http://localhost:3000/api-playground  
+**Development:** http://localhost:3000/api-playground
 **Production:** https://chat.daza.ar/api-playground
 
 ### Authentication Required
@@ -23,7 +23,7 @@ Test the main chat interface with streaming responses.
 
 #### Request Configuration
 
-**Method:** `POST`  
+**Method:** `POST`
 **Content-Type:** `application/json`
 
 **Body Schema:**
@@ -43,12 +43,12 @@ Test the main chat interface with streaming responses.
 
 #### Available Models
 
-| Model ID | Description | Best For |
-|----------|-------------|----------|
+| Model ID                 | Description                | Best For             |
+| ------------------------ | -------------------------- | -------------------- |
 | `gemini-2.5-flash-image` | Fast, multimodal (default) | General chat, images |
-| `gemini-1.5-flash-002` | Fast, efficient | Quick responses |
-| `gemini-1.5-pro-002` | Most capable | Complex reasoning |
-| `gemini-1.0-pro-vision` | Multimodal (legacy) | Image analysis |
+| `gemini-1.5-flash-002`   | Fast, efficient            | Quick responses      |
+| `gemini-1.5-pro-002`     | Most capable               | Complex reasoning    |
+| `gemini-1.0-pro-vision`  | Multimodal (legacy)        | Image analysis       |
 
 #### Example Requests
 
@@ -183,7 +183,7 @@ Fetch available Gemini models and their capabilities.
 
 #### Request Configuration
 
-**Method:** `GET`  
+**Method:** `GET`
 **Authentication:** Required
 
 #### Example Request
@@ -204,7 +204,10 @@ curl -X GET http://localhost:3000/api/models \
       "description": "Fast multimodal model with image support",
       "inputTokenLimit": 8192,
       "outputTokenLimit": 8192,
-      "supportedGenerationMethods": ["generateContent", "streamGenerateContent"],
+      "supportedGenerationMethods": [
+        "generateContent",
+        "streamGenerateContent"
+      ],
       "multimodal": true
     },
     {
@@ -213,7 +216,10 @@ curl -X GET http://localhost:3000/api/models \
       "description": "Most capable model for complex tasks",
       "inputTokenLimit": 32768,
       "outputTokenLimit": 8192,
-      "supportedGenerationMethods": ["generateContent", "streamGenerateContent"],
+      "supportedGenerationMethods": [
+        "generateContent",
+        "streamGenerateContent"
+      ],
       "multimodal": true
     }
   ]
@@ -288,7 +294,7 @@ import { redirect } from "next/navigation"
 
 export default async function PlaygroundPage() {
   const session = await getServerSession(authOptions)
-  
+
   if (!session) {
     redirect("/login")
   }
@@ -748,22 +754,22 @@ Test streaming behavior:
 
 ### Understanding Headers
 
-**X-RateLimit-Limit:** Maximum requests allowed  
-**X-RateLimit-Remaining:** Requests remaining in window  
-**X-RateLimit-Reset:** Unix timestamp when limit resets  
-**Content-Type:** Response format (text/plain or application/json)  
+**X-RateLimit-Limit:** Maximum requests allowed
+**X-RateLimit-Remaining:** Requests remaining in window
+**X-RateLimit-Reset:** Unix timestamp when limit resets
+**Content-Type:** Response format (text/plain or application/json)
 **Cache-Control:** Caching behavior
 
 ### Status Codes
 
-| Code | Meaning | Common Cause |
-|------|---------|--------------|
-| 200 | OK | Request succeeded |
-| 400 | Bad Request | Invalid JSON or missing fields |
-| 401 | Unauthorized | Not signed in |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Internal Server Error | Server-side error |
-| 503 | Service Unavailable | Vertex AI unavailable |
+| Code | Meaning               | Common Cause                   |
+| ---- | --------------------- | ------------------------------ |
+| 200  | OK                    | Request succeeded              |
+| 400  | Bad Request           | Invalid JSON or missing fields |
+| 401  | Unauthorized          | Not signed in                  |
+| 429  | Too Many Requests     | Rate limit exceeded            |
+| 500  | Internal Server Error | Server-side error              |
+| 503  | Service Unavailable   | Vertex AI unavailable          |
 
 ---
 
@@ -781,7 +787,7 @@ const res = await fetch(endpoint, {
     "X-Custom-Header": "value",
   },
   body: requestBody,
-})
+});
 ```
 
 ### Request Interceptors
@@ -789,14 +795,14 @@ const res = await fetch(endpoint, {
 Log all requests:
 
 ```typescript
-const originalFetch = fetch
+const originalFetch = fetch;
 
 window.fetch = async (...args) => {
-  console.log("Request:", args)
-  const response = await originalFetch(...args)
-  console.log("Response:", response)
-  return response
-}
+  console.log("Request:", args);
+  const response = await originalFetch(...args);
+  console.log("Response:", response);
+  return response;
+};
 ```
 
 ### Response Transformers
@@ -806,10 +812,10 @@ Transform responses before display:
 ```typescript
 const transformResponse = (body: string, contentType: string) => {
   if (contentType?.includes("application/json")) {
-    return JSON.stringify(JSON.parse(body), null, 2)
+    return JSON.stringify(JSON.parse(body), null, 2);
   }
-  return body
-}
+  return body;
+};
 ```
 
 ---
@@ -831,11 +837,11 @@ Create a library of request templates for common scenarios:
 Implement request history to reuse previous requests:
 
 ```typescript
-const [history, setHistory] = useState<string[]>([])
+const [history, setHistory] = useState<string[]>([]);
 
 const saveRequest = (body: string) => {
-  setHistory((prev) => [body, ...prev.slice(0, 9)]) // Keep last 10
-}
+  setHistory((prev) => [body, ...prev.slice(0, 9)]); // Keep last 10
+};
 ```
 
 ### 3. Export Results
@@ -846,13 +852,13 @@ Add export functionality for responses:
 const exportResponse = (response: ApiResponse) => {
   const blob = new Blob([JSON.stringify(response, null, 2)], {
     type: "application/json",
-  })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement("a")
-  a.href = url
-  a.download = `response-${Date.now()}.json`
-  a.click()
-}
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `response-${Date.now()}.json`;
+  a.click();
+};
 ```
 
 ### 4. Validate JSON
@@ -862,12 +868,12 @@ Add JSON validation before sending:
 ```typescript
 const validateJSON = (text: string): boolean => {
   try {
-    JSON.parse(text)
-    return true
+    JSON.parse(text);
+    return true;
   } catch {
-    return false
+    return false;
   }
-}
+};
 ```
 
 ---
@@ -885,6 +891,7 @@ const validateJSON = (text: string): boolean => {
 **Symptom:** 401 Unauthorized
 
 **Solution:**
+
 1. Sign in at `/login`
 2. Check cookies are enabled
 3. Verify session at `/api/auth/session`
@@ -894,6 +901,7 @@ const validateJSON = (text: string): boolean => {
 **Symptom:** 400 Bad Request with "Invalid JSON"
 
 **Solution:**
+
 1. Validate JSON syntax
 2. Check for trailing commas
 3. Use a JSON formatter
@@ -903,6 +911,7 @@ const validateJSON = (text: string): boolean => {
 **Symptom:** 429 Too Many Requests
 
 **Solution:**
+
 1. Wait 10 seconds
 2. Check `X-RateLimit-Reset` header
 3. Reduce request frequency
@@ -926,5 +935,5 @@ const validateJSON = (text: string): boolean => {
 
 ---
 
-**Last Updated:** November 2025  
+**Last Updated:** November 2025
 **Maintained by:** Core Development Team

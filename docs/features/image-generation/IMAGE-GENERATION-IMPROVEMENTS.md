@@ -329,6 +329,6 @@ No breaking changes - all improvements are internal:
 
 ---
 
-**Status**: ✅ Ready for testing  
-**Impact**: Better debugging, more reliable image handling  
+**Status**: ✅ Ready for testing
+**Impact**: Better debugging, more reliable image handling
 **Breaking Changes**: None

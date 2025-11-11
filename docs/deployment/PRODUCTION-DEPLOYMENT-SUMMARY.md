@@ -1,8 +1,8 @@
 # Production Deployment Summary
 
-**Date:** November 9, 2025  
-**Deployment ID:** 19205193416  
-**Commit:** 754309cc718c18416c0375ea9cc8d10cb65c881d  
+**Date:** November 9, 2025
+**Deployment ID:** 19205193416
+**Commit:** 754309cc718c18416c0375ea9cc8d10cb65c881d
 **Status:** ✅ **SUCCESSFUL**
 
 ---
@@ -161,7 +161,7 @@ ERROR: (gcloud.run.domain-mappings.create) unrecognized arguments: --region=us-c
 All security headers from Session 1 are successfully deployed:
 
 ```bash
-$ curl -I https://chat.daza.ar
+curl -I https://chat.daza.ar
 ```
 
 **Headers Present**:
@@ -489,8 +489,8 @@ The `GCP_SA_KEY` secret (JSON service account key) can now be safely removed as 
 
 ---
 
-**Deployment Completed**: November 9, 2025, 07:30 UTC  
-**Production Status**: ✅ LIVE  
+**Deployment Completed**: November 9, 2025, 07:30 UTC
+**Production Status**: ✅ LIVE
 **Next Review**: 24-hour monitoring checkpoint (November 10, 2025)
 
 ---

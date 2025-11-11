@@ -1,6 +1,6 @@
 # OAuth Redirect URI Configuration
 
-**Last Updated**: November 2025  
+**Last Updated**: November 2025
 **Status**: Active - Production issue resolved
 
 ## Problem
@@ -137,5 +137,5 @@ gcloud beta run domain-mappings describe --domain=chat.daza.ar --region=us-centr
 
 ---
 
-**Last Updated**: November 7, 2025  
+**Last Updated**: November 7, 2025
 **Status**: Documented for production deployment

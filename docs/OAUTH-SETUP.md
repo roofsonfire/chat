@@ -62,7 +62,7 @@ env_vars: |
   ENABLE_TEST_CREDENTIALS=false
 secrets: |
   NEXTAUTH_SECRET=nextauth-secret:latest
-  AUTH_USER_EMAIL=auth-user-email:latest  
+  AUTH_USER_EMAIL=auth-user-email:latest
   AUTH_USER_PASSWORD_HASH=auth-user-password-hash:latest
   GOOGLE_PROJECT_ID=google-project-id:latest
   GOOGLE_LOCATION=google-location:latest

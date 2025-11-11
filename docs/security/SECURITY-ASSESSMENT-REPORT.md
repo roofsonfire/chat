@@ -1,12 +1,12 @@
 # Comprehensive Security Assessment Report
 
-**Repository:** roofsonfire/chat  
-**Assessment Date:** November 8, 2025  
-**Validation Date:** January 29, 2025  
-**Report Version:** 1.1 (Validated)  
-**Auditor:** Senior Application Security Auditor  
-**Validator:** AI Security Audit System v2.0  
-**Scope:** Full repository analysis including source code, dependencies, CI/CD, and infrastructure  
+**Repository:** roofsonfire/chat
+**Assessment Date:** November 8, 2025
+**Validation Date:** January 29, 2025
+**Report Version:** 1.1 (Validated)
+**Auditor:** Senior Application Security Auditor
+**Validator:** AI Security Audit System v2.0
+**Scope:** Full repository analysis including source code, dependencies, CI/CD, and infrastructure
 **Validation Tools:** npm audit, CodeQL, Hadolint, GitHub API, grep SAST
 
 ---
@@ -72,9 +72,9 @@ This Next.js 15-based AI chat application demonstrates **good security practices
 
 #### 🔴 HIGH: Missing Secure Cookie Attributes
 
-**File:** `src/lib/auth/logic.ts`  
-**Lines:** 148-177 (authOptions)  
-**CWE:** CWE-614 (Sensitive Cookie in HTTPS Session Without 'Secure' Attribute)  
+**File:** `src/lib/auth/logic.ts`
+**Lines:** 148-177 (authOptions)
+**CWE:** CWE-614 (Sensitive Cookie in HTTPS Session Without 'Secure' Attribute)
 **OWASP ASVS:** V3.4.1
 
 **Issue:**
@@ -138,8 +138,8 @@ export const authOptions: AuthOptions = {
 
 #### 🟡 MEDIUM: Session Timeout Not Configured
 
-**File:** `src/lib/auth/logic.ts:155-157`  
-**CWE:** CWE-613 (Insufficient Session Expiration)  
+**File:** `src/lib/auth/logic.ts:155-157`
+**CWE:** CWE-613 (Insufficient Session Expiration)
 **OWASP ASVS:** V3.3.1
 
 **Issue:** No explicit `maxAge` for JWT sessions.
@@ -213,8 +213,8 @@ export const chatRequestSchema = z.object({
 
 #### 🟢 LOW: XSS Risk in Chart Component
 
-**File:** `src/components/ui/chart.tsx:83-101`  
-**CWE:** CWE-79 (Cross-Site Scripting)  
+**File:** `src/components/ui/chart.tsx:83-101`
+**CWE:** CWE-79 (Cross-Site Scripting)
 **OWASP ASVS:** V5.3.3
 
 **Issue:**
@@ -265,8 +265,8 @@ const colorConfig = Object.entries(config)
 
 #### 🔴 MEDIUM: CSRF Protection Weakness
 
-**File:** `src/middleware.ts:16-48`  
-**CWE:** CWE-352 (Cross-Site Request Forgery)  
+**File:** `src/middleware.ts:16-48`
+**CWE:** CWE-352 (Cross-Site Request Forgery)
 **OWASP ASVS:** V4.2.2
 
 **Issue:** CSRF protection only validates `Origin` header matching `Host`:
@@ -367,8 +367,8 @@ function handleCsrf(req: NextRequest): NextResponse | void {
 
 #### 🔴 MEDIUM: Rate Limiter Vulnerable to Bypass in Distributed Deployments
 
-**File:** `src/middleware/rate-limit.ts:13-23`  
-**CWE:** CWE-770 (Allocation of Resources Without Limits or Throttling)  
+**File:** `src/middleware/rate-limit.ts:13-23`
+**CWE:** CWE-770 (Allocation of Resources Without Limits or Throttling)
 **OWASP ASVS:** V11.1.4
 
 **Issue:** In-memory rate limiting resets on server restart and doesn't work across multiple instances:
@@ -413,7 +413,7 @@ const rateLimiter = new RateLimiterRedis({
 
 #### 🟡 MEDIUM: No Request Size Limits
 
-**File:** `src/app/api/chat/route.ts`  
+**File:** `src/app/api/chat/route.ts`
 **CWE:** CWE-400 (Uncontrolled Resource Consumption)
 
 **Issue:** Next.js default body size limit (4.5MB) may allow large payloads. With base64 images (5MB max), total request size could approach 10MB+.
@@ -488,7 +488,7 @@ private sanitizeString(value: string, key?: string): string {
 
 #### 🟢 LOW: bcrypt Salt Rounds Could Be Increased
 
-**File:** `src/lib/auth/password.ts:3`  
+**File:** `src/lib/auth/password.ts:3`
 **CWE:** CWE-916 (Use of Password Hash With Insufficient Computational Effort)
 
 **Current:** `SALT_ROUNDS = 10` (adequate but not optimal for 2025)
@@ -519,7 +519,7 @@ const SALT_ROUNDS = 12;
 
 #### 🟢 LOW: CSP Could Be More Restrictive
 
-**File:** `src/middleware/security.ts:32-44`  
+**File:** `src/middleware/security.ts:32-44`
 **CWE:** CWE-1021 (Improper Restriction of Rendered UI Layers)
 
 **Current CSP:**
@@ -594,8 +594,8 @@ npm audit --json
 
 ### 2.2 Software Bill of Materials (SBOM)
 
-**Production Dependencies:** 205 packages  
-**Development Dependencies:** 711 packages  
+**Production Dependencies:** 205 packages
+**Development Dependencies:** 711 packages
 **Total:** 949 packages
 
 #### Critical Production Dependencies
@@ -612,7 +612,7 @@ npm audit --json
 
 #### License Analysis
 
-**All licenses:** MIT, ISC, Apache-2.0, BSD-2-Clause, BSD-3-Clause  
+**All licenses:** MIT, ISC, Apache-2.0, BSD-2-Clause, BSD-3-Clause
 **Risk:** ✅ **LOW** - All permissive licenses, no GPL or restrictive licenses
 
 ---
@@ -629,7 +629,7 @@ npm audit --json
 
 #### 🔴 MEDIUM: Docker Base Image Pinned But Node Version Upgradable
 
-**File:** `Dockerfile:3`  
+**File:** `Dockerfile:3`
 **CWE:** CWE-1104 (Use of Unmaintained Third Party Components)
 
 **Current:**
@@ -1492,8 +1492,8 @@ This Next.js application demonstrates **strong security fundamentals** with comp
 
 ## Appendix D: Validation & Cross-Reference Results
 
-**Validation Date:** January 29, 2025  
-**Validation Method:** Automated tool verification using MCP (Model Context Protocol) tools  
+**Validation Date:** January 29, 2025
+**Validation Method:** Automated tool verification using MCP (Model Context Protocol) tools
 **Validator:** AI Security Audit System v2.0
 
 ### Validation Summary
@@ -1513,7 +1513,7 @@ This report has been validated using 10+ automated security tools and GitHub API
 
 ### 1. Dependency Vulnerability Validation
 
-**Tool:** `npm audit --json`  
+**Tool:** `npm audit --json`
 **Validation Date:** January 29, 2025
 
 ```json
@@ -1541,7 +1541,7 @@ This report has been validated using 10+ automated security tools and GitHub API
 
 ### 2. Package Version Corrections
 
-**Tool:** `npm ls <package>`  
+**Tool:** `npm ls <package>`
 **Validation Date:** January 29, 2025
 
 | Package                | Report Version | Actual Version | Status       |
@@ -1559,9 +1559,9 @@ This report has been validated using 10+ automated security tools and GitHub API
 
 ### 3. GitHub CodeQL Security Findings
 
-**Tool:** GitHub Code Scanning (CodeQL)  
-**Query Packs:** `security-extended`, `security-and-quality`  
-**Last Scan:** November 7, 2025 03:54:58 UTC  
+**Tool:** GitHub Code Scanning (CodeQL)
+**Query Packs:** `security-extended`, `security-and-quality`
+**Last Scan:** November 7, 2025 03:54:58 UTC
 **API Endpoint:** `/repos/roofsonfire/chat/code-scanning/alerts`
 
 #### 🔴 Alert #1: Clear-text Logging of Sensitive Data (ERROR)
@@ -1631,8 +1631,8 @@ console.error("   3. Try a different region (currently using: ${location})");
 
 ### 4. GitHub Dependabot Alert Status
 
-**Tool:** GitHub Dependabot Security Alerts  
-**API Endpoint:** `/repos/roofsonfire/chat/dependabot/alerts`  
+**Tool:** GitHub Dependabot Security Alerts
+**API Endpoint:** `/repos/roofsonfire/chat/dependabot/alerts`
 **Validation Date:** January 29, 2025
 
 **Result:** ✅ **ZERO active Dependabot alerts**
@@ -1643,7 +1643,7 @@ This cross-validates the npm audit findings - no known CVEs in dependencies.
 
 ### 5. Dockerfile Security Validation
 
-**Tool:** Hadolint v2.12.0  
+**Tool:** Hadolint v2.12.0
 **Validation Date:** January 29, 2025
 
 ```bash
@@ -1674,8 +1674,8 @@ docker run --rm -i hadolint/hadolint < Dockerfile
 
 ### 6. Session Cookie Configuration Validation
 
-**Tool:** grep pattern matching  
-**Patterns Searched:** `httpOnly`, `sameSite`, `secure`  
+**Tool:** grep pattern matching
+**Patterns Searched:** `httpOnly`, `sameSite`, `secure`
 **Files Scanned:** `src/lib/auth/*.ts`, `src/app/api/auth/**/*.ts`
 
 **Command:**
@@ -1697,8 +1697,8 @@ This **confirms** the HIGH severity finding in Section 6.1.1 (Session Management
 
 ### 7. GitHub Actions Security Validation
 
-**Tool:** grep pattern matching for SHA-pinned actions  
-**Pattern:** `uses:.*@[a-f0-9]{40}`  
+**Tool:** grep pattern matching for SHA-pinned actions
+**Pattern:** `uses:.*@[a-f0-9]{40}`
 **Files Scanned:** `.github/workflows/*.yml`
 
 **Command:**
@@ -1722,8 +1722,8 @@ Sample verified actions:
 
 ### 8. Secrets Management Validation
 
-**Tool:** grep pattern matching  
-**Pattern:** `secrets\.`  
+**Tool:** grep pattern matching
+**Pattern:** `secrets\.`
 **Files Scanned:** `.github/workflows/*.yml`
 
 **Command:**
@@ -1754,8 +1754,8 @@ grep -rn "AIza\|sk-\|pk_\|password.*=" src/ --exclude-dir=node_modules | grep -v
 
 ### 9. Environment Variable Access Validation
 
-**Tool:** grep pattern matching for `process.env` bypasses  
-**Pattern:** `process\.env\.(NEXTAUTH|GOOGLE|AUTH_)`  
+**Tool:** grep pattern matching for `process.env` bypasses
+**Pattern:** `process\.env\.(NEXTAUTH|GOOGLE|AUTH_)`
 **Files Scanned:** `src/**/*.ts`, `src/**/*.tsx`
 
 **Command:**
@@ -1779,7 +1779,7 @@ All environment variable access goes through validated `env` proxy (`src/lib/env
 
 ### 10. Outdated Package Detection
 
-**Tool:** `npm outdated --json`  
+**Tool:** `npm outdated --json`
 **Validation Date:** January 29, 2025
 
 **Critical Packages Status:**
@@ -1804,8 +1804,8 @@ All environment variable access goes through validated `env` proxy (`src/lib/env
 
 ### 11. Security Commit History Validation
 
-**Tool:** git log with security-focused grep  
-**Pattern:** `security|vuln|CVE`  
+**Tool:** git log with security-focused grep
+**Pattern:** `security|vuln|CVE`
 **Date Range:** Since 2024-01-01
 
 **Command:**
@@ -1878,14 +1878,14 @@ Based on automated validation, the following corrections were made to this repor
 **Validation Conclusion:**
 This security assessment report has been validated using automated tools and GitHub APIs. All major findings have been confirmed accurate, with minor package version corrections applied. The addition of CodeQL and Hadolint findings enhances the completeness of the assessment without changing the overall risk rating.
 
-**Validator Signature:** AI Security Audit System v2.0  
+**Validator Signature:** AI Security Audit System v2.0
 **Validation Timestamp:** January 29, 2025 22:45 UTC
 
 ---
 
-**Report Generated:** November 8, 2025  
-**Report Validated:** January 29, 2025  
-**Methodology:** OWASP ASVS 4.0, OWASP Top 10 2021, OWASP API Top 10 2023, CWE Top 25, NIST SSDF  
-**Tools Used:** npm audit, git log analysis, manual code review, SAST pattern matching, CodeQL, Hadolint, GitHub API  
-**Signature:** Senior Application Security Auditor  
+**Report Generated:** November 8, 2025
+**Report Validated:** January 29, 2025
+**Methodology:** OWASP ASVS 4.0, OWASP Top 10 2021, OWASP API Top 10 2023, CWE Top 25, NIST SSDF
+**Tools Used:** npm audit, git log analysis, manual code review, SAST pattern matching, CodeQL, Hadolint, GitHub API
+**Signature:** Senior Application Security Auditor
 **Validation Signature:** AI Security Audit System v2.0

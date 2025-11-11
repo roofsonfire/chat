@@ -54,6 +54,7 @@ Add to `.github/workflows/test.yml`:
 ### 1. Code Block Validation
 
 **Checks:**
+
 - Matching braces `{}`
 - Matching parentheses `()`
 - Complete import statements
@@ -74,6 +75,7 @@ function broken() {
 ```
 
 **Supported Languages:**
+
 - TypeScript/JavaScript (`.ts`, `.tsx`, `.js`, `.jsx`)
 - Bash/Shell (`.sh`, `.bash`)
 - JSON (`.json`)
@@ -82,11 +84,13 @@ function broken() {
 ### 2. Link Validation
 
 **Internal Links:**
+
 - File existence checks
 - Relative path resolution
 - Anchor validation (planned)
 
 **External Links:**
+
 - URL format validation
 - HTTPS enforcement (warning for HTTP)
 - Space detection
@@ -110,6 +114,7 @@ function broken() {
 ### 3. Markdown Formatting
 
 **Checks:**
+
 - Trailing whitespace
 - Tabs vs spaces
 - Multiple blank lines
@@ -119,22 +124,27 @@ function broken() {
 
 **Example:**
 
-```markdown
+````markdown
 ✅ Correct header:
+
 ## Section Title
 
 ❌ Missing space:
-##Section Title
+## Section Title
 
 ✅ Code block with language:
+
 ```typescript
+const x = 1;
+```
+````
+
+⚠️ Code block without language:
+
+```
 const x = 1
 ```
 
-⚠️ Code block without language:
-```
-const x = 1
-```
 ```
 
 ### 4. API Endpoint Testing (Future)
@@ -167,19 +177,20 @@ const x = 1
 ### Output Format
 
 ```
+
 📚 Documentation Testing Suite
 
 Configuration:
-  Test links: true
-  Test code: true
-  Test markdown: true
-  Specific file: None (testing all)
+Test links: true
+Test code: true
+Test markdown: true
+Specific file: None (testing all)
 
 Testing 25 markdown file(s)...
 
-  Testing: docs/API.md
-  Testing: docs/DEVELOPMENT.md
-  ...
+Testing: docs/API.md
+Testing: docs/DEVELOPMENT.md
+...
 
 ============================================================
 📊 Test Results
@@ -189,19 +200,20 @@ Files tested: 25
 Errors: 0
 Warnings: 3
 
-⚠️  Warnings:
+⚠️ Warnings:
 
-  docs/API.md:42
-    Code block contains '...' which may be placeholder text
+docs/API.md:42
+Code block contains '...' which may be placeholder text
 
-  docs/guides/QUICKSTART.md:15
-    Line has trailing spaces
+docs/guides/QUICKSTART.md:15
+Line has trailing spaces
 
-  docs/README.md:100
-    Non-HTTPS URL: http://example.com
+docs/README.md:100
+Non-HTTPS URL: http://example.com
 
 ✅ All tests passed!
-```
+
+````
 
 ---
 
@@ -214,7 +226,7 @@ Edit `scripts/test-docs.mjs`:
 ```javascript
 function testCodeBlock(block, file) {
   const errors = []
-  
+
   // Add custom rule
   if (block.language === "typescript") {
     if (block.code.includes("any") && !block.code.includes("// @ts-ignore")) {
@@ -226,29 +238,29 @@ function testCodeBlock(block, file) {
       })
     }
   }
-  
+
   return errors
 }
-```
+````
 
 ### Adding Custom Link Validators
 
 ```javascript
 function testLink(link, file) {
-  const errors = []
-  
+  const errors = [];
+
   // Add custom rule - Check for deprecated URLs
-  const deprecatedDomains = ["old-domain.com", "deprecated-api.io"]
+  const deprecatedDomains = ["old-domain.com", "deprecated-api.io"];
   if (deprecatedDomains.some((domain) => link.url.includes(domain))) {
     errors.push({
       type: "warning",
       file,
       line: link.line,
       message: `Link uses deprecated domain: ${link.url}`,
-    })
+    });
   }
-  
-  return errors
+
+  return errors;
 }
 ```
 
@@ -258,8 +270,9 @@ function testLink(link, file) {
 
 ### 1. Write Testable Code Examples
 
-```markdown
+````markdown
 ✅ Good - Complete, runnable example:
+
 ```typescript
 import { useState } from "react"
 
@@ -268,13 +281,16 @@ export function Counter() {
   return <button onClick={() => setCount(count + 1)}>{count}</button>
 }
 ```
+````
 
 ❌ Bad - Incomplete snippet:
+
 ```typescript
-const [count, setCount] = useState(0)
+const [count, setCount] = useState(0);
 // ... more code
 ```
-```
+
+````
 
 ### 2. Use Relative Links
 
@@ -284,23 +300,27 @@ const [count, setCount] = useState(0)
 
 ❌ Bad - Absolute GitHub URL:
 [Development Guide](https://github.com/roofsonfire/chat/blob/main/docs/DEVELOPMENT.md)
-```
+````
 
 **Why?** Relative links work locally and on any fork/deployment.
 
 ### 3. Specify Code Block Languages
 
-```markdown
+````markdown
 ✅ Good - Language specified:
+
 ```bash
 npm install
 ```
+````
 
 ❌ Bad - No language:
+
 ```
 npm install
 ```
-```
+
+````
 
 **Why?** Enables syntax highlighting and language-specific validation.
 
@@ -313,14 +333,16 @@ const response = await fetch("/api/chat", {
   method: "POST",
   body: JSON.stringify({ messages: [...] })
 })
-```
+````
 
 ❌ Bad - Old API:
+
 ```typescript
 // This endpoint was removed in v2.0
-const response = await fetch("/api/old-endpoint")
+const response = await fetch("/api/old-endpoint");
 ```
-```
+
+````
 
 ---
 
@@ -362,7 +384,7 @@ function example() {
 function example() {
   return { key: "value" }
 }
-```
+````
 
 ### Issue: "Broken internal link: ./missing.md"
 
@@ -372,7 +394,7 @@ function example() {
 
 ```markdown
 Before: [Guide](./missing.md)
-After:  [Guide](./guides/QUICKSTART.md)
+After: [Guide](./guides/QUICKSTART.md)
 ```
 
 ### Issue: "Non-HTTPS URL: http://example.com"
@@ -383,7 +405,7 @@ After:  [Guide](./guides/QUICKSTART.md)
 
 ```markdown
 Before: http://example.com
-After:  https://example.com
+After: https://example.com
 ```
 
 ### Issue: "Header missing space after #"
@@ -394,7 +416,7 @@ After:  https://example.com
 
 ```markdown
 Before: ##Title
-After:  ## Title
+After: ## Title
 ```
 
 ---
@@ -406,7 +428,7 @@ After:  ## Title
 Add to `.husky/pre-commit`:
 
 ```bash
-#!/bin/sh
+# !/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
 # Test docs if markdown files changed
@@ -438,15 +460,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Test documentation
         run: npm run test:docs
 ```
@@ -459,8 +481,8 @@ Create JSON output for CI/CD:
 // Add to scripts/test-docs.mjs
 
 if (process.argv.includes("--json")) {
-  console.log(JSON.stringify(results, null, 2))
-  process.exit(results.totalErrors > 0 ? 1 : 0)
+  console.log(JSON.stringify(results, null, 2));
+  process.exit(results.totalErrors > 0 ? 1 : 0);
 }
 ```
 
@@ -485,16 +507,19 @@ node scripts/test-docs.mjs --json > test-results.json
 ### Testing Issues
 
 1. **Run with verbose flag:**
+
    ```bash
    node scripts/test-docs.mjs --verbose
    ```
 
 2. **Test specific file:**
+
    ```bash
    node scripts/test-docs.mjs --file=docs/problematic.md
    ```
 
 3. **Check exit code:**
+
    ```bash
    node scripts/test-docs.mjs
    echo $?  # 0 = pass, 1 = fail
@@ -511,6 +536,6 @@ If the test script has issues:
 
 ---
 
-**Last Updated:** November 2025  
-**Maintained by:** Core Development Team  
+**Last Updated:** November 2025
+**Maintained by:** Core Development Team
 **Test Suite Version:** 1.0.0

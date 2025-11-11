@@ -10,13 +10,13 @@ This document summarizes the Phase 2 frontend implementation for displaying AI-g
 
 **File**: `src/lib/hooks/use-chat.ts`
 
-#### Key Changes:
+#### Key Changes
 
 - **JSON Chunk Parsing**: Replaced plain text streaming with JSON parsing
 - **Image Accumulation**: Collects generated images alongside text
 - **Buffer Management**: Handles partial JSON chunks with line buffering
 
-#### New Logic Flow:
+#### New Logic Flow
 
 ```typescript
 // Old: Plain text accumulation
@@ -35,7 +35,7 @@ if (chunk.type === "text") {
 }
 ```
 
-#### Line Buffering:
+#### Line Buffering
 
 ```typescript
 // Handle incomplete JSON chunks
@@ -50,14 +50,14 @@ This ensures we don't try to parse partial JSON objects.
 
 **File**: `src/components/chat/message.tsx`
 
-#### Added Features:
+#### Added Features
 
 - **Generated Image Display**: Renders AI-generated images
 - **Download Buttons**: Hover to reveal download button for each image
 - **Image Grouping**: Displays multiple generated images in sequence
 - **Responsive Layout**: Images scale appropriately
 
-#### New UI Elements:
+#### New UI Elements
 
 ```tsx
 {
@@ -89,7 +89,7 @@ This ensures we don't try to parse partial JSON objects.
 }
 ```
 
-#### Visual Distinction:
+#### Visual Distinction
 
 - **User uploads** (`message.image`): Displayed at top, smaller (200x200)
 - **AI generations** (`message.generatedImages`): Displayed below text, larger (400x400)
@@ -98,13 +98,13 @@ This ensures we don't try to parse partial JSON objects.
 
 **File**: `src/components/chat/model-selector.tsx`
 
-#### Added Features:
+#### Added Features
 
 - **Image Icon Indicator**: Purple image icon (🖼️) shows models with image generation capability
 - **Capability Detection**: Reads `capabilities` array from model definition
 - **Visual Feedback**: Helps users identify which model to use for image generation
 
-#### UI Update:
+#### UI Update
 
 ```tsx
 <div className="flex items-center gap-2">
@@ -134,6 +134,7 @@ Nano Banana 🍌 - Generate and edit images
 
 2. **Backend Processing**:
    - Streams JSON chunks:
+
      ```json
      {"type":"text","content":"Here's a beautiful red flower:"}\n
      {"type":"image","mimeType":"image/png","data":"iVBORw0KG..."}\n
@@ -145,6 +146,7 @@ Nano Banana 🍌 - Generate and edit images
    - Shows download button on hover
 
 4. **Result**:
+
    ```
    Assistant:
    Here's a beautiful red flower:
@@ -331,6 +333,6 @@ npm run build
 
 ---
 
-**Phase 2 Status**: ✅ COMPLETE  
-**Ready for Testing**: Yes  
+**Phase 2 Status**: ✅ COMPLETE
+**Ready for Testing**: Yes
 **Backward Compatible**: Yes (text-only models unaffected)

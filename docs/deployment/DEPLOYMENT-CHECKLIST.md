@@ -159,7 +159,7 @@ gcloud services enable aiplatform.googleapis.com
 
 ## 📊 Success Indicators
 
-### Deployment Successful When:
+### Deployment Successful When
 
 - ✅ `gcloud run services describe chat-staging` shows `status: READY`
 - ✅ `https://staging.chat.daza.ar` loads without SSL errors
@@ -168,7 +168,7 @@ gcloud services enable aiplatform.googleapis.com
 - ✅ Image generation works (see images in response)
 - ✅ No errors in logs
 
-### Expected Performance:
+### Expected Performance
 
 - **First load**: 2-5 seconds (cold start)
 - **Subsequent requests**: <1 second
@@ -178,7 +178,7 @@ gcloud services enable aiplatform.googleapis.com
 
 ## 🎉 Post-Launch Tasks
 
-### After Successful Deployment:
+### After Successful Deployment
 
 - [ ] Add staging URL to README.md
 - [ ] Test all features thoroughly
@@ -186,7 +186,7 @@ gcloud services enable aiplatform.googleapis.com
 - [ ] Document any issues or improvements
 - [ ] Plan production deployment
 
-### Optional Enhancements:
+### Optional Enhancements
 
 - [ ] Set up custom error pages
 - [ ] Configure Cloud Monitoring alerts
@@ -230,10 +230,10 @@ Monitor usage:
 
 ## 📝 Quick Reference
 
-**Project**: norse-breaker-474323-n8  
-**Region**: us-central1  
-**Service**: chat-staging  
-**Domain**: staging.chat.daza.ar  
+**Project**: norse-breaker-474323-n8
+**Region**: us-central1
+**Service**: chat-staging
+**Domain**: staging.chat.daza.ar
 **Model**: gemini-2.5-flash-image
 
 **Scripts**:

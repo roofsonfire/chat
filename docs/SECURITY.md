@@ -136,5 +136,5 @@ For security-related questions that are not vulnerabilities, you can:
 
 ---
 
-**Last Updated**: January 2025  
+**Last Updated**: January 2025
 **Next Review**: Quarterly

@@ -127,16 +127,16 @@ graph TD
 
 ```markdown
 !!! note "Optional Title"
-    This is a note admonition.
+This is a note admonition.
 
 !!! warning
-    This is a warning.
+This is a warning.
 
 !!! tip
-    This is a helpful tip.
+This is a helpful tip.
 
 !!! danger
-    This is a danger warning.
+This is a danger warning.
 ```
 
 ### Code Blocks with Highlighting
@@ -154,14 +154,14 @@ function greet(name: string): string {
 
 ```markdown
 === "TypeScript"
-    ```typescript
+`typescript
     const x: number = 42;
-    ```
+    `
 
 === "JavaScript"
-    ```javascript
+`javascript
     const x = 42;
-    ```
+    `
 ```
 
 ### Adding Cards (Grid Layout)
@@ -171,11 +171,11 @@ function greet(name: string): string {
 
 - :material-icon:{ .lg .middle } **Title**
 
-    ---
+  ***
 
-    Description here
+  Description here
 
-    [:octicons-arrow-right-24: Link](path/to/page.md)
+  [:octicons-arrow-right-24: Link](path/to/page.md)
 
 </div>
 ```
@@ -197,8 +197,8 @@ Modify `mkdocs.yml`:
 ```yaml
 theme:
   palette:
-    primary: indigo  # Change primary color
-    accent: pink     # Change accent color
+    primary: indigo # Change primary color
+    accent: pink # Change accent color
 ```
 
 ## 🔍 Search Configuration
@@ -220,7 +220,7 @@ Add Google Analytics in `mkdocs.yml`:
 extra:
   analytics:
     provider: google
-    property: G-XXXXXXXXXX  # Your GA4 property ID
+    property: G-XXXXXXXXXX # Your GA4 property ID
 ```
 
 ## 🐛 Troubleshooting
@@ -279,5 +279,5 @@ See [CONTRIBUTING-DOCS.md](CONTRIBUTING-DOCS.md) for documentation contribution 
 
 ---
 
-**Last Updated**: November 2025  
+**Last Updated**: November 2025
 **Maintained by**: Core Development Team

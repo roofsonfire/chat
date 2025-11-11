@@ -1,6 +1,6 @@
 # 🎯 Deployment Transition Plan: Staging → Production
 
-**Status**: ✅ Phase 1 & 2 Complete - Repository Public & Protected  
+**Status**: ✅ Phase 1 & 2 Complete - Repository Public & Protected
 **Date**: November 7, 2025
 
 ## ✅ Completed Steps
@@ -82,7 +82,7 @@ Branch protection rules successfully configured via GitHub API:
 
 **Go to**: https://console.cloud.google.com/apis/credentials?project=norse-breaker-474323-n8
 
-#### Create Production OAuth Client:
+#### Create Production OAuth Client
 
 1. Click "Create Credentials" → "OAuth 2.0 Client ID"
 2. Configure:
@@ -95,7 +95,7 @@ Branch protection rules successfully configured via GitHub API:
 3. Click "Create"
 4. **Save the Client ID and Client Secret**
 
-#### Create Development OAuth Client (for localhost):
+#### Create Development OAuth Client (for localhost)
 
 1. Click "Create Credentials" → "OAuth 2.0 Client ID"
 2. Configure:
@@ -108,7 +108,7 @@ Branch protection rules successfully configured via GitHub API:
 3. Click "Create"
 4. **Save the Client ID and Client Secret**
 
-#### Update Local `.env.local`:
+#### Update Local `.env.local`
 
 ```bash
 # Add development OAuth credentials
@@ -136,7 +136,7 @@ gcloud secrets versions list google-client-secret
 
 **Go to**: Namecheap Dashboard → Domain List → daza.ar → Advanced DNS
 
-#### Add Production CNAME Record:
+#### Add Production CNAME Record
 
 ```
 Type: CNAME Record
@@ -145,7 +145,7 @@ Value: ghs.googlehosted.com
 TTL: 1800 (for testing, increase to 3600 later)
 ```
 
-#### Keep Staging Record (for backup):
+#### Keep Staging Record (for backup)
 
 ```
 Type: CNAME Record
@@ -193,17 +193,19 @@ The script will:
 **Option B: Via GitHub Actions (After testing manual)**
 
 1. Merge `develop` to `main`:
+
    ```bash
    git checkout main
    git pull origin main
    git merge develop
    git push origin main
    ```
+
 2. GitHub Actions will automatically deploy
 
 ### Step 7: Test Production Deployment (15 minutes)
 
-#### Test Checklist:
+#### Test Checklist
 
 - [ ] Visit https://chat.daza.ar (should load)
 - [ ] SSL certificate is valid (🔒 in browser)
@@ -215,7 +217,7 @@ The script will:
 - [ ] Mobile view works
 - [ ] Check logs: `gcloud run logs read chat-production --region=us-central1 --limit=50`
 
-#### If Issues Occur:
+#### If Issues Occur
 
 ```bash
 # Check service status

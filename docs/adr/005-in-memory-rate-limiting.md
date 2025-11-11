@@ -1,7 +1,7 @@
 # 005. Use In-Memory Rate Limiting
 
-**Status:** Accepted  
-**Date:** 2024-11-07  
+**Status:** Accepted
+**Date:** 2024-11-07
 **Deciders:** Core Development Team
 
 ## Context
@@ -163,5 +163,5 @@ Track these metrics:
 
 ---
 
-**Last Updated:** November 2025  
+**Last Updated:** November 2025
 **Supersedes:** Previous Upstash Redis implementation

@@ -94,5 +94,5 @@ gh run list --limit 5
 
 ---
 
-**Last Updated**: November 7, 2025  
+**Last Updated**: November 7, 2025
 **Related Docs**: [`GITHUB-ACTIONS-DEPLOYMENT.md`](GITHUB-ACTIONS-DEPLOYMENT.md), [`MANUAL-DEPLOY-COMMANDS.md`](MANUAL-DEPLOY-COMMANDS.md), [`SECURITY-AUDIT.md`](../SECURITY-AUDIT.md)

@@ -1,8 +1,8 @@
 # ADR 006: Move Allowlist to Environment Variables
 
-**Status:** Accepted  
-**Date:** 2025-11-07  
-**Deciders:** Core Development Team  
+**Status:** Accepted
+**Date:** 2025-11-07
+**Deciders:** Core Development Team
 **Tags:** security, privacy, authentication
 
 ## Context
@@ -53,17 +53,17 @@ ALLOWED_EMAILS=user1@example.com,user2@example.com,user3@example.com
 
 ### Positive
 
-✅ **Privacy Protection**: Email addresses no longer in source code  
-✅ **Security**: Emails stored in Google Cloud Secret Manager for production  
-✅ **Flexibility**: Can update allowlist without code changes (restart required)  
-✅ **Best Practices**: Follows security standards for sensitive data  
-✅ **Git History Cleanup**: Combined with history rewrite to remove exposed emails  
+✅ **Privacy Protection**: Email addresses no longer in source code
+✅ **Security**: Emails stored in Google Cloud Secret Manager for production
+✅ **Flexibility**: Can update allowlist without code changes (restart required)
+✅ **Best Practices**: Follows security standards for sensitive data
+✅ **Git History Cleanup**: Combined with history rewrite to remove exposed emails
 ✅ **Validation**: Zod schema validates all emails are properly formatted
 
 ### Negative
 
-⚠️ **Restart Required**: Changes to allowlist require application restart  
-⚠️ **Configuration Complexity**: One more environment variable to manage  
+⚠️ **Restart Required**: Changes to allowlist require application restart
+⚠️ **Configuration Complexity**: One more environment variable to manage
 ⚠️ **Migration Needed**: Existing deployments must add new env var
 
 ### Neutral
@@ -241,5 +241,5 @@ CREATE INDEX idx_allowlist_email ON allowlist(email);
 
 ---
 
-**Status:** ✅ Implemented  
+**Status:** ✅ Implemented
 **Next Review:** When database integration is ready

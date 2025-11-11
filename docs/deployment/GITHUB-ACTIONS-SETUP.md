@@ -85,7 +85,7 @@ ERROR: (gcloud.auth.activate-service-account) Failed to activate service account
 Error: Process completed with exit code 1
 ```
 
-**Root Cause:**  
+**Root Cause:**
 Service account key secret is missing, malformed, or lacks required permissions.
 
 **Diagnosis:**
@@ -137,7 +137,7 @@ Run echo ${{ secrets.NEXTAUTH_SECRET }}
 # Output: (empty)
 ```
 
-**Root Cause:**  
+**Root Cause:**
 Secrets are not available in forked repository PRs or are not configured correctly.
 
 **Diagnosis:**
@@ -181,7 +181,7 @@ jobs:
 Error: google-github-actions/auth failed with: retry function failed after 3 attempts
 ```
 
-**Root Cause:**  
+**Root Cause:**
 Workload Identity Pool or Provider misconfigured.
 
 **Diagnosis:**
@@ -239,7 +239,7 @@ Error: Timeout of 300000ms exceeded
 The job running on runner GitHub Actions X has exceeded the maximum execution time
 ```
 
-**Root Cause:**  
+**Root Cause:**
 Cloud Run deployment takes longer than GitHub Actions job timeout.
 
 **Solution:**
@@ -289,7 +289,7 @@ Error: Missing environment variable: NEXTAUTH_SECRET
 Application failed to start
 ```
 
-**Root Cause:**  
+**Root Cause:**
 Environment variables not passed from GitHub secrets to Cloud Run service.
 
 **Diagnosis:**
@@ -337,7 +337,7 @@ ERROR: (gcloud.run.deploy) PERMISSION_DENIED: The caller does not have permissio
 Error: Process completed with exit code 1
 ```
 
-**Root Cause:**  
+**Root Cause:**
 Service account used by GitHub Actions lacks required IAM roles.
 
 **Diagnosis:**
@@ -378,12 +378,12 @@ gcloud projects add-iam-policy-binding norse-breaker-474323-n8 \
 **Symptom:**
 
 ```
-#4 [internal] load metadata for docker.io/library/node:20-alpine
-#4 DONE 2.5s
+# 4 [internal] load metadata for docker.io/library/node:20-alpine
+# 4 DONE 2.5s
 # ... Every layer rebuilds (slow builds)
 ```
 
-**Root Cause:**  
+**Root Cause:**
 Build cache not configured or invalidated.
 
 **Solution:**
@@ -424,19 +424,19 @@ RUN --mount=type=cache,target=/root/.npm npm ci
 
 ### "Context access might be invalid" Warnings
 
-**Problem**: Yellow warning icons in GitHub editor  
-**Solution**: These are informational only. Configure the secrets as described above, or ignore if not needed.  
+**Problem**: Yellow warning icons in GitHub editor
+**Solution**: These are informational only. Configure the secrets as described above, or ignore if not needed.
 **Impact**: None - workflow runs successfully
 
 ### Coverage Upload Failing
 
-**Problem**: Codecov step fails  
-**Solution**: Add CODECOV_TOKEN secret  
+**Problem**: Codecov step fails
+**Solution**: Add CODECOV_TOKEN secret
 **Workaround**: This won't fail the build due to `fail_ci_if_error: false`
 
 ### Build Failing
 
-**Problem**: Build check fails  
+**Problem**: Build check fails
 **Solution**:
 
 1. Run `npm run build` locally to reproduce

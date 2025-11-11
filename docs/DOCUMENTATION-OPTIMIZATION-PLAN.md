@@ -1,8 +1,8 @@
 # 📚 Documentation Optimization Plan for GitHub Copilot Era
 
-**Status**: Draft  
-**Created**: November 7, 2025  
-**Owner**: Core Team  
+**Status**: Draft
+**Created**: November 7, 2025
+**Owner**: Core Team
 **Goal**: Transform documentation into an AI-first, developer-optimized knowledge system
 
 ---
@@ -236,7 +236,7 @@ const stream = await service.streamChat(messages)
 
 ### 3.1 Restructure Main README
 
-**Current:** 428 lines (too long)  
+**Current:** 428 lines (too long)
 **Target:** 150 lines max
 
 **New Structure:**
@@ -277,7 +277,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## License
 
-MIT - See [LICENSE](LICENSE)
+MIT - See [LICENSE](../LICENSE)
 ```
 
 ### 3.2 Create Quickstart Guides (NEW)
@@ -419,14 +419,14 @@ graph TD
 **New file:** `scripts/docs/health-check.sh`
 
 ```bash
-#!/bin/bash
+# !/bin/bash
 # Check for broken links, orphaned files, outdated content
 ```
 
 **New file:** `scripts/docs/generate-toc.sh`
 
 ```bash
-#!/bin/bash
+# !/bin/bash
 # Auto-generate table of contents for markdown files
 ```
 

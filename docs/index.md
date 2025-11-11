@@ -6,37 +6,37 @@ Welcome to the comprehensive documentation for our production-grade AI chat appl
 
 <div class="grid cards" markdown>
 
--   :material-clock-fast:{ .lg .middle } __Quick Start__
+- :material-clock-fast:{ .lg .middle } **Quick Start**
 
-    ---
+  ***
 
-    Get up and running in 5 minutes
+  Get up and running in 5 minutes
 
-    [:octicons-arrow-right-24: Quick Start Guide](guides/QUICKSTART.md)
+  [:octicons-arrow-right-24: Quick Start Guide](guides/QUICKSTART.md)
 
--   :material-book-open-variant:{ .lg .middle } __Development Guide__
+- :material-book-open-variant:{ .lg .middle } **Development Guide**
 
-    ---
+  ***
 
-    Complete development setup and workflows
+  Complete development setup and workflows
 
-    [:octicons-arrow-right-24: Development](DEVELOPMENT.md)
+  [:octicons-arrow-right-24: Development](DEVELOPMENT.md)
 
--   :material-api:{ .lg .middle } __API Reference__
+- :material-api:{ .lg .middle } **API Reference**
 
-    ---
+  ***
 
-    HTTP and streaming endpoints
+  HTTP and streaming endpoints
 
-    [:octicons-arrow-right-24: API Docs](API.md)
+  [:octicons-arrow-right-24: API Docs](API.md)
 
--   :material-rocket-launch:{ .lg .middle } __Deployment__
+- :material-rocket-launch:{ .lg .middle } **Deployment**
 
-    ---
+  ***
 
-    Deploy to Google Cloud Run
+  Deploy to Google Cloud Run
 
-    [:octicons-arrow-right-24: Deploy](deployment/DEPLOY.md)
+  [:octicons-arrow-right-24: Deploy](deployment/DEPLOY.md)
 
 </div>
 
@@ -53,11 +53,11 @@ This is a **production-grade AI chat application** built with:
 
 ### Key Features
 
-✅ **Real-time AI Chat** - Streaming responses with multimodal support (text + images)  
-✅ **Server-First Architecture** - React Server Components by default  
-✅ **Type-Safe** - TypeScript strict mode + Zod runtime validation  
-✅ **Secure** - OAuth, rate limiting, input validation, security headers  
-✅ **Production-Ready** - Deployed on Google Cloud Run with CI/CD  
+✅ **Real-time AI Chat** - Streaming responses with multimodal support (text + images)
+✅ **Server-First Architecture** - React Server Components by default
+✅ **Type-Safe** - TypeScript strict mode + Zod runtime validation
+✅ **Secure** - OAuth, rate limiting, input validation, security headers
+✅ **Production-Ready** - Deployed on Google Cloud Run with CI/CD
 ✅ **Well-Documented** - Comprehensive docs, JSDoc, and code patterns
 
 ## 🏗️ Architecture Overview
@@ -171,18 +171,18 @@ Security is built-in with multiple layers:
 
 ## 🚀 Tech Stack
 
-| Category        | Technology                     | Version  |
-| --------------- | ------------------------------ | -------- |
-| **Framework**   | Next.js                        | 15.5.4   |
-| **UI Library**  | React                          | 19.1.0   |
-| **Language**    | TypeScript                     | 5.x      |
-| **Styling**     | Tailwind CSS                   | 4.x      |
-| **Components**  | shadcn/ui                      | v4       |
-| **AI**          | Google Vertex AI               | Gemini 2.5 |
-| **Auth**        | NextAuth.js                    | 4.24.11  |
-| **Validation**  | Zod                            | 4.1.12   |
-| **Testing**     | Vitest                         | 3.2.4    |
-| **Platform**    | Google Cloud Run               | -        |
+| Category       | Technology       | Version    |
+| -------------- | ---------------- | ---------- |
+| **Framework**  | Next.js          | 15.5.4     |
+| **UI Library** | React            | 19.1.0     |
+| **Language**   | TypeScript       | 5.x        |
+| **Styling**    | Tailwind CSS     | 4.x        |
+| **Components** | shadcn/ui        | v4         |
+| **AI**         | Google Vertex AI | Gemini 2.5 |
+| **Auth**       | NextAuth.js      | 4.24.11    |
+| **Validation** | Zod              | 4.1.12     |
+| **Testing**    | Vitest           | 3.2.4      |
+| **Platform**   | Google Cloud Run | -          |
 
 ## 📊 Project Status
 
@@ -229,6 +229,6 @@ This documentation follows these principles:
 
 ---
 
-**Last Updated:** November 2025  
-**Maintained by:** Core Development Team  
+**Last Updated:** November 2025
+**Maintained by:** Core Development Team
 **Questions?** Open an issue on [GitHub](https://github.com/roofsonfire/chat/issues)
