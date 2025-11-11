@@ -13,10 +13,11 @@ This directory holds everything that expands on the main `README.md`. Use the se
 | **Deployment guide**       | [deployment/DEPLOY.md](deployment/DEPLOY.md)                                |
 | **API reference**          | [API.md](API.md)                                                            |
 
-## 📚 Documentation Optimization
+## 📚 Documentation Optimization & Quality
 
 We're currently optimizing our documentation for the AI-assisted development era:
 
+- **[DOCUMENTATION-AUDIT-REPORT.md](DOCUMENTATION-AUDIT-REPORT.md)** – Comprehensive documentation audit (88/100 quality score)
 - **[DOCUMENTATION-OPTIMIZATION-PLAN.md](DOCUMENTATION-OPTIMIZATION-PLAN.md)** – Full strategic plan
 - **[DOCUMENTATION-OPTIMIZATION-SUMMARY.md](DOCUMENTATION-OPTIMIZATION-SUMMARY.md)** – Current progress and status
 
@@ -57,13 +58,18 @@ We're currently optimizing our documentation for the AI-assisted development era
 - [features/MIDDLEWARE-SECURITY-SUMMARY.md](features/MIDDLEWARE-SECURITY-SUMMARY.md) – Middleware protections and threat model.
 - [OAUTH-SETUP.md](OAUTH-SETUP.md) – OAuth configuration, secrets, and troubleshooting.
 - [USER-MANAGEMENT.md](USER-MANAGEMENT.md) – Identity and access controls (also linked under Build & Architecture).
-- [SECURITY-AUDIT.md](SECURITY-AUDIT.md) – Recent external audit findings and remediation status.
-- [SECURITY-CLEARANCE-REPORT.md](SECURITY-CLEARANCE-REPORT.md) – Vendor access and clearance tracking.
-- [security/LOGGING-RUNBOOK.md](security/LOGGING-RUNBOOK.md) – Log retention, sinks, metrics, and alerting procedures.
-- [security/LOGGING-RUNBOOK-EXECUTION.md](security/LOGGING-RUNBOOK-EXECUTION.md) – Evidence of production runbook execution (Nov 2025).
-- [security/THREAT-MODEL.md](security/THREAT-MODEL.md) – Assets, trust boundaries, threats, and tabletop exercise plan.
-- [security/TABLETOP-PLAN.md](security/TABLETOP-PLAN.md) – Incident response tabletop agenda, roles, and success criteria.
-- [security/TABLETOP-REPORT.md](security/TABLETOP-REPORT.md) – Exercise outcomes, action items, and lessons learned (Jan 2026).
+- **[security/](security/)** – Complete security documentation
+  - [SECURITY-AUDIT.md](security/SECURITY-AUDIT.md) – Recent external audit findings and remediation status
+  - [SECURITY-CLEARANCE-REPORT.md](security/SECURITY-CLEARANCE-REPORT.md) – Vendor access and clearance tracking
+  - [SECURITY-ASSESSMENT-REPORT.md](security/SECURITY-ASSESSMENT-REPORT.md) – Comprehensive security assessment
+  - [SECURITY-ASSESSMENT-VALIDATION.md](security/SECURITY-ASSESSMENT-VALIDATION.md) – Validation results
+  - [SECURITY-FINDINGS-REMEDIATION-STATUS.md](security/SECURITY-FINDINGS-REMEDIATION-STATUS.md) – Tracking remediation progress
+  - [SECURITY-REMEDIATION-PLAN.md](security/SECURITY-REMEDIATION-PLAN.md) – Action plan for security improvements
+  - [LOGGING-RUNBOOK.md](security/LOGGING-RUNBOOK.md) – Log retention, sinks, metrics, and alerting procedures
+  - [LOGGING-RUNBOOK-EXECUTION.md](security/LOGGING-RUNBOOK-EXECUTION.md) – Evidence of production runbook execution (Nov 2025)
+  - [THREAT-MODEL.md](security/THREAT-MODEL.md) – Assets, trust boundaries, threats, and tabletop exercise plan
+  - [TABLETOP-PLAN.md](security/TABLETOP-PLAN.md) – Incident response tabletop agenda, roles, and success criteria
+  - [TABLETOP-REPORT.md](security/TABLETOP-REPORT.md) – Exercise outcomes, action items, and lessons learned (Jan 2026)
 
 ## Testing & Quality
 
@@ -81,11 +87,27 @@ We're currently optimizing our documentation for the AI-assisted development era
 - [deployment/GITHUB-ACTIONS-DEPLOYMENT.md](deployment/GITHUB-ACTIONS-DEPLOYMENT.md) – Automated deployment job details.
 - [deployment/GITHUB-ACTIONS-STATUS.md](deployment/GITHUB-ACTIONS-STATUS.md) – Current automation status and troubleshooting.
 - [deployment/WORKFLOWS-EXPLAINED.md](deployment/WORKFLOWS-EXPLAINED.md) – Deep dive into each workflow file.
-- [DEPLOYMENT-TRANSITION-PLAN.md](DEPLOYMENT-TRANSITION-PLAN.md) – Checklist for promoting staging to production.
+- [deployment/DEPLOYMENT-TRANSITION-PLAN.md](deployment/DEPLOYMENT-TRANSITION-PLAN.md) – Checklist for promoting staging to production.
+- [deployment/PRODUCTION-DEPLOYMENT-SUMMARY.md](deployment/PRODUCTION-DEPLOYMENT-SUMMARY.md) – Production deployment summary and outcomes.
+
+## Session Notes & Development History
+
+- **[sessions/](sessions/)** – Development session summaries and manual testing
+  - [SESSION-1-MANUAL-TESTING.md](sessions/SESSION-1-MANUAL-TESTING.md) – Initial manual testing session
+  - [SESSION-1-SUMMARY.md](sessions/SESSION-1-SUMMARY.md) – Session 1 summary
+  - [SESSION-2-SUMMARY.md](sessions/SESSION-2-SUMMARY.md) – Session 2 summary
+  - [SESSION-3-SUMMARY.md](sessions/SESSION-3-SUMMARY.md) – Session 3 summary
+  - [SESSION-4-SUMMARY.md](sessions/SESSION-4-SUMMARY.md) – Session 4 summary
+
+## Fixes & Troubleshooting
+
+- **[fixes/](fixes/)** – Documented fixes and solutions
+  - [OAUTH-ALLOWLIST-FIX.md](fixes/OAUTH-ALLOWLIST-FIX.md) – OAuth allowlist configuration fix
 
 ## Migration History & Archive
 
 - [archive/README.md](archive/README.md) – Archive policy and historical documentation index.
+- [archive/README-old.md](archive/README-old.md) – Previous README version (archived).
 - [migration/DYNAMIC-MODEL-IMPLEMENTATION-SUMMARY.md](migration/DYNAMIC-MODEL-IMPLEMENTATION-SUMMARY.md) – Current model selection architecture.
 - [migration/GEMINI-2.5-IMPLEMENTATION.md](migration/GEMINI-2.5-IMPLEMENTATION.md) – Active Gemini 2.5 implementation.
 - [migration/DYNAMIC-MODEL-FETCHING.md](migration/DYNAMIC-MODEL-FETCHING.md) – Active model fetching logic.
