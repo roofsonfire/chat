@@ -135,7 +135,7 @@ export function MessageInput({
           value={input}
           onChange={handleInputChange}
           placeholder="Type a message..."
-          className="min-h-[40px] flex-1 resize-none bg-transparent focus-within:outline-none"
+          className="min-h-10 flex-1 resize-none bg-transparent focus-within:outline-none"
           rows={1}
           disabled={isLoading}
           aria-label="Message input"

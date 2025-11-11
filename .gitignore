@@ -47,5 +47,9 @@ next-env.d.ts
 /playwright-report/
 /playwright/.cache/
 
+# mkdocs
+/site/
+/.venv/
+
 *storybook.log
 storybook-static
