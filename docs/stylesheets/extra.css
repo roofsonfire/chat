@@ -1,0 +1,162 @@
+/* Custom styles for Chat Application Documentation */
+
+/* Improve code block styling */
+.highlight {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Better spacing for grid cards */
+.grid.cards {
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+/* Improve admonition styling */
+.admonition {
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Better table styling */
+table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Improve search results */
+.md-search-result__article {
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+/* Better TOC styling */
+.md-nav__item .md-nav__link--active {
+  font-weight: 600;
+}
+
+/* Improve mermaid diagram styling */
+.mermaid {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+/* Code block enhancements */
+.highlight pre {
+  padding: 1rem;
+}
+
+/* Better spacing for headers */
+h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Improve navigation tabs */
+.md-tabs {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-md-color-scheme="slate"] .md-tabs {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Better footer styling */
+.md-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-md-color-scheme="slate"] .md-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Improve inline code */
+code {
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
+/* Better keyboard key styling */
+kbd {
+  padding: 0.2em 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+}
+
+[data-md-color-scheme="slate"] kbd {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Improve horizontal rules */
+hr {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-md-color-scheme="slate"] hr {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Better list styling */
+ul, ol {
+  margin: 1rem 0;
+}
+
+li {
+  margin: 0.5rem 0;
+}
+
+/* Improve blockquote styling */
+blockquote {
+  border-left: 4px solid var(--md-primary-fg-color);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+[data-md-color-scheme="slate"] blockquote {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Better badge styling */
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.6em;
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 0.25rem;
+  margin: 0 0.2em;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.badge-error {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-info {
+  background-color: #17a2b8;
+  color: white;
+}
