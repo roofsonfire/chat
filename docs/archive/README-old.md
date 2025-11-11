@@ -149,7 +149,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ## � Documentation
 
 - **Quick orientation**: Start with the [Documentation Index](../README.md) for the full table of contents.
-- **Daily development workflows**: [Development Guide](docs/DEVELOPMENT.md).
+- **Daily development workflows**: [Development Guide](../DEVELOPMENT.md).
 - **Architecture & services**: [Project Navigation](docs/PROJECT-NAVIGATION.md) and the Architecture section in the documentation index.
 - **Operations & deployment**: Cloud Run guides under `docs/deployment/`.
 - **Security & IAM**: [USER-MANAGEMENT.md](docs/USER-MANAGEMENT.md) and the Security section in the documentation index.
@@ -307,7 +307,7 @@ Components are customizable and accessible out of the box.
 
 - [**Documentation Index**](../README.md) - Complete guides and navigation
 - [**Project Status Summary**](docs/PROJECT-STATUS.md) - Deployment snapshot and roadmap
-- [**Development Guide**](docs/DEVELOPMENT.md) - Local setup, workflows, and tooling
+- [**Development Guide**](../DEVELOPMENT.md) - Local setup, workflows, and tooling
 - [**Cloud Run Deployment**](../deployment/CLOUD-RUN-DEPLOYMENT.md) - Production rollout steps
 - [**OAuth Setup**](docs/OAUTH-SETUP.md) - Google OAuth configuration & troubleshooting
 - [**GitHub Copilot Instructions**](../../.github/copilot-instructions.md) - AI pairing guidance
@@ -326,7 +326,7 @@ Components are customizable and accessible out of the box.
 
 ### Security Policy
 
-See [SECURITY.md](docs/SECURITY.md) for vulnerability reporting.
+See [SECURITY.md](../SECURITY.md) for vulnerability reporting.
 
 ## 🤝 Contributing
 
@@ -338,7 +338,7 @@ We welcome contributions! Please follow these steps:
 4. **Run tests**: `npm run test`
 5. **Submit a pull request** using our [PR template](.github/PULL_REQUEST_TEMPLATE.md)
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines.
 
 ## 📊 Tech Stack
 
@@ -401,7 +401,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
 - **🐛 [Report Issues](https://github.com/roofsonfire/chat/issues/new/choose)** - Bug reports & feature requests
 - **💬 [Discussions](https://github.com/roofsonfire/chat/discussions)** - Questions & ideas
 - **📚 [Documentation](../README.md)** - Comprehensive guides
-- **🛡️ [Security](docs/SECURITY.md)** - Security policy
+- **🛡️ [Security](../SECURITY.md)** - Security policy
 
 ## 📄 License
 
