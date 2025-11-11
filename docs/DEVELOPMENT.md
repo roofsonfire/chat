@@ -101,6 +101,285 @@ Or use a service account:
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 ```
 
+### 4. Gemini CLI Integration
+
+The [Gemini CLI](https://github.com/google/generative-ai-docs/tree/main/demos/gemini-cli) provides a powerful command-line interface for interacting with Google's Gemini models directly from your terminal. This is useful for quick testing, prototyping prompts, and debugging AI responses.
+
+#### Installation
+
+Install the Gemini CLI globally via npm:
+
+```bash
+npm install -g @google/generative-ai-cli
+```
+
+Or use it directly with npx (no installation required):
+
+```bash
+npx @google/generative-ai-cli --help
+```
+
+#### Setup and Authentication
+
+The Gemini CLI uses the same authentication as your application. Ensure you're authenticated with Google Cloud:
+
+```bash
+# Application Default Credentials (recommended for development)
+gcloud auth application-default login
+
+# Verify authentication
+gcloud auth application-default print-access-token
+```
+
+Set required environment variables:
+
+```bash
+export GOOGLE_PROJECT_ID=your-project-id
+export GOOGLE_LOCATION=us-central1
+```
+
+#### Basic Usage
+
+**Test a simple prompt:**
+
+```bash
+gemini "What is the capital of France?"
+```
+
+**Use a specific model:**
+
+```bash
+gemini --model gemini-2.5-flash "Explain quantum computing in simple terms"
+```
+
+**Multi-line prompts with stdin:**
+
+```bash
+echo "Write a haiku about coding" | gemini
+```
+
+**Save output to file:**
+
+```bash
+gemini "Generate a list of 10 creative project names" > project-names.txt
+```
+
+#### Model Management
+
+**List available models:**
+
+```bash
+gemini models list
+```
+
+**Get model details:**
+
+```bash
+gemini models describe gemini-2.5-flash
+```
+
+**Compare models:**
+
+```bash
+# Test the same prompt on different models
+for model in gemini-1.5-flash gemini-1.5-pro gemini-2.5-flash; do
+  echo "=== $model ==="
+  gemini --model $model "Summarize the concept of machine learning"
+  echo
+done
+```
+
+#### Multimodal Queries (Text + Images)
+
+**Analyze an image:**
+
+```bash
+gemini --image path/to/image.jpg "What objects do you see in this image?"
+```
+
+**Multiple images:**
+
+```bash
+gemini \
+  --image screenshot1.png \
+  --image screenshot2.png \
+  "Compare these two screenshots and highlight the differences"
+```
+
+**Image from URL:**
+
+```bash
+gemini \
+  --image-url "https://example.com/diagram.png" \
+  "Explain what this diagram represents"
+```
+
+#### Advanced Options
+
+**Set temperature (0.0 - 2.0):**
+
+```bash
+gemini --temperature 0.9 "Write a creative story about a robot"
+```
+
+**Limit output tokens:**
+
+```bash
+gemini --max-tokens 100 "Explain TypeScript in detail"
+```
+
+**JSON output format:**
+
+```bash
+gemini --format json "List the planets in our solar system"
+```
+
+**Verbose mode (see API details):**
+
+```bash
+gemini --verbose "Hello, Gemini!"
+```
+
+#### Integration with This Workspace
+
+**Test chat prompts before implementing:**
+
+```bash
+# Test a system prompt
+gemini --system-instruction "You are a helpful coding assistant" \
+  "How do I use React hooks?"
+
+# Test message formatting
+gemini "User: How do I deploy to Cloud Run?
+Assistant: I'll help you with that. First, ensure you have..."
+```
+
+**Validate image inputs:**
+
+```bash
+# Test image upload flow
+gemini --image public/test-image.jpg \
+  "Describe this image in detail" \
+  --max-tokens 200
+```
+
+**Prototype new features:**
+
+```bash
+# Test code generation
+gemini "Generate a TypeScript interface for a chat message with role, content, and timestamp fields"
+
+# Test function calling
+gemini --function-declarations functions.json \
+  "What's the weather in New York?"
+```
+
+#### Troubleshooting
+
+**Issue: `Error: Could not load the default credentials`**
+
+**Solution:**
+
+```bash
+# Re-authenticate
+gcloud auth application-default login
+
+# Or set explicit service account
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
+```
+
+**Issue: `Error: Permission denied`**
+
+**Solution:**
+
+```bash
+# Enable Vertex AI API
+gcloud services enable aiplatform.googleapis.com
+
+# Verify IAM permissions
+gcloud projects get-iam-policy $GOOGLE_PROJECT_ID \
+  --flatten="bindings[].members" \
+  --filter="bindings.members:user:$(gcloud config get-value account)"
+```
+
+**Issue: `Error: Model not found`**
+
+**Solution:**
+
+```bash
+# List available models in your region
+gemini models list --location us-central1
+
+# Use exact model name from the list
+gemini --model gemini-2.5-flash-001 "Your prompt here"
+```
+
+**Issue: `Error: Quota exceeded`**
+
+**Solution:**
+
+```bash
+# Check quota usage
+gcloud alpha services api-keys lookup-key \
+  --display-name "Vertex AI API" \
+  --location global
+
+# Request quota increase in Cloud Console:
+# https://console.cloud.google.com/iam-admin/quotas
+```
+
+**Issue: `Rate limit exceeded`**
+
+**Solution:**
+
+```bash
+# Add delay between requests
+for prompt in "prompt1" "prompt2" "prompt3"; do
+  gemini "$prompt"
+  sleep 2  # Wait 2 seconds between calls
+done
+```
+
+#### Useful Aliases
+
+Add these to your `~/.bashrc` or `~/.zshrc`:
+
+```bash
+# Quick Gemini access
+alias gai='gemini --model gemini-2.5-flash'
+
+# Gemini with verbose output
+alias gaiv='gemini --model gemini-2.5-flash --verbose'
+
+# Analyze images
+alias gimg='gemini --model gemini-2.5-flash --image'
+
+# Code review helper
+alias greview='gemini --model gemini-1.5-pro --system-instruction "You are a code reviewer focusing on best practices and security"'
+```
+
+Usage with aliases:
+
+```bash
+gai "Quick question about React hooks"
+gimg screenshot.png "What's wrong with this UI?"
+greview < src/components/chat.tsx
+```
+
+#### Tips for Effective Prompting
+
+1. **Be specific:** Instead of "Explain React", use "Explain React hooks with 3 examples"
+2. **Provide context:** "As a Next.js 15 developer, how do I..."
+3. **Request format:** "List 5 bullet points..." or "Provide a JSON object..."
+4. **Set constraints:** "In 100 words or less..." or "Using only TypeScript..."
+5. **Iterate:** Test prompts in CLI before adding to application code
+
+#### Documentation
+
+- [Gemini CLI GitHub](https://github.com/google/generative-ai-docs/tree/main/demos/gemini-cli)
+- [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs)
+- [Gemini API Reference](https://ai.google.dev/api/rest/v1/models)
+
 ## Development Workflow
 
 ### Running the Development Server
