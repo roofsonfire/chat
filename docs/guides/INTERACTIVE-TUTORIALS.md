@@ -15,8 +15,8 @@ Step-by-step guides with runnable code examples for common development tasks.
 
 ## Tutorial 1: Building Your First Chat Interface
 
-**Time:** 15 minutes  
-**Difficulty:** Beginner  
+**Time:** 15 minutes
+**Difficulty:** Beginner
 **Prerequisites:** Completed [onboarding](ONBOARDING.md)
 
 ### Goal
@@ -47,7 +47,7 @@ export function MyChat() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!input.trim() || isLoading) return
 
     // Add user message to chat
@@ -87,13 +87,13 @@ export function MyChat() {
           setMessages((prev) => {
             const newMessages = [...prev]
             const lastMessage = newMessages[newMessages.length - 1]
-            
+
             if (lastMessage?.role === "assistant") {
               lastMessage.content = assistantMessage
             } else {
               newMessages.push({ role: "assistant", content: assistantMessage })
             }
-            
+
             return newMessages
           })
         }
@@ -207,8 +207,8 @@ Try sending: "Hello, how are you?"
 
 ## Tutorial 2: Adding Image Upload Support
 
-**Time:** 20 minutes  
-**Difficulty:** Intermediate  
+**Time:** 20 minutes
+**Difficulty:** Intermediate
 **Prerequisites:** [Tutorial 1](#tutorial-1-building-your-first-chat-interface)
 
 ### Goal
@@ -221,9 +221,9 @@ Update your `Message` interface in `src/components/my-chat.tsx`:
 
 ```typescript
 interface Message {
-  role: "user" | "assistant"
-  content: string
-  image?: string // Base64 data URL
+  role: "user" | "assistant";
+  content: string;
+  image?: string; // Base64 data URL
 }
 ```
 
@@ -281,7 +281,7 @@ export function MyChatWithImages() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if ((!input.trim() && !selectedImage) || isLoading) return
 
     // Add user message with optional image
@@ -290,7 +290,7 @@ export function MyChatWithImages() {
       content: input || "What's in this image?",
       image: selectedImage || undefined,
     }
-    
+
     setMessages((prev) => [...prev, userMessage])
     setInput("")
     setSelectedImage(null)
@@ -327,13 +327,13 @@ export function MyChatWithImages() {
           setMessages((prev) => {
             const newMessages = [...prev]
             const lastMessage = newMessages[newMessages.length - 1]
-            
+
             if (lastMessage?.role === "assistant") {
               lastMessage.content = assistantMessage
             } else {
               newMessages.push({ role: "assistant", content: assistantMessage })
             }
-            
+
             return newMessages
           })
         }
@@ -362,7 +362,7 @@ export function MyChatWithImages() {
               <p className="text-sm font-semibold mb-1">
                 {message.role === "user" ? "You" : "AI"}
               </p>
-              
+
               {message.image && (
                 <div className="relative mb-2">
                   <Image
@@ -374,7 +374,7 @@ export function MyChatWithImages() {
                   />
                 </div>
               )}
-              
+
               <p className="text-sm">{message.content}</p>
             </CardContent>
           </Card>
@@ -412,7 +412,7 @@ export function MyChatWithImages() {
           onChange={handleImageSelect}
           className="hidden"
         />
-        
+
         <Button
           type="button"
           variant="outline"
@@ -421,7 +421,7 @@ export function MyChatWithImages() {
         >
           <ImageIcon className="h-4 w-4" />
         </Button>
-        
+
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -429,7 +429,7 @@ export function MyChatWithImages() {
           disabled={isLoading}
           className="flex-1"
         />
-        
+
         <Button type="submit" disabled={isLoading}>
           Send
         </Button>
@@ -446,6 +446,7 @@ npm run dev
 ```
 
 Try:
+
 1. Click the image icon
 2. Select an image
 3. Send a message: "What's in this image?"
@@ -477,8 +478,8 @@ Try:
 
 ## Tutorial 3: Implementing Model Selection
 
-**Time:** 15 minutes  
-**Difficulty:** Intermediate  
+**Time:** 15 minutes
+**Difficulty:** Intermediate
 **Prerequisites:** [Tutorial 1](#tutorial-1-building-your-first-chat-interface)
 
 ### Goal
@@ -490,43 +491,43 @@ Allow users to choose between different Gemini models at runtime.
 Create a hook to fetch models: `src/hooks/use-models.ts`
 
 ```typescript
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 interface Model {
-  id: string
-  displayName: string
-  description: string
+  id: string;
+  displayName: string;
+  description: string;
 }
 
 export function useModels() {
-  const [models, setModels] = useState<Model[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [models, setModels] = useState<Model[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchModels() {
       try {
-        const response = await fetch("/api/models")
-        
+        const response = await fetch("/api/models");
+
         if (!response.ok) {
-          throw new Error("Failed to fetch models")
+          throw new Error("Failed to fetch models");
         }
 
-        const data = await response.json()
-        setModels(data.models)
+        const data = await response.json();
+        setModels(data.models);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error")
+        setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
 
-    fetchModels()
-  }, [])
+    fetchModels();
+  }, []);
 
-  return { models, isLoading, error }
+  return { models, isLoading, error };
 }
 ```
 
@@ -558,7 +559,7 @@ export function MyChatWithModelSelection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!input.trim() || isLoading) return
 
     const userMessage: Message = { role: "user", content: input }
@@ -627,6 +628,7 @@ npm run dev
 ```
 
 Try:
+
 1. Select "Gemini 2.5 Flash" (fast)
 2. Send a simple question
 3. Switch to "Gemini 1.5 Pro" (powerful)
@@ -657,8 +659,8 @@ Try:
 
 ## Tutorial 4: Error Handling Patterns
 
-**Time:** 20 minutes  
-**Difficulty:** Intermediate  
+**Time:** 20 minutes
+**Difficulty:** Intermediate
 **Prerequisites:** [Tutorial 1](#tutorial-1-building-your-first-chat-interface)
 
 ### Goal
@@ -676,8 +678,8 @@ export class ChatError extends Error {
     public code: string,
     public statusCode: number = 500
   ) {
-    super(message)
-    this.name = "ChatError"
+    super(message);
+    this.name = "ChatError";
   }
 }
 
@@ -687,17 +689,13 @@ export class RateLimitError extends ChatError {
       "Too many requests. Please wait a moment before trying again.",
       "RATE_LIMIT",
       429
-    )
+    );
   }
 }
 
 export class AuthError extends ChatError {
   constructor() {
-    super(
-      "Authentication failed. Please sign in again.",
-      "AUTH_ERROR",
-      401
-    )
+    super("Authentication failed. Please sign in again.", "AUTH_ERROR", 401);
   }
 }
 
@@ -707,13 +705,13 @@ export class NetworkError extends ChatError {
       "Network error. Please check your connection and try again.",
       "NETWORK_ERROR",
       0
-    )
+    );
   }
 }
 
 export class APIError extends ChatError {
   constructor(message: string = "API request failed") {
-    super(message, "API_ERROR", 500)
+    super(message, "API_ERROR", 500);
   }
 }
 ```
@@ -723,28 +721,34 @@ export class APIError extends ChatError {
 Create `src/hooks/use-chat-with-errors.ts`:
 
 ```typescript
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ChatError, RateLimitError, AuthError, NetworkError, APIError } from "@/lib/errors/chat-errors"
+import { useState } from "react";
+import {
+  ChatError,
+  RateLimitError,
+  AuthError,
+  NetworkError,
+  APIError,
+} from "@/lib/errors/chat-errors";
 
 interface Message {
-  role: "user" | "assistant"
-  content: string
+  role: "user" | "assistant";
+  content: string;
 }
 
 interface ErrorState {
-  message: string
-  code: string
-  canRetry: boolean
+  message: string;
+  code: string;
+  canRetry: boolean;
 }
 
 export function useChatWithErrors() {
-  const [messages, setMessages] = useState<Message[]>([])
-  const [input, setInput] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<ErrorState | null>(null)
-  const [retryCount, setRetryCount] = useState(0)
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<ErrorState | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   const handleError = (err: unknown): ErrorState => {
     if (err instanceof RateLimitError) {
@@ -752,7 +756,7 @@ export function useChatWithErrors() {
         message: err.message,
         code: err.code,
         canRetry: true,
-      }
+      };
     }
 
     if (err instanceof AuthError) {
@@ -760,7 +764,7 @@ export function useChatWithErrors() {
         message: err.message,
         code: err.code,
         canRetry: false,
-      }
+      };
     }
 
     if (err instanceof NetworkError) {
@@ -768,7 +772,7 @@ export function useChatWithErrors() {
         message: err.message,
         code: err.code,
         canRetry: true,
-      }
+      };
     }
 
     if (err instanceof ChatError) {
@@ -776,7 +780,7 @@ export function useChatWithErrors() {
         message: err.message,
         code: err.code,
         canRetry: err.statusCode >= 500,
-      }
+      };
     }
 
     // Unknown error
@@ -784,19 +788,19 @@ export function useChatWithErrors() {
       message: "An unexpected error occurred. Please try again.",
       code: "UNKNOWN",
       canRetry: true,
-    }
-  }
+    };
+  };
 
   const sendMessage = async (messageToSend?: string) => {
-    const content = messageToSend || input
-    
-    if (!content.trim() || isLoading) return
+    const content = messageToSend || input;
 
-    const userMessage: Message = { role: "user", content }
-    setMessages((prev) => [...prev, userMessage])
-    setInput("")
-    setError(null)
-    setIsLoading(true)
+    if (!content.trim() || isLoading) return;
+
+    const userMessage: Message = { role: "user", content };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setError(null);
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/chat", {
@@ -805,87 +809,90 @@ export function useChatWithErrors() {
         body: JSON.stringify({
           messages: [...messages, userMessage],
         }),
-      })
+      });
 
       // Handle different error status codes
       if (response.status === 429) {
-        throw new RateLimitError()
+        throw new RateLimitError();
       }
 
       if (response.status === 401 || response.status === 403) {
-        throw new AuthError()
+        throw new AuthError();
       }
 
       if (response.status >= 500) {
-        const data = await response.json().catch(() => ({}))
-        throw new APIError(data.error || "Server error")
+        const data = await response.json().catch(() => ({}));
+        throw new APIError(data.error || "Server error");
       }
 
       if (!response.ok) {
-        throw new APIError("Request failed")
+        throw new APIError("Request failed");
       }
 
       // Reset retry count on success
-      setRetryCount(0)
+      setRetryCount(0);
 
       // Read streaming response
-      const reader = response.body?.getReader()
-      const decoder = new TextDecoder()
-      let assistantMessage = ""
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = "";
 
       if (reader) {
         while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
+          const { done, value } = await reader.read();
+          if (done) break;
 
-          const chunk = decoder.decode(value)
-          assistantMessage += chunk
+          const chunk = decoder.decode(value);
+          assistantMessage += chunk;
 
           setMessages((prev) => {
-            const newMessages = [...prev]
-            const lastMessage = newMessages[newMessages.length - 1]
-            
+            const newMessages = [...prev];
+            const lastMessage = newMessages[newMessages.length - 1];
+
             if (lastMessage?.role === "assistant") {
-              lastMessage.content = assistantMessage
+              lastMessage.content = assistantMessage;
             } else {
-              newMessages.push({ role: "assistant", content: assistantMessage })
+              newMessages.push({
+                role: "assistant",
+                content: assistantMessage,
+              });
             }
-            
-            return newMessages
-          })
+
+            return newMessages;
+          });
         }
       }
     } catch (err) {
-      console.error("Chat error:", err)
-      
+      console.error("Chat error:", err);
+
       // Handle network errors
       if (err instanceof TypeError && err.message.includes("fetch")) {
-        setError(handleError(new NetworkError()))
+        setError(handleError(new NetworkError()));
       } else {
-        setError(handleError(err))
+        setError(handleError(err));
       }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const retry = () => {
-    if (!error?.canRetry) return
-    
-    setRetryCount((prev) => prev + 1)
+    if (!error?.canRetry) return;
+
+    setRetryCount((prev) => prev + 1);
     const lastUserMessage = messages
       .slice()
       .reverse()
-      .find((m) => m.role === "user")
-    
+      .find((m) => m.role === "user");
+
     if (lastUserMessage) {
-      sendMessage(lastUserMessage.content)
+      sendMessage(lastUserMessage.content);
     }
-  }
+  };
 
   const clearError = () => {
-    setError(null)
-  }
+    setError(null);
+  };
 
   return {
     messages,
@@ -897,7 +904,7 @@ export function useChatWithErrors() {
     sendMessage,
     retry,
     clearError,
-  }
+  };
 }
 ```
 
@@ -985,8 +992,8 @@ export function RobustChat() {
 
 ## Tutorial 5: Streaming Responses
 
-**Time:** 25 minutes  
-**Difficulty:** Advanced  
+**Time:** 25 minutes
+**Difficulty:** Advanced
 **Prerequisites:** [Tutorial 1](#tutorial-1-building-your-first-chat-interface)
 
 ### Goal
@@ -1004,33 +1011,33 @@ Create `src/lib/streaming/stream-utils.ts`:
 export async function* parseSSEStream(
   reader: ReadableStreamDefaultReader<Uint8Array>
 ): AsyncGenerator<string> {
-  const decoder = new TextDecoder()
-  let buffer = ""
+  const decoder = new TextDecoder();
+  let buffer = "";
 
   while (true) {
-    const { done, value } = await reader.read()
-    
+    const { done, value } = await reader.read();
+
     if (done) {
       // Process any remaining data in buffer
       if (buffer.trim()) {
-        yield buffer
+        yield buffer;
       }
-      break
+      break;
     }
 
-    buffer += decoder.decode(value, { stream: true })
-    const lines = buffer.split("\n")
-    
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+
     // Keep the last incomplete line in buffer
-    buffer = lines.pop() || ""
+    buffer = lines.pop() || "";
 
     for (const line of lines) {
       if (line.startsWith("data: ")) {
-        const data = line.slice(6)
+        const data = line.slice(6);
         if (data === "[DONE]") {
-          return
+          return;
         }
-        yield data
+        yield data;
       }
     }
   }
@@ -1041,7 +1048,7 @@ export async function* parseSSEStream(
  */
 export function estimateTokens(text: string): number {
   // Rough estimate: 1 token ≈ 4 characters
-  return Math.ceil(text.length / 4)
+  return Math.ceil(text.length / 4);
 }
 
 /**
@@ -1051,17 +1058,17 @@ export function createCancellableRequest(
   url: string,
   options: RequestInit = {}
 ) {
-  const controller = new AbortController()
-  
+  const controller = new AbortController();
+
   const request = fetch(url, {
     ...options,
     signal: controller.signal,
-  })
+  });
 
   return {
     request,
     cancel: () => controller.abort(),
-  }
+  };
 }
 ```
 
@@ -1070,58 +1077,62 @@ export function createCancellableRequest(
 Create `src/hooks/use-advanced-streaming.ts`:
 
 ```typescript
-"use client"
+"use client";
 
-import { useState, useRef, useCallback } from "react"
-import { parseSSEStream, estimateTokens, createCancellableRequest } from "@/lib/streaming/stream-utils"
+import { useState, useRef, useCallback } from "react";
+import {
+  parseSSEStream,
+  estimateTokens,
+  createCancellableRequest,
+} from "@/lib/streaming/stream-utils";
 
 interface Message {
-  role: "user" | "assistant"
-  content: string
-  tokens?: number
+  role: "user" | "assistant";
+  content: string;
+  tokens?: number;
 }
 
 interface StreamingMetrics {
-  chunkCount: number
-  totalTokens: number
-  streamingTime: number
-  cancelled: boolean
+  chunkCount: number;
+  totalTokens: number;
+  streamingTime: number;
+  cancelled: boolean;
 }
 
 export function useAdvancedStreaming() {
-  const [messages, setMessages] = useState<Message[]>([])
-  const [input, setInput] = useState("")
-  const [isStreaming, setIsStreaming] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
   const [metrics, setMetrics] = useState<StreamingMetrics>({
     chunkCount: 0,
     totalTokens: 0,
     streamingTime: 0,
     cancelled: false,
-  })
-  
-  const cancelRef = useRef<(() => void) | null>(null)
-  const startTimeRef = useRef<number>(0)
+  });
+
+  const cancelRef = useRef<(() => void) | null>(null);
+  const startTimeRef = useRef<number>(0);
 
   const sendMessage = useCallback(async () => {
-    if (!input.trim() || isStreaming) return
+    if (!input.trim() || isStreaming) return;
 
     const userMessage: Message = {
       role: "user",
       content: input,
       tokens: estimateTokens(input),
-    }
-    
-    setMessages((prev) => [...prev, userMessage])
-    setInput("")
-    setIsStreaming(true)
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsStreaming(true);
     setMetrics({
       chunkCount: 0,
       totalTokens: 0,
       streamingTime: 0,
       cancelled: false,
-    })
-    
-    startTimeRef.current = Date.now()
+    });
+
+    startTimeRef.current = Date.now();
 
     try {
       const { request, cancel } = createCancellableRequest("/api/chat", {
@@ -1130,52 +1141,52 @@ export function useAdvancedStreaming() {
         body: JSON.stringify({
           messages: [...messages, userMessage],
         }),
-      })
+      });
 
-      cancelRef.current = cancel
+      cancelRef.current = cancel;
 
-      const response = await request
+      const response = await request;
 
       if (!response.ok) {
-        throw new Error("Request failed")
+        throw new Error("Request failed");
       }
 
-      const reader = response.body?.getReader()
+      const reader = response.body?.getReader();
       if (!reader) {
-        throw new Error("No reader available")
+        throw new Error("No reader available");
       }
 
-      let assistantMessage = ""
-      let chunkCount = 0
+      let assistantMessage = "";
+      let chunkCount = 0;
 
       for await (const chunk of parseSSEStream(reader)) {
-        assistantMessage += chunk
-        chunkCount++
+        assistantMessage += chunk;
+        chunkCount++;
 
         setMessages((prev) => {
-          const newMessages = [...prev]
-          const lastMessage = newMessages[newMessages.length - 1]
-          
+          const newMessages = [...prev];
+          const lastMessage = newMessages[newMessages.length - 1];
+
           if (lastMessage?.role === "assistant") {
-            lastMessage.content = assistantMessage
-            lastMessage.tokens = estimateTokens(assistantMessage)
+            lastMessage.content = assistantMessage;
+            lastMessage.tokens = estimateTokens(assistantMessage);
           } else {
             newMessages.push({
               role: "assistant",
               content: assistantMessage,
               tokens: estimateTokens(assistantMessage),
-            })
+            });
           }
-          
-          return newMessages
-        })
+
+          return newMessages;
+        });
 
         setMetrics((prev) => ({
           ...prev,
           chunkCount,
           totalTokens: estimateTokens(assistantMessage),
           streamingTime: Date.now() - startTimeRef.current,
-        }))
+        }));
       }
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -1183,23 +1194,23 @@ export function useAdvancedStreaming() {
           ...prev,
           cancelled: true,
           streamingTime: Date.now() - startTimeRef.current,
-        }))
+        }));
       } else {
-        console.error("Streaming error:", error)
-        throw error
+        console.error("Streaming error:", error);
+        throw error;
       }
     } finally {
-      setIsStreaming(false)
-      cancelRef.current = null
+      setIsStreaming(false);
+      cancelRef.current = null;
     }
-  }, [input, isStreaming, messages])
+  }, [input, isStreaming, messages]);
 
   const cancelStream = useCallback(() => {
     if (cancelRef.current) {
-      cancelRef.current()
-      cancelRef.current = null
+      cancelRef.current();
+      cancelRef.current = null;
     }
-  }, [])
+  }, []);
 
   return {
     messages,
@@ -1209,7 +1220,7 @@ export function useAdvancedStreaming() {
     metrics,
     sendMessage,
     cancelStream,
-  }
+  };
 }
 ```
 
@@ -1340,20 +1351,656 @@ export function AdvancedStreamingChat() {
 
 ## Tutorial 6: Custom AI Service Integration
 
-**Time:** 30 minutes  
-**Difficulty:** Advanced  
+**Time:** 30 minutes
+**Difficulty:** Advanced
 **Prerequisites:** Understanding of [Service Layer Pattern](../.github/patterns/service-layer-pattern.md)
 
 ### Goal
 
-Create a custom AI service wrapper with caching, fallbacks, and custom prompts.
+Create a custom AI service wrapper with caching, fallbacks, and custom prompts to integrate multiple AI providers.
 
-Coming soon! This tutorial will cover:
-- Creating custom service classes
-- Implementing response caching
-- Adding fallback models
-- Custom system prompts
-- Performance optimization
+### What You'll Learn
+
+- Creating custom service adapter classes
+- Implementing response caching with TTL
+- Adding fallback models for reliability
+- Custom system prompts and configurations
+- Performance optimization strategies
+
+### Step 1: Create the Base AI Service Interface
+
+First, define a common interface that all AI providers will implement:
+
+**File:** `src/lib/services/ai/ai-service-interface.ts`
+
+```typescript
+export interface ChatMessage {
+  role: "user" | "assistant" | "system"
+  content: string
+  imageData?: string
+}
+
+export interface AIServiceConfig {
+  provider: string
+  modelId: string
+  temperature?: number
+  maxTokens?: number
+  systemPrompt?: string
+}
+
+export interface AIServiceResponse {
+  content: string
+  model: string
+  usage?: {
+    promptTokens: number
+    completionTokens: number
+    totalTokens: number
+  }
+  finishReason?: string
+}
+
+export interface IAIService {
+  chat(messages: ChatMessage[], config?: AIServiceConfig): Promise<AIServiceResponse>
+  streamChat(messages: ChatMessage[], config?: AIServiceConfig): Promise<ReadableStream>
+}
+```
+
+### Step 2: Implement Vertex AI Adapter
+
+Create an adapter for Google Vertex AI (our current provider):
+
+**File:** `src/lib/services/ai/vertex-ai-adapter.ts`
+
+```typescript
+import { VertexAI } from "@google-cloud/vertexai"
+import { logger } from "@/lib/logger"
+import { VertexAIError } from "@/lib/errors"
+import type { IAIService, ChatMessage, AIServiceConfig, AIServiceResponse } from "./ai-service-interface"
+
+export class VertexAIAdapter implements IAIService {
+  private vertexAI: VertexAI
+
+  constructor(
+    private projectId: string,
+    private location: string
+  ) {
+    this.vertexAI = new VertexAI({
+      project: projectId,
+      location: location,
+    })
+  }
+
+  async chat(messages: ChatMessage[], config?: AIServiceConfig): Promise<AIServiceResponse> {
+    try {
+      const model = this.vertexAI.getGenerativeModel({
+        model: config?.modelId || "gemini-2.5-flash",
+      })
+
+      const formattedMessages = this.formatMessages(messages, config?.systemPrompt)
+
+      const result = await model.generateContent({
+        contents: formattedMessages,
+        generationConfig: {
+          temperature: config?.temperature ?? 0.7,
+          maxOutputTokens: config?.maxTokens ?? 8192,
+        },
+      })
+
+      const response = result.response
+      const text = response.candidates?.[0]?.content?.parts?.[0]?.text || ""
+
+      logger.info("Vertex AI chat completed", {
+        model: config?.modelId,
+        messageCount: messages.length,
+      })
+
+      return {
+        content: text,
+        model: config?.modelId || "gemini-2.5-flash",
+        usage: {
+          promptTokens: response.usageMetadata?.promptTokenCount || 0,
+          completionTokens: response.usageMetadata?.candidatesTokenCount || 0,
+          totalTokens: response.usageMetadata?.totalTokenCount || 0,
+        },
+        finishReason: response.candidates?.[0]?.finishReason,
+      }
+    } catch (error) {
+      logger.error("Vertex AI error", { error })
+      throw new VertexAIError("Failed to generate response")
+    }
+  }
+
+  async streamChat(messages: ChatMessage[], config?: AIServiceConfig): Promise<ReadableStream> {
+    const model = this.vertexAI.getGenerativeModel({
+      model: config?.modelId || "gemini-2.5-flash",
+    })
+
+    const formattedMessages = this.formatMessages(messages, config?.systemPrompt)
+
+    const result = await model.generateContentStream({
+      contents: formattedMessages,
+      generationConfig: {
+        temperature: config?.temperature ?? 0.7,
+        maxOutputTokens: config?.maxTokens ?? 8192,
+      },
+    })
+
+    return this.transformStream(result)
+  }
+
+  private formatMessages(messages: ChatMessage[], systemPrompt?: string) {
+    const formatted = messages.map((msg) => ({
+      role: msg.role === "assistant" ? "model" : msg.role,
+      parts: [
+        ...(systemPrompt && msg.role === "user" ? [{ text: systemPrompt }] : []),
+        { text: msg.content },
+        ...(msg.imageData
+          ? [
+              {
+                inlineData: {
+                  mimeType: "image/jpeg",
+                  data: msg.imageData,
+                },
+              },
+            ]
+          : []),
+      ],
+    }))
+
+    return formatted
+  }
+
+  private transformStream(result: any): ReadableStream {
+    const encoder = new TextEncoder()
+
+    return new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of result.stream) {
+            const text = chunk.candidates[0]?.content?.parts[0]?.text
+            if (text) {
+              controller.enqueue(encoder.encode(text))
+            }
+          }
+          controller.close()
+        } catch (error) {
+          controller.error(error)
+        }
+      },
+    })
+  }
+}
+```
+
+### Step 3: Add Response Caching
+
+Implement a caching layer to reduce API calls and costs:
+
+**File:** `src/lib/services/ai/cached-ai-service.ts`
+
+```typescript
+import { logger } from "@/lib/logger"
+import type { IAIService, ChatMessage, AIServiceConfig, AIServiceResponse } from "./ai-service-interface"
+
+interface CacheEntry {
+  response: AIServiceResponse
+  timestamp: number
+  expiresAt: number
+}
+
+export class CachedAIService implements IAIService {
+  private cache = new Map<string, CacheEntry>()
+  private defaultTTL = 3600000 // 1 hour in milliseconds
+
+  constructor(
+    private wrappedService: IAIService,
+    private ttl: number = 3600000
+  ) {
+    this.defaultTTL = ttl
+  }
+
+  async chat(messages: ChatMessage[], config?: AIServiceConfig): Promise<AIServiceResponse> {
+    const cacheKey = this.generateCacheKey(messages, config)
+
+    // Check cache
+    const cached = this.getFromCache(cacheKey)
+    if (cached) {
+      logger.info("Cache hit for AI request", { cacheKey })
+      return cached.response
+    }
+
+    // Call wrapped service
+    const response = await this.wrappedService.chat(messages, config)
+
+    // Store in cache
+    this.setInCache(cacheKey, response)
+
+    logger.info("Cache miss - stored new response", { cacheKey })
+    return response
+  }
+
+  async streamChat(messages: ChatMessage[], config?: AIServiceConfig): Promise<ReadableStream> {
+    // Streaming responses are not cached
+    return this.wrappedService.streamChat(messages, config)
+  }
+
+  private generateCacheKey(messages: ChatMessage[], config?: AIServiceConfig): string {
+    const messagesString = JSON.stringify(messages)
+    const configString = JSON.stringify(config || {})
+    return `${messagesString}:${configString}`
+  }
+
+  private getFromCache(key: string): CacheEntry | null {
+    const entry = this.cache.get(key)
+
+    if (!entry) {
+      return null
+    }
+
+    // Check if expired
+    if (Date.now() > entry.expiresAt) {
+      this.cache.delete(key)
+      return null
+    }
+
+    return entry
+  }
+
+  private setInCache(key: string, response: AIServiceResponse): void {
+    const entry: CacheEntry = {
+      response,
+      timestamp: Date.now(),
+      expiresAt: Date.now() + this.defaultTTL,
+    }
+
+    this.cache.set(key, entry)
+
+    // Prevent memory leak - limit cache size
+    if (this.cache.size > 1000) {
+      const firstKey = this.cache.keys().next().value
+      this.cache.delete(firstKey)
+    }
+  }
+
+  public clearCache(): void {
+    this.cache.clear()
+    logger.info("AI service cache cleared")
+  }
+
+  public getCacheStats() {
+    return {
+      size: this.cache.size,
+      entries: Array.from(this.cache.entries()).map(([key, entry]) => ({
+        key: key.substring(0, 50) + "...",
+        timestamp: entry.timestamp,
+        expiresIn: entry.expiresAt - Date.now(),
+      })),
+    }
+  }
+}
+```
+
+### Step 4: Implement Fallback Mechanism
+
+Add automatic fallback to alternative models if primary fails:
+
+**File:** `src/lib/services/ai/fallback-ai-service.ts`
+
+```typescript
+import { logger } from "@/lib/logger"
+import type { IAIService, ChatMessage, AIServiceConfig, AIServiceResponse } from "./ai-service-interface"
+
+export class FallbackAIService implements IAIService {
+  constructor(
+    private primaryService: IAIService,
+    private fallbackServices: IAIService[]
+  ) {}
+
+  async chat(messages: ChatMessage[], config?: AIServiceConfig): Promise<AIServiceResponse> {
+    // Try primary service
+    try {
+      logger.info("Attempting primary AI service")
+      return await this.primaryService.chat(messages, config)
+    } catch (primaryError) {
+      logger.warn("Primary AI service failed, trying fallbacks", { error: primaryError })
+
+      // Try each fallback in order
+      for (let i = 0; i < this.fallbackServices.length; i++) {
+        try {
+          logger.info(`Attempting fallback service ${i + 1}`)
+          const result = await this.fallbackServices[i].chat(messages, config)
+          logger.info(`Fallback service ${i + 1} succeeded`)
+          return result
+        } catch (fallbackError) {
+          logger.warn(`Fallback service ${i + 1} failed`, { error: fallbackError })
+          continue
+        }
+      }
+
+      // All services failed
+      logger.error("All AI services failed")
+      throw new Error("All AI services unavailable")
+    }
+  }
+
+  async streamChat(messages: ChatMessage[], config?: AIServiceConfig): Promise<ReadableStream> {
+    // For streaming, try primary then first fallback only
+    try {
+      return await this.primaryService.streamChat(messages, config)
+    } catch (error) {
+      logger.warn("Primary stream failed, trying first fallback", { error })
+
+      if (this.fallbackServices.length > 0) {
+        return await this.fallbackServices[0].streamChat(messages, config)
+      }
+
+      throw error
+    }
+  }
+}
+```
+
+### Step 5: Create Service Factory
+
+Build a factory to create configured AI services:
+
+**File:** `src/lib/services/ai/ai-service-factory.ts`
+
+```typescript
+import { env } from "@/lib/env"
+import { VertexAIAdapter } from "./vertex-ai-adapter"
+import { CachedAIService } from "./cached-ai-service"
+import { FallbackAIService } from "./fallback-ai-service"
+import type { IAIService } from "./ai-service-interface"
+
+export interface AIServiceOptions {
+  enableCache?: boolean
+  cacheTTL?: number
+  enableFallback?: boolean
+}
+
+export function createAIService(options: AIServiceOptions = {}): IAIService {
+  const {
+    enableCache = true,
+    cacheTTL = 3600000, // 1 hour
+    enableFallback = true,
+  } = options
+
+  // Create primary Vertex AI service
+  let primaryService: IAIService = new VertexAIAdapter(
+    env.GOOGLE_PROJECT_ID,
+    env.GOOGLE_LOCATION
+  )
+
+  // Add caching if enabled
+  if (enableCache) {
+    primaryService = new CachedAIService(primaryService, cacheTTL)
+  }
+
+  // Add fallback if enabled
+  if (enableFallback) {
+    // Create fallback service with different model
+    const fallbackService = new VertexAIAdapter(
+      env.GOOGLE_PROJECT_ID,
+      env.GOOGLE_LOCATION
+    )
+
+    primaryService = new FallbackAIService(primaryService, [fallbackService])
+  }
+
+  return primaryService
+}
+```
+
+### Step 6: Use in API Route
+
+Update your chat API route to use the factory:
+
+**File:** `src/app/api/chat/route.ts`
+
+```typescript
+import { NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
+import { z } from "zod"
+
+import { authOptions } from "@/lib/auth/config"
+import { createAIService } from "@/lib/services/ai/ai-service-factory"
+import { logger } from "@/lib/logger"
+
+const chatRequestSchema = z.object({
+  messages: z.array(
+    z.object({
+      role: z.enum(["user", "assistant"]),
+      content: z.string(),
+      imageData: z.string().optional(),
+    })
+  ),
+  modelId: z.string().optional(),
+  systemPrompt: z.string().optional(),
+})
+
+export async function POST(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const body = await req.json()
+    const { messages, modelId, systemPrompt } = chatRequestSchema.parse(body)
+
+    // Create AI service with caching and fallback
+    const aiService = createAIService({
+      enableCache: true,
+      cacheTTL: 3600000, // 1 hour
+      enableFallback: true,
+    })
+
+    // Stream response
+    const stream = await aiService.streamChat(messages, {
+      provider: "vertex-ai",
+      modelId: modelId || "gemini-2.5-flash",
+      systemPrompt,
+    })
+
+    return new NextResponse(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
+    })
+  } catch (error) {
+    logger.error("Chat API error", { error })
+    return NextResponse.json(
+      { error: "Failed to process request" },
+      { status: 500 }
+    )
+  }
+}
+```
+
+### Step 7: Testing Your Custom Service
+
+Create a test to verify everything works:
+
+**File:** `tests/unit/ai-service.test.ts`
+
+```typescript
+import { describe, it, expect, vi, beforeEach } from "vitest"
+import { CachedAIService } from "@/lib/services/ai/cached-ai-service"
+import { FallbackAIService } from "@/lib/services/ai/fallback-ai-service"
+import type { IAIService, ChatMessage } from "@/lib/services/ai/ai-service-interface"
+
+describe("CachedAIService", () => {
+  it("should cache responses", async () => {
+    const mockService: IAIService = {
+      chat: vi.fn().mockResolvedValue({
+        content: "Hello!",
+        model: "test-model",
+      }),
+      streamChat: vi.fn(),
+    }
+
+    const cachedService = new CachedAIService(mockService, 60000)
+
+    const messages: ChatMessage[] = [{ role: "user", content: "Hi" }]
+
+    // First call
+    await cachedService.chat(messages)
+    expect(mockService.chat).toHaveBeenCalledTimes(1)
+
+    // Second call - should use cache
+    await cachedService.chat(messages)
+    expect(mockService.chat).toHaveBeenCalledTimes(1) // Still 1, not called again
+  })
+
+  it("should expire cached responses", async () => {
+    const mockService: IAIService = {
+      chat: vi.fn().mockResolvedValue({
+        content: "Hello!",
+        model: "test-model",
+      }),
+      streamChat: vi.fn(),
+    }
+
+    const cachedService = new CachedAIService(mockService, 100) // 100ms TTL
+
+    const messages: ChatMessage[] = [{ role: "user", content: "Hi" }]
+
+    await cachedService.chat(messages)
+    expect(mockService.chat).toHaveBeenCalledTimes(1)
+
+    // Wait for cache to expire
+    await new Promise((resolve) => setTimeout(resolve, 150))
+
+    await cachedService.chat(messages)
+    expect(mockService.chat).toHaveBeenCalledTimes(2) // Called again after expiry
+  })
+})
+
+describe("FallbackAIService", () => {
+  it("should use fallback on primary failure", async () => {
+    const primaryService: IAIService = {
+      chat: vi.fn().mockRejectedValue(new Error("Primary failed")),
+      streamChat: vi.fn(),
+    }
+
+    const fallbackService: IAIService = {
+      chat: vi.fn().mockResolvedValue({
+        content: "Fallback response",
+        model: "fallback-model",
+      }),
+      streamChat: vi.fn(),
+    }
+
+    const service = new FallbackAIService(primaryService, [fallbackService])
+
+    const messages: ChatMessage[] = [{ role: "user", content: "Hi" }]
+    const response = await service.chat(messages)
+
+    expect(response.content).toBe("Fallback response")
+    expect(fallbackService.chat).toHaveBeenCalledTimes(1)
+  })
+})
+```
+
+### Testing Locally
+
+1. **Run the tests:**
+
+```bash
+npm run test -- tests/unit/ai-service.test.ts
+```
+
+2. **Test the API manually:**
+
+```bash
+curl -X POST http://localhost:3000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      {"role": "user", "content": "Hello!"}
+    ],
+    "systemPrompt": "You are a helpful assistant."
+  }'
+```
+
+3. **Monitor cache performance:**
+
+Add an admin endpoint to check cache stats:
+
+**File:** `src/app/api/admin/cache-stats/route.ts`
+
+```typescript
+import { NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth/config"
+
+// Global cache instance (in production, use a singleton pattern)
+let cacheService: any = null
+
+export async function GET(req: NextRequest) {
+  const session = await getServerSession(authOptions)
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  if (!cacheService) {
+    return NextResponse.json({ message: "Cache not initialized" })
+  }
+
+  const stats = cacheService.getCacheStats()
+  return NextResponse.json(stats)
+}
+```
+
+### Performance Optimization Tips
+
+1. **Adjust Cache TTL:** For frequently changing data, use shorter TTL (e.g., 5 minutes). For static content, use longer TTL (e.g., 24 hours).
+
+2. **Cache Invalidation:** Clear cache when underlying data changes:
+
+```typescript
+// In your update handler
+await updateData()
+cacheService.clearCache()
+```
+
+3. **Monitor Cache Hit Rate:** Track hits vs misses to optimize TTL:
+
+```typescript
+const hitRate = (cacheHits / totalRequests) * 100
+logger.info(`Cache hit rate: ${hitRate}%`)
+```
+
+### Extension Ideas
+
+- **Multiple Providers:** Add OpenAI, Anthropic, or Cohere adapters
+- **Load Balancing:** Distribute requests across multiple instances
+- **Rate Limiting:** Prevent API quota exhaustion
+- **Cost Tracking:** Monitor and optimize AI API costs
+- **A/B Testing:** Compare different models' performance
+
+### ✅ Completion Checklist
+
+- [ ] Created interface and base types
+- [ ] Implemented Vertex AI adapter
+- [ ] Added caching layer
+- [ ] Implemented fallback mechanism
+- [ ] Created service factory
+- [ ] Updated API route
+- [ ] Wrote unit tests
+- [ ] Tested locally
+- [ ] Monitored performance
+
+### 📚 Related Resources
+
+- [Service Layer Pattern](../.github/patterns/service-layer-pattern.md)
+- [Error Handling Pattern](../.github/patterns/error-handling-pattern.md)
+- [Testing Pattern](../.github/patterns/testing-pattern.md)
+
+**Congratulations!** You've built a production-ready custom AI service integration with caching, fallbacks, and extensibility.
 
 ---
 
@@ -1371,5 +2018,5 @@ Coming soon! This tutorial will cover:
 
 ---
 
-**Last Updated:** November 2025  
+**Last Updated:** November 2025
 **Maintained by:** Core Development Team
