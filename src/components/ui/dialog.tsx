@@ -6,6 +6,75 @@ import { XIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Dialog Component
+ *
+ * Modal dialog built on Radix UI Dialog primitive. Root component for
+ * the dialog composition pattern.
+ *
+ * @component
+ * @param {React.ComponentProps<typeof DialogPrimitive.Root>} props - Radix Dialog root props
+ * @param {boolean} [props.open] - Controlled open state
+ * @param {Function} [props.onOpenChange] - Callback when open state changes
+ * @param {boolean} [props.modal=true] - Whether dialog is modal
+ *
+ * @returns {JSX.Element} Dialog root component
+ *
+ * @example
+ * ```tsx
+ * <Dialog>
+ *   <DialogTrigger asChild>
+ *     <Button>Open Dialog</Button>
+ *   </DialogTrigger>
+ *   <DialogContent>
+ *     <DialogHeader>
+ *       <DialogTitle>Confirm Action</DialogTitle>
+ *       <DialogDescription>
+ *         Are you sure you want to continue?
+ *       </DialogDescription>
+ *     </DialogHeader>
+ *     <DialogFooter>
+ *       <Button variant="outline">Cancel</Button>
+ *       <Button>Confirm</Button>
+ *     </DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Controlled dialog
+ * const [open, setOpen] = useState(false);
+ *
+ * <Dialog open={open} onOpenChange={setOpen}>
+ *   <DialogContent>
+ *     <DialogTitle>Settings</DialogTitle>
+ *     {/* content *\/}
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ *
+ * Features:
+ * - Modal overlay with backdrop blur
+ * - Smooth enter/exit animations
+ * - Keyboard navigation (Esc to close)
+ * - Focus trap and restoration
+ * - Scroll lock when open
+ * - Accessible (ARIA attributes)
+ * - Customizable positioning
+ *
+ * Sub-components:
+ * @see {@link DialogTrigger} - Button to open dialog
+ * @see {@link DialogContent} - Main dialog content area
+ * @see {@link DialogHeader} - Dialog header section
+ * @see {@link DialogTitle} - Dialog title (required for accessibility)
+ * @see {@link DialogDescription} - Dialog description text
+ * @see {@link DialogFooter} - Dialog footer with actions
+ * @see {@link DialogClose} - Button to close dialog
+ *
+ * @see {@link https://ui.shadcn.com/docs/components/dialog} shadcn/ui Dialog Documentation
+ * @see {@link https://www.radix-ui.com/docs/primitives/components/dialog} Radix UI Dialog Documentation
+ */
 function Dialog({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
