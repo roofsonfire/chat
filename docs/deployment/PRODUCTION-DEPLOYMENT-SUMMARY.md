@@ -436,7 +436,7 @@ The `GCP_SA_KEY` secret (JSON service account key) can now be safely removed as 
 ### Deployment Documentation
 
 - [docs/deployment/GITHUB-ACTIONS-DEPLOYMENT.md](docs/deployment/GITHUB-ACTIONS-DEPLOYMENT.md) - WIF setup guide
-- [docs/deployment/CLOUD-RUN-DEPLOYMENT.md](docs/deployment/CLOUD-RUN-DEPLOYMENT.md) - Cloud Run guide
+- [docs/deployment/CLOUD-RUN-DEPLOYMENT.md](CLOUD-RUN-DEPLOYMENT.md) - Cloud Run guide
 
 ### Pull Requests
 

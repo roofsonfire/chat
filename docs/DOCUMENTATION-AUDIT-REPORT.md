@@ -1464,9 +1464,9 @@ grep -r "OAUTH-ALLOWLIST-FIX" docs/ .github/ README.md | tee -a link-audit.txt
 ```markdown
 <!-- Update any references to moved docs -->
 
-- [Session Summaries](docs/sessions/)
-- [Security Documentation](docs/security/)
-- [Deployment Guides](docs/deployment/)
+- [Session Summaries](docs/sessions/README.md)
+- [Security Documentation](docs/security/README.md)
+- [Deployment Guides](docs/deployment/README.md)
 ```
 
 **Step 3: Update docs/README.md** (45 min):

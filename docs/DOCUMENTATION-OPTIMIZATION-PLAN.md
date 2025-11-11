@@ -249,7 +249,7 @@ const stream = await service.streamChat(messages)
 ## Quick Links
 
 🚀 [5-Min Quickstart](docs/quickstart/local-setup.md)
-📚 [Full Documentation](docs/README.md)
+📚 [Full Documentation](README.md)
 🌐 [Live Demo](https://chat.daza.ar)
 
 ## What Is This?
@@ -262,10 +262,10 @@ const stream = await service.streamChat(messages)
 
 ## Documentation
 
-- **Getting Started:** [Quickstart guides](docs/quickstart/)
-- **Development:** [Daily workflows](docs/guides/)
-- **API Reference:** [Technical specs](docs/reference/)
-- **Deployment:** [Cloud Run guide](docs/deployment/)
+- **Getting Started:** [Quickstart guides](docs/quickstart/README.md)
+- **Development:** [Daily workflows](docs/guides/README.md)
+- **API Reference:** [Technical specs](docs/reference/README.md)
+- **Deployment:** [Cloud Run guide](docs/deployment/README.md)
 
 ## Tech Stack
 

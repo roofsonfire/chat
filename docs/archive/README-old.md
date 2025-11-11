@@ -148,7 +148,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## � Documentation
 
-- **Quick orientation**: Start with the [Documentation Index](docs/README.md) for the full table of contents.
+- **Quick orientation**: Start with the [Documentation Index](../README.md) for the full table of contents.
 - **Daily development workflows**: [Development Guide](docs/DEVELOPMENT.md).
 - **Architecture & services**: [Project Navigation](docs/PROJECT-NAVIGATION.md) and the Architecture section in the documentation index.
 - **Operations & deployment**: Cloud Run guides under `docs/deployment/`.
@@ -230,7 +230,7 @@ git push origin feature/my-feature
    TTL: 3600
    ```
 
-For detailed deployment instructions, see [Cloud Run Deployment Guide](docs/deployment/CLOUD-RUN-DEPLOYMENT.md).
+For detailed deployment instructions, see [Cloud Run Deployment Guide](../deployment/CLOUD-RUN-DEPLOYMENT.md).
 
 ## 🧪 Testing
 
@@ -305,10 +305,10 @@ Components are customizable and accessible out of the box.
 
 ### 📚 Documentation
 
-- [**Documentation Index**](docs/README.md) - Complete guides and navigation
+- [**Documentation Index**](../README.md) - Complete guides and navigation
 - [**Project Status Summary**](docs/PROJECT-STATUS.md) - Deployment snapshot and roadmap
 - [**Development Guide**](docs/DEVELOPMENT.md) - Local setup, workflows, and tooling
-- [**Cloud Run Deployment**](docs/deployment/CLOUD-RUN-DEPLOYMENT.md) - Production rollout steps
+- [**Cloud Run Deployment**](../deployment/CLOUD-RUN-DEPLOYMENT.md) - Production rollout steps
 - [**OAuth Setup**](docs/OAUTH-SETUP.md) - Google OAuth configuration & troubleshooting
 - [**GitHub Copilot Instructions**](../../.github/copilot-instructions.md) - AI pairing guidance
 - [**Model Selection**](docs/features/MODEL-SELECTION.md) - Dynamic Vertex AI configuration
@@ -400,7 +400,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
 
 - **🐛 [Report Issues](https://github.com/roofsonfire/chat/issues/new/choose)** - Bug reports & feature requests
 - **💬 [Discussions](https://github.com/roofsonfire/chat/discussions)** - Questions & ideas
-- **📚 [Documentation](docs/README.md)** - Comprehensive guides
+- **📚 [Documentation](../README.md)** - Comprehensive guides
 - **🛡️ [Security](docs/SECURITY.md)** - Security policy
 
 ## 📄 License
@@ -421,7 +421,7 @@ This project is licensed under the MIT License - see the [LICENSE](../LICENSE) f
 
 **Built with ❤️ using Next.js, TypeScript, and Google Vertex AI**
 
-[🏠 Repository](https://github.com/roofsonfire/chat) • [📚 Documentation](docs/README.md) • [🌐 Live Demo](https://staging.chat.daza.ar)
+[🏠 Repository](https://github.com/roofsonfire/chat) • [📚 Documentation](../README.md) • [🌐 Live Demo](https://staging.chat.daza.ar)
 
 ⭐ **Star us on GitHub** if you find this project helpful!
 
