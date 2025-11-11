@@ -31,6 +31,7 @@
     "docs:lint:spelling": "cspell \"**/*.md\" \"**/*.ts\" \"**/*.tsx\" --no-progress",
     "docs:lint:prose": "remark . --quiet --frail --ignore-path .gitignore",
     "docs:fix": "markdownlint \"**/*.md\" --ignore node_modules --ignore .next --fix",
+    "docs:test": "node scripts/test-docs.mjs",
     "docs:serve": "mkdocs serve",
     "docs:build": "mkdocs build",
     "docs:deploy": "mkdocs gh-deploy"
