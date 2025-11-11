@@ -551,7 +551,7 @@ The following commands in documentation should be verified in a clean GCP projec
    - [ ] Set up VS Code or Zed with recommended extensions
    - [ ] Make a test commit with pre-commit hooks passing
    - [ ] Read CONTRIBUTING.md and CODE_OF_CONDUCT.md
-   - [ ] Join [GitHub Discussions](link) and introduce yourself
+   - [ ] Join GitHub Discussions (link TBD) and introduce yourself
    ```
 
 2. **MISSING: VIDEO WALKTHROUGH OR SCREENSHOTS**:

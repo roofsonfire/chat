@@ -310,7 +310,7 @@ Components are customizable and accessible out of the box.
 - [**Development Guide**](docs/DEVELOPMENT.md) - Local setup, workflows, and tooling
 - [**Cloud Run Deployment**](docs/deployment/CLOUD-RUN-DEPLOYMENT.md) - Production rollout steps
 - [**OAuth Setup**](docs/OAUTH-SETUP.md) - Google OAuth configuration & troubleshooting
-- [**GitHub Copilot Instructions**](.github/copilot-instructions.md) - AI pairing guidance
+- [**GitHub Copilot Instructions**](../../.github/copilot-instructions.md) - AI pairing guidance
 - [**Model Selection**](docs/features/MODEL-SELECTION.md) - Dynamic Vertex AI configuration
 
 ## 🛡️ Security
@@ -334,7 +334,7 @@ We welcome contributions! Please follow these steps:
 
 1. **Fork the repository** on GitHub
 2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Make your changes** following our [coding standards](.github/copilot-instructions.md)
+3. **Make your changes** following our [coding standards](../../.github/copilot-instructions.md)
 4. **Run tests**: `npm run test`
 5. **Submit a pull request** using our [PR template](.github/PULL_REQUEST_TEMPLATE.md)
 
