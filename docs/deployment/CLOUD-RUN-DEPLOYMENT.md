@@ -189,7 +189,398 @@ echo -n "new-value" | gcloud secrets versions add secret-name --data-file=-
 # Cloud Run will automatically use latest version
 ```
 
-## 🐛 Troubleshooting
+## � Common gcloud Errors & Solutions
+
+This section provides diagnosis and solutions for the most common Google Cloud deployment errors.
+
+### Error 1: Permission Denied
+
+**Symptom:**
+
+```bash
+ERROR: (gcloud.run.deploy) PERMISSION_DENIED: Permission 'run.services.create' denied on 'projects/PROJECT_ID/locations/REGION/services/SERVICE_NAME'
+```
+
+**Root Cause:**
+
+Your Google Cloud user or service account lacks the necessary IAM permissions to deploy Cloud Run services.
+
+**Diagnosis:**
+
+```bash
+# Check current user
+gcloud auth list
+
+# Check permissions for current user
+gcloud projects get-iam-policy PROJECT_ID \
+  --flatten="bindings[].members" \
+  --filter="bindings.members:user:$(gcloud config get-value account)"
+```
+
+**Solution:**
+
+```bash
+# Grant Cloud Run Admin role to your user
+gcloud projects add-iam-policy-binding PROJECT_ID \
+  --member="user:YOUR_EMAIL@example.com" \
+  --role="roles/run.admin"
+
+# If using Service Account, grant to service account instead
+gcloud projects add-iam-policy-binding PROJECT_ID \
+  --member="serviceAccount:SERVICE_ACCOUNT_EMAIL" \
+  --role="roles/run.admin"
+
+# Also grant required roles for Secret Manager
+gcloud projects add-iam-policy-binding PROJECT_ID \
+  --member="user:YOUR_EMAIL@example.com" \
+  --role="roles/secretmanager.secretAccessor"
+```
+
+**Prevention:**
+
+- Use `gcloud iam roles describe roles/run.admin` to see all permissions
+- Consider creating custom IAM role with minimal required permissions
+- Document required roles in team onboarding
+
+---
+
+### Error 2: API Not Enabled
+
+**Symptom:**
+
+```bash
+ERROR: (gcloud.run.deploy) FAILED_PRECONDITION: Cloud Run API has not been used in project PROJECT_ID before or it is disabled
+```
+
+**Root Cause:**
+
+The Cloud Run API (or related APIs like Artifact Registry, Cloud Build) is not enabled for your project.
+
+**Diagnosis:**
+
+```bash
+# List enabled APIs
+gcloud services list --enabled --project=PROJECT_ID | grep -E "run|build|artifactregistry"
+
+# Check specific API status
+gcloud services list --available --project=PROJECT_ID | grep run.googleapis.com
+```
+
+**Solution:**
+
+```bash
+# Enable Cloud Run API
+gcloud services enable run.googleapis.com --project=PROJECT_ID
+
+# Enable related required APIs
+gcloud services enable \
+  cloudbuild.googleapis.com \
+  artifactregistry.googleapis.com \
+  aiplatform.googleapis.com \
+  secretmanager.googleapis.com \
+  --project=PROJECT_ID
+
+# Verify all APIs are enabled
+gcloud services list --enabled --project=PROJECT_ID
+```
+
+**Prevention:**
+
+- Create a setup script that enables all required APIs
+- Document required APIs in `README.md`
+- Use Terraform/Infrastructure as Code to manage API enablement
+
+---
+
+### Error 3: Invalid Project ID
+
+**Symptom:**
+
+```bash
+ERROR: (gcloud.run.deploy) NOT_FOUND: Project 'PROJECT_ID' not found or permission denied
+```
+
+**Root Cause:**
+
+The specified project ID doesn't exist, or you don't have access to it.
+
+**Diagnosis:**
+
+```bash
+# List all projects you have access to
+gcloud projects list
+
+# Check current configured project
+gcloud config get-value project
+
+# Verify project exists and you have access
+gcloud projects describe PROJECT_ID
+```
+
+**Solution:**
+
+```bash
+# Set the correct project
+gcloud config set project CORRECT_PROJECT_ID
+
+# If you need to create a new project
+gcloud projects create NEW_PROJECT_ID --name="Project Name"
+
+# Link billing account (required for Cloud Run)
+gcloud billing projects link NEW_PROJECT_ID \
+  --billing-account=BILLING_ACCOUNT_ID
+
+# List billing accounts if unknown
+gcloud billing accounts list
+```
+
+**Prevention:**
+
+- Always verify project ID with `gcloud config get-value project`
+- Store project ID in `.env` file and reference it: `PROJECT_ID=$(grep GOOGLE_PROJECT_ID .env | cut -d'=' -f2)`
+- Use project ID validation in deployment scripts
+
+---
+
+### Error 4: Quota Exceeded
+
+**Symptom:**
+
+```bash
+ERROR: (gcloud.run.deploy) RESOURCE_EXHAUSTED: Quota exceeded for quota metric 'Cloud Run requests'
+```
+
+**Root Cause:**
+
+You've exceeded Google Cloud quotas for Cloud Run requests, CPU allocation, or memory.
+
+**Diagnosis:**
+
+```bash
+# Check current quotas
+gcloud compute project-info describe --project=PROJECT_ID
+
+# View quota usage in console
+# https://console.cloud.google.com/iam-admin/quotas?project=PROJECT_ID
+
+# Check Cloud Run service limits
+gcloud run services describe SERVICE_NAME \
+  --region=REGION \
+  --format="value(spec.template.spec.containers[0].resources.limits)"
+```
+
+**Solution:**
+
+```bash
+# Request quota increase via Cloud Console:
+# 1. Go to: https://console.cloud.google.com/iam-admin/quotas
+# 2. Filter by "Cloud Run API"
+# 3. Select the quota to increase
+# 4. Click "EDIT QUOTAS" and submit request
+
+# Temporarily reduce resource limits
+gcloud run services update SERVICE_NAME \
+  --region=REGION \
+  --memory=512Mi \
+  --cpu=1 \
+  --max-instances=5
+
+# Monitor usage to avoid hitting limits
+gcloud monitoring time-series list \
+  --filter='metric.type="run.googleapis.com/request_count"'
+```
+
+**Prevention:**
+
+- Set appropriate `--max-instances` to avoid runaway costs
+- Monitor quota usage regularly
+- Set up billing alerts in Cloud Console
+- Use `--memory` and `--cpu` flags to optimize resource usage
+
+---
+
+### Error 5: Region Not Available
+
+**Symptom:**
+
+```bash
+ERROR: (gcloud.run.deploy) INVALID_ARGUMENT: The region 'REGION' is not available for Cloud Run
+```
+
+**Root Cause:**
+
+The specified region doesn't support Cloud Run or isn't available in your project.
+
+**Diagnosis:**
+
+```bash
+# List all available Cloud Run regions
+gcloud run regions list
+
+# Check if specific region is available
+gcloud run regions list | grep REGION_NAME
+```
+
+**Solution:**
+
+```bash
+# Use a supported region (recommended: us-central1)
+gcloud run deploy SERVICE_NAME \
+  --source . \
+  --region=us-central1
+
+# If you must use a specific region, verify it's available
+REGIONS=("us-central1" "us-east1" "us-west1" "europe-west1")
+for region in "${REGIONS[@]}"; do
+  echo "Checking $region..."
+  gcloud run services list --region=$region 2>/dev/null && echo "✅ $region available"
+done
+```
+
+**Prevention:**
+
+- Always use well-supported regions: `us-central1`, `us-east1`, `europe-west1`
+- Store region in environment variable: `GOOGLE_LOCATION=us-central1`
+- Document region choice in deployment guide
+- Consider multi-region setup for production resilience
+
+---
+
+### Error 6: Docker Build Failures
+
+**Symptom:**
+
+```bash
+ERROR: (gcloud.run.deploy) Cloud Build failed with status: FAILURE
+Step #X - "builder": error building image: error building stage...
+```
+
+**Root Cause:**
+
+Docker build process failed due to missing dependencies, incorrect Dockerfile syntax, or build errors.
+
+**Diagnosis:**
+
+```bash
+# View recent build logs
+gcloud builds list --limit=5 --project=PROJECT_ID
+
+# Get detailed logs for specific build
+BUILD_ID=$(gcloud builds list --limit=1 --format="value(id)")
+gcloud builds log $BUILD_ID
+
+# Test Docker build locally
+docker build -t test-image .
+
+# Check .gcloudignore
+cat .gcloudignore
+```
+
+**Solution:**
+
+```bash
+# Ensure .gcloudignore exists with proper exclusions
+cat > .gcloudignore << 'EOF'
+node_modules/
+.next/
+.git/
+.env*
+*.md
+tests/
+.vscode/
+EOF
+
+# Verify Dockerfile is correct
+cat Dockerfile
+
+# Test build locally before deploying
+docker build --platform linux/amd64 -t chat-test .
+docker run -p 3000:3000 chat-test
+
+# If build succeeds locally but fails on Cloud Build, check build config
+gcloud builds submit --config=cloudbuild.yaml .
+
+# Increase build timeout if needed
+gcloud run deploy SERVICE_NAME \
+  --source . \
+  --timeout=600 \
+  --region=REGION
+```
+
+**Prevention:**
+
+- Test Docker builds locally before deploying
+- Use `.gcloudignore` to exclude unnecessary files
+- Leverage Docker build cache with multi-stage builds
+- Monitor build times and optimize Dockerfile
+- Pin dependency versions in `package.json`
+
+---
+
+### Error 7: Secret Not Found
+
+**Symptom:**
+
+```bash
+ERROR: (gcloud.run.deploy) INVALID_ARGUMENT: Secret 'SECRET_NAME' not found in project 'PROJECT_ID'
+```
+
+**Root Cause:**
+
+The referenced secret doesn't exist in Secret Manager or the service account lacks access.
+
+**Diagnosis:**
+
+```bash
+# List all secrets
+gcloud secrets list --project=PROJECT_ID
+
+# Check specific secret exists
+gcloud secrets describe SECRET_NAME --project=PROJECT_ID
+
+# Verify latest version
+gcloud secrets versions list SECRET_NAME --project=PROJECT_ID
+
+# Check service account permissions
+gcloud secrets get-iam-policy SECRET_NAME --project=PROJECT_ID
+```
+
+**Solution:**
+
+```bash
+# Create missing secret
+echo -n "SECRET_VALUE" | gcloud secrets create SECRET_NAME --data-file=-
+
+# Grant Cloud Run service account access to secret
+SERVICE_ACCOUNT=$(gcloud run services describe SERVICE_NAME \
+  --region=REGION \
+  --format="value(spec.template.spec.serviceAccountName)")
+
+gcloud secrets add-iam-policy-binding SECRET_NAME \
+  --member="serviceAccount:$SERVICE_ACCOUNT" \
+  --role="roles/secretmanager.secretAccessor"
+
+# Update secret value
+echo -n "NEW_VALUE" | gcloud secrets versions add SECRET_NAME --data-file=-
+
+# Deploy with correct secret reference
+gcloud run deploy SERVICE_NAME \
+  --source . \
+  --region=REGION \
+  --update-secrets "ENV_VAR_NAME=SECRET_NAME:latest"
+```
+
+**Prevention:**
+
+- Create secrets before first deployment
+- Use `scripts/create-secrets.sh` for consistent setup
+- Document required secrets in `.env.example`
+- Use `--update-secrets` flag instead of `--set-secrets`
+- Verify secret access with `gcloud secrets versions access latest --secret=SECRET_NAME`
+
+---
+
+## �🐛 Troubleshooting
 
 ### Domain Not Working
 
