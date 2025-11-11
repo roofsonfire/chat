@@ -1,0 +1,1332 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Production-grade AI chat application built with Next.js 15 and Google Vertex AI" name="description"/>
+<meta content="Core Development Team" name="author"/>
+<link href="https://roofsonfire.github.io/chat/guides/ARCHITECTURE-DIAGRAMS/" rel="canonical"/>
+<link href="../../PROJECT-NAVIGATION/" rel="prev"/>
+<link href="../../adr/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.23" name="generator"/>
+<title>Visual Diagrams - Chat Application Documentation</title>
+<link href="../../assets/stylesheets/main.84d31ad4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+<link href="../../stylesheets/extra.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+<script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#architecture-diagrams">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<div data-md-color-scheme="default" data-md-component="outdated" hidden="">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Chat Application Documentation" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Chat Application Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Chat Application Documentation
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Visual Diagrams
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/roofsonfire/chat" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</div>
+<div class="md-source__repository">
+    roofsonfire/chat
+  </div>
+</a>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../QUICKSTART/">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../../.github/patterns/architecture-summary.md">
+          
+  
+  
+    
+  
+  Architecture
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../.github/patterns/api-route-pattern.md">
+          
+  
+  
+    
+  
+  Code Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../API/">
+          
+  
+  
+    
+  
+  API Reference
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../deployment/DEPLOY/">
+          
+  
+  
+    
+  
+  Deployment
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../SECURITY/">
+          
+  
+  
+    
+  
+  Security
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../PERFORMANCE/">
+          
+  
+  
+    
+  
+  Operations
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../CONTRIBUTING/">
+          
+  
+  
+    
+  
+  Contributing
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Chat Application Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Chat Application Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Chat Application Documentation
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/roofsonfire/chat" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</div>
+<div class="md-source__repository">
+    roofsonfire/chat
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../QUICKSTART/">
+<span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../DEVELOPMENT/">
+<span class="md-ellipsis">
+    Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EDITOR-SETUP/">
+<span class="md-ellipsis">
+    Editor Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../PROJECT-NAVIGATION/">
+<span class="md-ellipsis">
+    Project Navigation
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../.github/patterns/architecture-summary.md">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Visual Diagrams
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Visual Diagrams
+    
+  </span>
+</a>
+<nav aria-label="On this page" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#system-architecture">
+<span class="md-ellipsis">
+      System Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentication-flow">
+<span class="md-ellipsis">
+      Authentication Flow
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chat-request-flow">
+<span class="md-ellipsis">
+      Chat Request Flow
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling-flow">
+<span class="md-ellipsis">
+      Error Handling Flow
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#deployment-pipeline">
+<span class="md-ellipsis">
+      Deployment Pipeline
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-flow-diagram">
+<span class="md-ellipsis">
+      Data Flow Diagram
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#component-hierarchy">
+<span class="md-ellipsis">
+      Component Hierarchy
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#rate-limiting-architecture">
+<span class="md-ellipsis">
+      Rate Limiting Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-layers">
+<span class="md-ellipsis">
+      Security Layers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#model-selection-flow">
+<span class="md-ellipsis">
+      Model Selection Flow
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#image-upload-flow">
+<span class="md-ellipsis">
+      Image Upload Flow
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#diagram-legend">
+<span class="md-ellipsis">
+      Diagram Legend
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3_3" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../adr/">
+<span class="md-ellipsis">
+    ADRs
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_3_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_3">
+<span class="md-nav__icon md-icon"></span>
+            ADRs
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/001-use-nextjs-app-router/">
+<span class="md-ellipsis">
+    Next.js App Router
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/002-google-vertex-ai-selection/">
+<span class="md-ellipsis">
+    Vertex AI Selection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/005-in-memory-rate-limiting/">
+<span class="md-ellipsis">
+    In-Memory Rate Limiting
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../adr/006-environment-based-allowlist/">
+<span class="md-ellipsis">
+    Environment-Based Allowlist
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Code Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Code Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../.github/patterns/api-route-pattern.md">
+<span class="md-ellipsis">
+    API Routes
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../.github/patterns/server-component-pattern.md">
+<span class="md-ellipsis">
+    Server Components
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../.github/patterns/service-layer-pattern.md">
+<span class="md-ellipsis">
+    Service Layer
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../.github/patterns/error-handling-pattern.md">
+<span class="md-ellipsis">
+    Error Handling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../.github/patterns/validation-pattern.md">
+<span class="md-ellipsis">
+    Validation
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    API Reference
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../API/">
+<span class="md-ellipsis">
+    API Endpoints
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../USER-MANAGEMENT/">
+<span class="md-ellipsis">
+    Authentication
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/MODEL-SELECTION/">
+<span class="md-ellipsis">
+    Model Selection
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Deployment
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Deployment
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/DEPLOY/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/CLOUD-RUN-DEPLOYMENT/">
+<span class="md-ellipsis">
+    Cloud Run
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/MANUAL-DEPLOY-COMMANDS/">
+<span class="md-ellipsis">
+    Manual Commands
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+<span class="md-ellipsis">
+    GitHub Actions
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_6_4">
+<span class="md-nav__icon md-icon"></span>
+            GitHub Actions
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/GITHUB-ACTIONS-SETUP/">
+<span class="md-ellipsis">
+    Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/GITHUB-ACTIONS-DEPLOYMENT/">
+<span class="md-ellipsis">
+    Deployment
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/GITHUB-ACTIONS-STATUS/">
+<span class="md-ellipsis">
+    Status
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/CI-CD/">
+<span class="md-ellipsis">
+    CI/CD
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../deployment/WORKFLOWS-EXPLAINED/">
+<span class="md-ellipsis">
+    Workflows
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Security
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            Security
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../SECURITY/">
+<span class="md-ellipsis">
+    Security Policy
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../security/SECURITY-AUDIT/">
+<span class="md-ellipsis">
+    Security Audit
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../security/THREAT-MODEL/">
+<span class="md-ellipsis">
+    Threat Model
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../security/LOGGING-RUNBOOK/">
+<span class="md-ellipsis">
+    Logging
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/MIDDLEWARE-SECURITY-SUMMARY/">
+<span class="md-ellipsis">
+    Middleware
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+<span class="md-ellipsis">
+    Operations
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            Operations
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../PERFORMANCE/">
+<span class="md-ellipsis">
+    Performance
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../PROJECT-STATUS/">
+<span class="md-ellipsis">
+    Project Status
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../COMMON-MISTAKES/">
+<span class="md-ellipsis">
+    Common Mistakes
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+<span class="md-ellipsis">
+    Contributing
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CONTRIBUTING/">
+<span class="md-ellipsis">
+    Guidelines
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CONTRIBUTING-DOCS/">
+<span class="md-ellipsis">
+    Documentation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../CODE_OF_CONDUCT/">
+<span class="md-ellipsis">
+    Code of Conduct
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="architecture-diagrams">Architecture Diagrams<a class="headerlink" href="#architecture-diagrams" title="Permanent link">¶</a></h1>
+<p>Visual representation of the system architecture, flows, and components.</p>
+<h2 id="system-architecture">System Architecture<a class="headerlink" href="#system-architecture" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "Client Layer"
+        Browser[Browser]
+        Mobile[Mobile Device]
+    end
+
+    subgraph "Application Layer - Next.js 15"
+        Router[App Router]
+        Pages[Server Components]
+        API[API Routes]
+        Middleware[Middleware&lt;br/&gt;Auth, Rate Limit, Security]
+    end
+
+    subgraph "Service Layer"
+        ChatService[ChatService]
+        Logger[Logger]
+        ErrorHandler[Error Handler]
+    end
+
+    subgraph "External Services"
+        VertexAI[Google Vertex AI&lt;br/&gt;Gemini 2.5]
+        OAuth[Google OAuth]
+        SecretMgr[Secret Manager]
+    end
+
+    subgraph "Infrastructure - Cloud Run"
+        Container[Docker Container]
+        Secrets[Mounted Secrets]
+    end
+
+    Browser --&gt; Router
+    Mobile --&gt; Router
+    Router --&gt; Middleware
+    Middleware --&gt; Pages
+    Middleware --&gt; API
+    Pages --&gt; ChatService
+    API --&gt; ChatService
+    ChatService --&gt; VertexAI
+    API --&gt; OAuth
+    Container --&gt; Secrets
+    Secrets --&gt; SecretMgr
+    ChatService --&gt; Logger
+    API --&gt; ErrorHandler
+
+    style VertexAI fill:#4285f4,color:#fff
+    style OAuth fill:#34a853,color:#fff
+    style SecretMgr fill:#fbbc04,color:#000
+    style Container fill:#ea4335,color:#fff</code></pre>
+<h2 id="authentication-flow">Authentication Flow<a class="headerlink" href="#authentication-flow" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant M as Middleware
+    participant N as NextAuth
+    participant G as Google OAuth
+    participant A as Allowlist
+
+    U-&gt;&gt;B: Click "Sign in with Google"
+    B-&gt;&gt;N: Initiate OAuth
+    N-&gt;&gt;G: Redirect to Google
+    G-&gt;&gt;G: User authenticates
+    G-&gt;&gt;N: Return with tokens
+    N-&gt;&gt;A: Check email in allowlist
+
+    alt Email in Allowlist
+        A-&gt;&gt;N: ✅ Authorized
+        N-&gt;&gt;B: Create session
+        B-&gt;&gt;U: Redirect to chat
+    else Email NOT in Allowlist
+        A-&gt;&gt;N: ❌ Unauthorized
+        N-&gt;&gt;B: Access denied
+        B-&gt;&gt;U: Show error message
+    end
+
+    Note over M: All subsequent requests&lt;br/&gt;check session validity</code></pre>
+<h2 id="chat-request-flow">Chat Request Flow<a class="headerlink" href="#chat-request-flow" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant U as User
+    participant C as Chat Component
+    participant A as /api/chat
+    participant R as Rate Limiter
+    participant S as ChatService
+    participant V as Vertex AI
+
+    U-&gt;&gt;C: Type message + upload image
+    C-&gt;&gt;C: Validate input&lt;br/&gt;(size, format)
+    C-&gt;&gt;A: POST /api/chat
+    A-&gt;&gt;R: Check rate limit
+
+    alt Rate Limit Exceeded
+        R-&gt;&gt;A: ❌ 429 Too Many Requests
+        A-&gt;&gt;C: Error response
+        C-&gt;&gt;U: Show rate limit message
+    else Within Limits
+        R-&gt;&gt;A: ✅ Continue
+        A-&gt;&gt;A: Validate with Zod schema
+        A-&gt;&gt;S: streamChat(messages, image)
+        S-&gt;&gt;V: generateContentStream()
+
+        loop Stream chunks
+            V--&gt;&gt;S: Text chunk
+            S--&gt;&gt;A: Transform chunk
+            A--&gt;&gt;C: Server-Sent Event
+            C--&gt;&gt;U: Update UI incrementally
+        end
+
+        V-&gt;&gt;S: Stream complete
+        S-&gt;&gt;A: Close stream
+        A-&gt;&gt;C: Done
+        C-&gt;&gt;U: Final message rendered
+    end</code></pre>
+<h2 id="error-handling-flow">Error Handling Flow<a class="headerlink" href="#error-handling-flow" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph TD
+    Start[Request Initiated] --&gt; Middleware{Middleware&lt;br/&gt;Checks}
+    Middleware --&gt;|Security Headers| RateLimit{Rate Limit&lt;br/&gt;Check}
+    Middleware --&gt;|Failed| Error1[Return 401/403]
+
+    RateLimit --&gt;|Exceeded| Error2[Return 429&lt;br/&gt;Too Many Requests]
+    RateLimit --&gt;|OK| Auth{Authentication&lt;br/&gt;Check}
+
+    Auth --&gt;|No Session| Error3[Redirect to Login]
+    Auth --&gt;|Valid Session| Validate{Input&lt;br/&gt;Validation}
+
+    Validate --&gt;|Invalid| Error4[Return 400&lt;br/&gt;Validation Error]
+    Validate --&gt;|Valid| Service[Service Layer&lt;br/&gt;Execution]
+
+    Service --&gt;|Success| Response[Return Success&lt;br/&gt;200 OK]
+    Service --&gt;|Validation Error| Error5[Return 400&lt;br/&gt;Business Logic Error]
+    Service --&gt;|Auth Error| Error6[Return 401&lt;br/&gt;Unauthorized]
+    Service --&gt;|Not Found| Error7[Return 404&lt;br/&gt;Not Found]
+    Service --&gt;|Service Error| Error8[Return 503&lt;br/&gt;Service Unavailable]
+    Service --&gt;|Unknown Error| Error9[Return 500&lt;br/&gt;Internal Server Error]
+
+    Error1 --&gt; Log1[Log Warning]
+    Error2 --&gt; Log2[Log Warning]
+    Error3 --&gt; Log3[Log Info]
+    Error4 --&gt; Log4[Log Warning]
+    Error5 --&gt; Log5[Log Warning]
+    Error6 --&gt; Log6[Log Warning]
+    Error7 --&gt; Log7[Log Info]
+    Error8 --&gt; Log8[Log Error]
+    Error9 --&gt; Log9[Log Error]
+
+    Log8 --&gt; Alert[Alert if Critical]
+    Log9 --&gt; Alert
+
+    style Error1 fill:#ff6b6b
+    style Error2 fill:#ff6b6b
+    style Error3 fill:#ffd93d
+    style Error4 fill:#ff6b6b
+    style Error5 fill:#ff6b6b
+    style Error6 fill:#ff6b6b
+    style Error7 fill:#ffd93d
+    style Error8 fill:#ff0000,color:#fff
+    style Error9 fill:#ff0000,color:#fff
+    style Response fill:#51cf66</code></pre>
+<h2 id="deployment-pipeline">Deployment Pipeline<a class="headerlink" href="#deployment-pipeline" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph LR
+    subgraph "Developer Workflow"
+        Dev[Developer]
+        Local[Local Development]
+        Commit[Git Commit]
+    end
+
+    subgraph "GitHub"
+        PR[Pull Request]
+        Main[Main Branch]
+        Actions[GitHub Actions]
+    end
+
+    subgraph "CI Pipeline"
+        Lint[Lint &amp; Type Check]
+        Test[Unit Tests]
+        Build[Build Check]
+    end
+
+    subgraph "CD Pipeline"
+        Docker[Build Docker Image]
+        Registry[Artifact Registry]
+        Deploy[Deploy to Cloud Run]
+        Verify[Health Check]
+    end
+
+    subgraph "Production"
+        CloudRun[Cloud Run Service]
+        Domain[chat.daza.ar]
+        Monitoring[Cloud Monitoring]
+    end
+
+    Dev --&gt; Local
+    Local --&gt; Commit
+    Commit --&gt; PR
+    PR --&gt; Actions
+    Actions --&gt; Lint
+    Actions --&gt; Test
+    Actions --&gt; Build
+
+    Lint --&gt; Merge{Tests Pass?}
+    Test --&gt; Merge
+    Build --&gt; Merge
+
+    Merge --&gt;|Yes| Main
+    Merge --&gt;|No| PR
+
+    Main --&gt; Actions
+    Actions --&gt; Docker
+    Docker --&gt; Registry
+    Registry --&gt; Deploy
+    Deploy --&gt; Verify
+
+    Verify --&gt;|Success| CloudRun
+    Verify --&gt;|Failure| Rollback[Rollback]
+
+    CloudRun --&gt; Domain
+    CloudRun --&gt; Monitoring
+    Rollback --&gt; CloudRun
+
+    style Merge fill:#ffd93d
+    style CloudRun fill:#4285f4,color:#fff
+    style Rollback fill:#ff6b6b</code></pre>
+<h2 id="data-flow-diagram">Data Flow Diagram<a class="headerlink" href="#data-flow-diagram" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Client["Client-Side (React 19)"]
+        UI[UI Components]
+        State[Client State]
+        Hooks[Custom Hooks]
+    end
+
+    subgraph Server["Server-Side (Next.js 15)"]
+        RSC[React Server Components]
+        APIRoutes[API Routes]
+        Services[Service Layer]
+    end
+
+    subgraph External["External Services"]
+        VertexAI[Vertex AI API]
+        OAuth[Google OAuth]
+        Secrets[Secret Manager]
+    end
+
+    UI --&gt;|User Input| Hooks
+    Hooks --&gt;|API Call| APIRoutes
+    APIRoutes --&gt;|Validate| Zod[Zod Schema]
+    Zod --&gt;|Valid| Services
+    Services --&gt;|Chat Request| VertexAI
+    Services --&gt;|Auth Check| OAuth
+    APIRoutes --&gt;|Env Vars| Secrets
+    VertexAI --&gt;|Stream Response| Services
+    Services --&gt;|Transform| APIRoutes
+    APIRoutes --&gt;|SSE| Hooks
+    Hooks --&gt;|Update State| State
+    State --&gt;|Re-render| UI
+    RSC --&gt;|Initial Data| UI
+
+    style Zod fill:#3b82f6,color:#fff
+    style VertexAI fill:#4285f4,color:#fff
+    style OAuth fill:#34a853,color:#fff</code></pre>
+<h2 id="component-hierarchy">Component Hierarchy<a class="headerlink" href="#component-hierarchy" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph TD
+    Root[RootLayout&lt;br/&gt;Server Component]
+    Providers[Providers&lt;br/&gt;Client Component]
+    Header[Header&lt;br/&gt;Server Component]
+    Page[Chat Page&lt;br/&gt;Server Component]
+
+    Chat[Chat Component&lt;br/&gt;Client Component]
+    History[ChatHistory&lt;br/&gt;Client Component]
+    Input[MessageInput&lt;br/&gt;Client Component]
+    Messages[ChatMessages&lt;br/&gt;Client Component]
+
+    Message[ChatMessage&lt;br/&gt;Client Component]
+    ImageDisplay[ImageDisplay&lt;br/&gt;Client Component]
+    Markdown[MarkdownRenderer&lt;br/&gt;Client Component]
+
+    Root --&gt; Header
+    Root --&gt; Providers
+    Providers --&gt; Page
+    Page --&gt; Chat
+    Chat --&gt; History
+    Chat --&gt; Input
+    Chat --&gt; Messages
+    Messages --&gt; Message
+    Message --&gt; ImageDisplay
+    Message --&gt; Markdown
+
+    style Root fill:#22c55e,color:#fff
+    style Page fill:#22c55e,color:#fff
+    style Header fill:#22c55e,color:#fff
+    style Chat fill:#3b82f6,color:#fff
+    style History fill:#3b82f6,color:#fff
+    style Input fill:#3b82f6,color:#fff
+    style Messages fill:#3b82f6,color:#fff
+    style Message fill:#3b82f6,color:#fff</code></pre>
+<h2 id="rate-limiting-architecture">Rate Limiting Architecture<a class="headerlink" href="#rate-limiting-architecture" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph TB
+    Request[Incoming Request]
+    Middleware[Middleware]
+    RateLimiter[Rate Limiter&lt;br/&gt;rate-limiter-flexible]
+    Memory[(In-Memory Store)]
+
+    Request --&gt; Middleware
+    Middleware --&gt; RateLimiter
+    RateLimiter --&gt; Memory
+    Memory --&gt; Check{Within Limit?}
+
+    Check --&gt;|Yes| Increment[Increment Counter]
+    Check --&gt;|No| Block[Return 429]
+
+    Increment --&gt; Continue[Continue to Handler]
+    Block --&gt; Headers[Set Retry-After Header]
+    Headers --&gt; Response[Error Response]
+
+    Continue --&gt; Handler[Route Handler]
+    Handler --&gt; Success[Success Response]
+
+    style Memory fill:#6366f1,color:#fff
+    style Block fill:#ff6b6b
+    style Success fill:#51cf66</code></pre>
+<h2 id="security-layers">Security Layers<a class="headerlink" href="#security-layers" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph TD
+    Internet[Internet] --&gt; CDN[Cloud CDN]
+    CDN --&gt; CloudRun[Cloud Run]
+
+    CloudRun --&gt; SecurityHeaders[Security Headers&lt;br/&gt;CSP, HSTS, X-Frame-Options]
+    SecurityHeaders --&gt; RateLimit[Rate Limiting&lt;br/&gt;5 req / 10s per IP]
+    RateLimit --&gt; Auth[Authentication&lt;br/&gt;NextAuth Session]
+    Auth --&gt; AuthZ[Authorization&lt;br/&gt;Email Allowlist]
+    AuthZ --&gt; Validation[Input Validation&lt;br/&gt;Zod Schemas]
+    Validation --&gt; Sanitization[Output Sanitization&lt;br/&gt;XSS Prevention]
+    Sanitization --&gt; SecureSecrets[Secure Secrets&lt;br/&gt;Secret Manager]
+    SecureSecrets --&gt; App[Application Logic]
+
+    App --&gt; Response[Response]
+
+    style SecurityHeaders fill:#3b82f6,color:#fff
+    style RateLimit fill:#8b5cf6,color:#fff
+    style Auth fill:#ec4899,color:#fff
+    style AuthZ fill:#f59e0b,color:#fff
+    style Validation fill:#10b981,color:#fff
+    style SecureSecrets fill:#ef4444,color:#fff</code></pre>
+<h2 id="model-selection-flow">Model Selection Flow<a class="headerlink" href="#model-selection-flow" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; InitialState: Page Load
+    InitialState --&gt; LoadingModels: Fetch Available Models
+    LoadingModels --&gt; ModelsLoaded: Success
+    LoadingModels --&gt; LoadingError: API Error
+
+    LoadingError --&gt; Retry: User Retry
+    Retry --&gt; LoadingModels
+
+    ModelsLoaded --&gt; ModelSelected: User Selects Model
+    ModelSelected --&gt; ChatReady: Model Configured
+
+    ChatReady --&gt; Streaming: User Sends Message
+    Streaming --&gt; Processing: Vertex AI Processing
+    Processing --&gt; Streaming: Chunk Received
+    Processing --&gt; Complete: Stream Complete
+
+    Complete --&gt; ChatReady: Ready for Next Message
+
+    ChatReady --&gt; ModelChanged: User Changes Model
+    ModelChanged --&gt; ModelSelected</code></pre>
+<h2 id="image-upload-flow">Image Upload Flow<a class="headerlink" href="#image-upload-flow" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant U as User
+    participant UI as UI Component
+    participant V as Validator
+    participant C as Converter
+    participant API as API Route
+    participant S as ChatService
+    participant VA as Vertex AI
+
+    U-&gt;&gt;UI: Select image file
+    UI-&gt;&gt;V: Validate file
+
+    alt Invalid File
+        V-&gt;&gt;UI: ❌ Validation Error
+        UI-&gt;&gt;U: Show error message
+    else Valid File
+        V-&gt;&gt;UI: ✅ Valid
+        UI-&gt;&gt;C: Convert to base64
+        C-&gt;&gt;UI: Return data URL
+        UI-&gt;&gt;UI: Show preview
+        U-&gt;&gt;UI: Click send
+        UI-&gt;&gt;API: POST with image data
+        API-&gt;&gt;S: streamChat(message, imageData)
+        S-&gt;&gt;VA: Send with inline_data
+        VA--&gt;&gt;S: Stream response
+        S--&gt;&gt;API: Forward stream
+        API--&gt;&gt;UI: SSE chunks
+        UI--&gt;&gt;U: Display response
+    end
+
+    Note over V: Max 10MB&lt;br/&gt;JPEG/PNG/WebP/GIF</code></pre>
+<hr/>
+<h2 id="diagram-legend">Diagram Legend<a class="headerlink" href="#diagram-legend" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Green boxes</strong>: Server Components (rendered on server)</li>
+<li><strong>Blue boxes</strong>: Client Components (interactive, browser)</li>
+<li><strong>Red boxes</strong>: Error states</li>
+<li><strong>Yellow boxes</strong>: Decision points or warnings</li>
+</ul>
+<h2 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../.github/patterns/architecture-summary.md">Architecture Summary</a> - Detailed text description</li>
+<li><a href="../../API/">API Documentation</a> - API endpoint specifications</li>
+<li><a href="../../deployment/DEPLOY/">Deployment Guide</a> - Deployment process details</li>
+</ul>
+<hr/>
+<p><strong>Last Updated:</strong> November 2025
+<strong>Maintained by:</strong> Core Development Team</p>
+</article>
+</div>
+<script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<nav aria-label="Footer" class="md-footer__inner md-grid">
+<a aria-label="Previous: Project Navigation" class="md-footer__link md-footer__link--prev" href="../../PROJECT-NAVIGATION/">
+<div class="md-footer__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</div>
+<div class="md-footer__title">
+<span class="md-footer__direction">
+                Previous
+              </span>
+<div class="md-ellipsis">
+                Project Navigation
+              </div>
+</div>
+</a>
+<a aria-label="Next: Index" class="md-footer__link md-footer__link--next" href="../../adr/">
+<div class="md-footer__title">
+<span class="md-footer__direction">
+                Next
+              </span>
+<div class="md-ellipsis">
+                Index
+              </div>
+</div>
+<div class="md-footer__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+</div>
+</a>
+</nav>
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+<div class="md-copyright__highlight">
+      Copyright © 2025 roofsonfire
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/roofsonfire/chat" rel="noopener" target="_blank" title="GitHub Repository">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "navigation.indexes", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+<script src="../../javascripts/extra.js"></script>
+</body>
+</html>
