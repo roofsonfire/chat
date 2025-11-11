@@ -57,6 +57,60 @@ import {
   Trash2,
 } from "lucide-react";
 
+/**
+ * Chat Component
+ *
+ * Main chat interface with AI assistant integration. Provides a full-featured
+ * chat experience with message history, input field, model selection, command palette,
+ * and conversation management features.
+ *
+ * @component
+ * @returns {JSX.Element} Complete chat interface with sidebar and controls
+ *
+ * @example
+ * ```tsx
+ * // Basic usage in a page
+ * export default function ChatPage() {
+ *   return (
+ *     <div className="h-screen">
+ *       <Chat />
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * Features:
+ * - Real-time streaming responses from Google Vertex AI
+ * - Multimodal support (text + images)
+ * - Dynamic model selection (Gemini 1.5 Flash, Pro, Vision)
+ * - Command palette (⌘K / Ctrl+K) for quick actions
+ * - Conversation export (download as text file)
+ * - Clear history with confirmation dialog
+ * - Theme switching (light/dark mode)
+ * - Responsive sidebar layout
+ * - Keyboard shortcuts
+ * - Message persistence in session
+ *
+ * Keyboard Shortcuts:
+ * - `⌘K` or `Ctrl+K`: Open command palette
+ * - `⌘Enter` or `Ctrl+Enter`: Send message (in input)
+ *
+ * Command Palette Actions:
+ * - Start new conversation (clears history)
+ * - Export chat history
+ * - Change theme (light/dark)
+ * - Switch AI model
+ *
+ * State Management:
+ * - Uses `useChat` hook for message state and AI interactions
+ * - Local state for command palette visibility
+ * - Theme state via `next-themes`
+ *
+ * @see {@link useChat} - Custom hook managing chat logic
+ * @see {@link ChatHistory} - Message list component
+ * @see {@link MessageInput} - Input component with image upload
+ * @see {@link ModelSelector} - AI model selection dropdown
+ */
 export function Chat() {
   const {
     messages,

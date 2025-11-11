@@ -2,6 +2,79 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Input Component
+ *
+ * Form input field with consistent styling, focus states, and validation support.
+ * Built with shadcn/ui design system.
+ *
+ * @component
+ * @param {React.ComponentProps<"input">} props - Standard input HTML attributes
+ * @param {string} [props.className] - Additional CSS classes
+ * @param {string} [props.type] - Input type (text, email, password, etc.)
+ *
+ * @returns {JSX.Element} Styled input element
+ *
+ * @example
+ * ```tsx
+ * // Basic text input
+ * <Input
+ *   type="text"
+ *   placeholder="Enter your name"
+ *   value={name}
+ *   onChange={(e) => setName(e.target.value)}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Email input with validation
+ * <Input
+ *   type="email"
+ *   placeholder="email@example.com"
+ *   aria-invalid={!!emailError}
+ *   required
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // File input
+ * <Input
+ *   type="file"
+ *   accept="image/*"
+ *   onChange={handleFileUpload}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Disabled input
+ * <Input
+ *   type="text"
+ *   value={lockedValue}
+ *   disabled
+ * />
+ * ```
+ *
+ * Features:
+ * - Focus ring with smooth transition
+ * - Invalid state styling (red border/ring)
+ * - File upload styling
+ * - Placeholder text styling
+ * - Text selection highlighting
+ * - Dark mode support
+ * - Disabled state
+ * - Shadow for depth
+ * - Responsive font sizing
+ *
+ * Accessibility:
+ * - Use `aria-invalid` for validation errors
+ * - Pair with `<Label>` for form accessibility
+ * - Support for all standard input attributes
+ *
+ * @see {@link https://ui.shadcn.com/docs/components/input} shadcn/ui Input Documentation
+ */
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <input

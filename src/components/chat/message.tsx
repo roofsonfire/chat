@@ -22,10 +22,58 @@ import {
 } from "@/components/ui/hover-card";
 import { Copy, ThumbsUp, ThumbsDown, Flag, Bot, Sparkles } from "lucide-react";
 
+/**
+ * Props for the ChatMessage component
+ */
 interface ChatMessageProps {
+  /** The message object containing role, content, and optional image data */
   message: Message;
 }
 
+/**
+ * ChatMessage Component
+ *
+ * Renders an individual chat message with role-based styling, context menu actions,
+ * and support for multimodal content (text + images).
+ *
+ * @component
+ * @param {ChatMessageProps} props - Component props
+ * @param {Message} props.message - Message object with role, content, timestamp, and optional imageUrl
+ *
+ * @returns {JSX.Element} Rendered chat message with avatar, content, and actions
+ *
+ * @example
+ * ```tsx
+ * <ChatMessage
+ *   message={{
+ *     role: "assistant",
+ *     content: "Hello! How can I help you today?",
+ *     timestamp: new Date()
+ *   }}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Message with image
+ * <ChatMessage
+ *   message={{
+ *     role: "user",
+ *     content: "What's in this image?",
+ *     imageUrl: "data:image/jpeg;base64,...",
+ *     timestamp: new Date()
+ *   }}
+ * />
+ * ```
+ *
+ * Features:
+ * - Role-based styling (user messages right-aligned, assistant left-aligned)
+ * - Avatar with hover card showing AI model information
+ * - Context menu with copy, feedback, and flag actions
+ * - Image support with download functionality
+ * - Responsive layout with smooth animations
+ * - Accessibility attributes (ARIA labels, semantic HTML)
+ */
 export function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user";
 
