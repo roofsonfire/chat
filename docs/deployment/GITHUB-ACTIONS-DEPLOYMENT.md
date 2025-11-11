@@ -1,33 +1,33 @@
 # GitHub Actions Deployment Setup
 
-Esta guía te ayudará a configurar el deployment automático a Cloud Run usando GitHub Actions.
+This guide will help you set up automated deployment to Cloud Run using GitHub Actions.
 
 ## 📋 Overview
 
-El workflow de GitHub Actions (`deploy-production.yml`) se ejecuta automáticamente cuando:
+The GitHub Actions workflow (`deploy-production.yml`) runs automatically when:
 
-- La rama `main` pasa el workflow de CI con éxito (`workflow_run`)
-- Ejecutas manualmente desde la UI de GitHub
+- The `main` branch passes the CI workflow successfully (`workflow_run`)
+- You run it manually from the GitHub UI
 
-El workflow hace:
+The workflow does:
 
 1. ✅ Builds the Docker image
 2. ✅ Pushes to Artifact Registry
 3. ✅ Deploys to Cloud Run
 4. ✅ Maps custom domain
 5. ✅ Verifies deployment
-6. ✅ Rollback automático si falla
+6. ✅ Automatic rollback if it fails
 
-> **Importante (Nov 2025)**: la autenticación del workflow ya no usa llaves JSON. Ahora es obligatorio configurar [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) y exponer **dos secretos** en GitHub:
+> **Important (Nov 2025)**: workflow authentication no longer uses JSON keys. It's now required to configure [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) and expose **two secrets** in GitHub:
 >
-> - `GCP_WORKLOAD_IDENTITY_PROVIDER`: recurso del proveedor (`projects/<project-number>/locations/global/workloadIdentityPools/<pool>/providers/<provider>`)
-> - `GCP_SERVICE_ACCOUNT_EMAIL`: servicio que asumirá el workflow (`github-actions@<project-id>.iam.gserviceaccount.com`)
+> - `GCP_WORKLOAD_IDENTITY_PROVIDER`: provider resource (`projects/<project-number>/locations/global/workloadIdentityPools/<pool>/providers/<provider>`)
+> - `GCP_SERVICE_ACCOUNT_EMAIL`: service account that the workflow will assume (`github-actions@<project-id>.iam.gserviceaccount.com`)
 >
-> El secreto `GCP_SA_KEY` es legado y debe eliminarse una vez migrado.
+> The `GCP_SA_KEY` secret is legacy and should be removed once migrated.
 
-## 🔐 Paso 1: Crear Workload Identity Federation + Service Account
+## 🔐 Step 1: Create Workload Identity Federation + Service Account
 
-### 1. Crear el Workload Identity Pool y Provider (CLI)
+### 1. Create the Workload Identity Pool and Provider (CLI)
 
 ```bash
 PROJECT_ID="norse-breaker-474323-n8"
@@ -59,11 +59,11 @@ gcloud iam service-accounts add-iam-policy-binding \
     --member="principalSet://iam.googleapis.com/projects/$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')/locations/global/workloadIdentityPools/$POOL_ID/attribute.repository/roofsonfire/chat"
 ```
 
-### 2. Asignar permisos a la Service Account
+### 2. Assign Permissions to the Service Account
 
-Utiliza los mismos bindings descritos en la sección anterior (`roles/run.admin`, `roles/storage.admin`, etc.) sobre `github-actions@$PROJECT_ID.iam.gserviceaccount.com`.
+Use the same bindings described in the previous section (`roles/run.admin`, `roles/storage.admin`, etc.) on `github-actions@$PROJECT_ID.iam.gserviceaccount.com`.
 
-### 3. Obtén los valores a cargar como secretos
+### 3. Get the Values to Upload as Secrets
 
 ```bash
 PROJECT_NUMBER="$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')"
@@ -71,16 +71,16 @@ echo "Provider: projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/
 echo "Service Account: github-actions@$PROJECT_ID.iam.gserviceaccount.com"
 ```
 
-Guarda ambos valores; los usaremos en el Paso 2.
+Save both values; we'll use them in Step 2.
 
-> ⚠️ **¿Aún necesitas llaves JSON?**
-> Solo mantenlas de forma temporal durante la migración. El nuevo workflow fallará si `GCP_WORKLOAD_IDENTITY_PROVIDER` o `GCP_SERVICE_ACCOUNT_EMAIL` no están configurados.
+> ⚠️ **Still need JSON keys?**
+> Only keep them temporarily during migration. The new workflow will fail if `GCP_WORKLOAD_IDENTITY_PROVIDER` or `GCP_SERVICE_ACCOUNT_EMAIL` are not configured.
 
 ---
 
-### (Legacy) Crear Service Account con llaves JSON
+### (Legacy) Create Service Account with JSON Keys
 
-### Opción A: Usar gcloud CLI (Recomendado)
+### Option A: Use gcloud CLI (Recommended)
 
 ```bash
 # Configurar variables
@@ -88,12 +88,12 @@ PROJECT_ID="norse-breaker-474323-n8"
 SA_NAME="github-actions"
 SA_EMAIL="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 
-# Crear service account
+# Create service account
 gcloud iam service-accounts create $SA_NAME \
     --description="Service account for GitHub Actions deployments" \
     --display-name="GitHub Actions"
 
-# Dar permisos necesarios
+# Give necessary permissions
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:${SA_EMAIL}" \
     --role="roles/run.admin"
@@ -110,19 +110,19 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:${SA_EMAIL}" \
     --role="roles/artifactregistry.admin"
 
-# Crear y descargar la key
+# Create and download the key
 gcloud iam service-accounts keys create github-actions-key.json \
     --iam-account=$SA_EMAIL
 
-# Mostrar el contenido (lo necesitarás para GitHub)
+# Display the content (you'll need this for GitHub)
 cat github-actions-key.json
 
-# ⚠️ IMPORTANTE: Guarda este archivo de forma segura
-# Después de agregarlo a GitHub, elimínalo:
+# ⚠️ IMPORTANT: Save this file securely
+# After adding it to GitHub, delete it:
 # rm github-actions-key.json
 ```
 
-### Opción B: Usar Google Cloud Console
+### Option B: Use Google Cloud Console
 
 1. Ve a: https://console.cloud.google.com/iam-admin/serviceaccounts?project=norse-breaker-474323-n8
 2. Click "Create Service Account"
