@@ -136,7 +136,7 @@ Generate full CycloneDX SBOM and track in artifact repository for continuous mon
 
   ```ts
   const scrubbed = redactSensitiveFields(payload);
-  safeWriter[level]({ ...context, payload: scrubbed });
+  safeWriter[level]({ context, payload: scrubbed });
   ```
 
 - **src/middleware/security.ts**

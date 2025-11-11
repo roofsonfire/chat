@@ -66,12 +66,9 @@ imagemin docs/images/*.png --out-dir=docs/images
 Reference images in markdown:
 
 ```markdown
-![Chat Interface](../images/chat-interface-overview.png)
-
-Or with alt text and caption:
-
-![The main chat interface showing real-time AI responses](../images/chat-interface-overview.png)
-_Figure 1: Main chat interface with streaming responses_
+<!-- Examples will be added when actual screenshots are captured -->
+![Alt text](../images/filename.png)
+_Figure caption describing the image_
 ```
 
 ---

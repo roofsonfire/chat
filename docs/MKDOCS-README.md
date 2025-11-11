@@ -175,7 +175,7 @@ function greet(name: string): string {
 
   Description here
 
-  [:octicons-arrow-right-24: Link](path/to/page.md)
+  [:octicons-arrow-right-24: Link](#)
 
 </div>
 ```
