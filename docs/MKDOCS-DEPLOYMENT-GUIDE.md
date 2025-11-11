@@ -68,6 +68,7 @@ npm run docs:deploy
 ```
 
 This will:
+
 1. Build the documentation site
 2. Push to the `gh-pages` branch
 3. GitHub Pages will automatically serve it
@@ -104,11 +105,13 @@ Once deployed, the site will be available at:
 To use a custom domain:
 
 1. Add `CNAME` file to `docs/` directory:
+
    ```
    docs.yourdo main.com
    ```
 
 2. Configure DNS:
+
    ```
    Type: CNAME
    Name: docs
@@ -231,8 +234,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'docs/**'
-      - 'mkdocs.yml'
+      - "docs/**"
+      - "mkdocs.yml"
 
 jobs:
   deploy:
@@ -261,6 +264,7 @@ pip list | grep mkdocs
 ### Monitoring
 
 After deployment, monitor:
+
 - **Accessibility:** Check https://roofsonfire.github.io/chat/ works
 - **Search:** Test search functionality
 - **Navigation:** Verify all links work
@@ -274,7 +278,7 @@ Update Google Analytics ID in `mkdocs.yml`:
 extra:
   analytics:
     provider: google
-    property: G-XXXXXXXXXX  # Replace with your GA4 ID
+    property: G-XXXXXXXXXX # Replace with your GA4 ID
 ```
 
 ## Quick Reference

@@ -113,7 +113,7 @@ extra:
       name: GitHub Repository
   analytics:
     provider: google
-    property: G-XXXXXXXXXX  # Replace with actual GA4 property ID
+    property: G-XXXXXXXXXX # Replace with actual GA4 property ID
 
 nav:
   - Home: index.md

@@ -1375,33 +1375,39 @@ First, define a common interface that all AI providers will implement:
 
 ```typescript
 export interface ChatMessage {
-  role: "user" | "assistant" | "system"
-  content: string
-  imageData?: string
+  role: "user" | "assistant" | "system";
+  content: string;
+  imageData?: string;
 }
 
 export interface AIServiceConfig {
-  provider: string
-  modelId: string
-  temperature?: number
-  maxTokens?: number
-  systemPrompt?: string
+  provider: string;
+  modelId: string;
+  temperature?: number;
+  maxTokens?: number;
+  systemPrompt?: string;
 }
 
 export interface AIServiceResponse {
-  content: string
-  model: string
+  content: string;
+  model: string;
   usage?: {
-    promptTokens: number
-    completionTokens: number
-    totalTokens: number
-  }
-  finishReason?: string
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+  finishReason?: string;
 }
 
 export interface IAIService {
-  chat(messages: ChatMessage[], config?: AIServiceConfig): Promise<AIServiceResponse>
-  streamChat(messages: ChatMessage[], config?: AIServiceConfig): Promise<ReadableStream>
+  chat(
+    messages: ChatMessage[],
+    config?: AIServiceConfig
+  ): Promise<AIServiceResponse>;
+  streamChat(
+    messages: ChatMessage[],
+    config?: AIServiceConfig
+  ): Promise<ReadableStream>;
 }
 ```
 
@@ -1412,13 +1418,18 @@ Create an adapter for Google Vertex AI (our current provider):
 **File:** `src/lib/services/ai/vertex-ai-adapter.ts`
 
 ```typescript
-import { VertexAI } from "@google-cloud/vertexai"
-import { logger } from "@/lib/logger"
-import { VertexAIError } from "@/lib/errors"
-import type { IAIService, ChatMessage, AIServiceConfig, AIServiceResponse } from "./ai-service-interface"
+import { VertexAI } from "@google-cloud/vertexai";
+import { logger } from "@/lib/logger";
+import { VertexAIError } from "@/lib/errors";
+import type {
+  IAIService,
+  ChatMessage,
+  AIServiceConfig,
+  AIServiceResponse,
+} from "./ai-service-interface";
 
 export class VertexAIAdapter implements IAIService {
-  private vertexAI: VertexAI
+  private vertexAI: VertexAI;
 
   constructor(
     private projectId: string,
@@ -1427,16 +1438,22 @@ export class VertexAIAdapter implements IAIService {
     this.vertexAI = new VertexAI({
       project: projectId,
       location: location,
-    })
+    });
   }
 
-  async chat(messages: ChatMessage[], config?: AIServiceConfig): Promise<AIServiceResponse> {
+  async chat(
+    messages: ChatMessage[],
+    config?: AIServiceConfig
+  ): Promise<AIServiceResponse> {
     try {
       const model = this.vertexAI.getGenerativeModel({
         model: config?.modelId || "gemini-2.5-flash",
-      })
+      });
 
-      const formattedMessages = this.formatMessages(messages, config?.systemPrompt)
+      const formattedMessages = this.formatMessages(
+        messages,
+        config?.systemPrompt
+      );
 
       const result = await model.generateContent({
         contents: formattedMessages,
@@ -1444,15 +1461,15 @@ export class VertexAIAdapter implements IAIService {
           temperature: config?.temperature ?? 0.7,
           maxOutputTokens: config?.maxTokens ?? 8192,
         },
-      })
+      });
 
-      const response = result.response
-      const text = response.candidates?.[0]?.content?.parts?.[0]?.text || ""
+      const response = result.response;
+      const text = response.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
       logger.info("Vertex AI chat completed", {
         model: config?.modelId,
         messageCount: messages.length,
-      })
+      });
 
       return {
         content: text,
@@ -1463,19 +1480,25 @@ export class VertexAIAdapter implements IAIService {
           totalTokens: response.usageMetadata?.totalTokenCount || 0,
         },
         finishReason: response.candidates?.[0]?.finishReason,
-      }
+      };
     } catch (error) {
-      logger.error("Vertex AI error", { error })
-      throw new VertexAIError("Failed to generate response")
+      logger.error("Vertex AI error", { error });
+      throw new VertexAIError("Failed to generate response");
     }
   }
 
-  async streamChat(messages: ChatMessage[], config?: AIServiceConfig): Promise<ReadableStream> {
+  async streamChat(
+    messages: ChatMessage[],
+    config?: AIServiceConfig
+  ): Promise<ReadableStream> {
     const model = this.vertexAI.getGenerativeModel({
       model: config?.modelId || "gemini-2.5-flash",
-    })
+    });
 
-    const formattedMessages = this.formatMessages(messages, config?.systemPrompt)
+    const formattedMessages = this.formatMessages(
+      messages,
+      config?.systemPrompt
+    );
 
     const result = await model.generateContentStream({
       contents: formattedMessages,
@@ -1483,16 +1506,18 @@ export class VertexAIAdapter implements IAIService {
         temperature: config?.temperature ?? 0.7,
         maxOutputTokens: config?.maxTokens ?? 8192,
       },
-    })
+    });
 
-    return this.transformStream(result)
+    return this.transformStream(result);
   }
 
   private formatMessages(messages: ChatMessage[], systemPrompt?: string) {
     const formatted = messages.map((msg) => ({
       role: msg.role === "assistant" ? "model" : msg.role,
       parts: [
-        ...(systemPrompt && msg.role === "user" ? [{ text: systemPrompt }] : []),
+        ...(systemPrompt && msg.role === "user"
+          ? [{ text: systemPrompt }]
+          : []),
         { text: msg.content },
         ...(msg.imageData
           ? [
@@ -1505,29 +1530,29 @@ export class VertexAIAdapter implements IAIService {
             ]
           : []),
       ],
-    }))
+    }));
 
-    return formatted
+    return formatted;
   }
 
   private transformStream(result: any): ReadableStream {
-    const encoder = new TextEncoder()
+    const encoder = new TextEncoder();
 
     return new ReadableStream({
       async start(controller) {
         try {
           for await (const chunk of result.stream) {
-            const text = chunk.candidates[0]?.content?.parts[0]?.text
+            const text = chunk.candidates[0]?.content?.parts[0]?.text;
             if (text) {
-              controller.enqueue(encoder.encode(text))
+              controller.enqueue(encoder.encode(text));
             }
           }
-          controller.close()
+          controller.close();
         } catch (error) {
-          controller.error(error)
+          controller.error(error);
         }
       },
-    })
+    });
   }
 }
 ```
@@ -1539,71 +1564,85 @@ Implement a caching layer to reduce API calls and costs:
 **File:** `src/lib/services/ai/cached-ai-service.ts`
 
 ```typescript
-import { logger } from "@/lib/logger"
-import type { IAIService, ChatMessage, AIServiceConfig, AIServiceResponse } from "./ai-service-interface"
+import { logger } from "@/lib/logger";
+import type {
+  IAIService,
+  ChatMessage,
+  AIServiceConfig,
+  AIServiceResponse,
+} from "./ai-service-interface";
 
 interface CacheEntry {
-  response: AIServiceResponse
-  timestamp: number
-  expiresAt: number
+  response: AIServiceResponse;
+  timestamp: number;
+  expiresAt: number;
 }
 
 export class CachedAIService implements IAIService {
-  private cache = new Map<string, CacheEntry>()
-  private defaultTTL = 3600000 // 1 hour in milliseconds
+  private cache = new Map<string, CacheEntry>();
+  private defaultTTL = 3600000; // 1 hour in milliseconds
 
   constructor(
     private wrappedService: IAIService,
     private ttl: number = 3600000
   ) {
-    this.defaultTTL = ttl
+    this.defaultTTL = ttl;
   }
 
-  async chat(messages: ChatMessage[], config?: AIServiceConfig): Promise<AIServiceResponse> {
-    const cacheKey = this.generateCacheKey(messages, config)
+  async chat(
+    messages: ChatMessage[],
+    config?: AIServiceConfig
+  ): Promise<AIServiceResponse> {
+    const cacheKey = this.generateCacheKey(messages, config);
 
     // Check cache
-    const cached = this.getFromCache(cacheKey)
+    const cached = this.getFromCache(cacheKey);
     if (cached) {
-      logger.info("Cache hit for AI request", { cacheKey })
-      return cached.response
+      logger.info("Cache hit for AI request", { cacheKey });
+      return cached.response;
     }
 
     // Call wrapped service
-    const response = await this.wrappedService.chat(messages, config)
+    const response = await this.wrappedService.chat(messages, config);
 
     // Store in cache
-    this.setInCache(cacheKey, response)
+    this.setInCache(cacheKey, response);
 
-    logger.info("Cache miss - stored new response", { cacheKey })
-    return response
+    logger.info("Cache miss - stored new response", { cacheKey });
+    return response;
   }
 
-  async streamChat(messages: ChatMessage[], config?: AIServiceConfig): Promise<ReadableStream> {
+  async streamChat(
+    messages: ChatMessage[],
+    config?: AIServiceConfig
+  ): Promise<ReadableStream> {
     // Streaming responses are not cached
-    return this.wrappedService.streamChat(messages, config)
+    return this.wrappedService.streamChat(messages, config);
   }
 
-  private generateCacheKey(messages: ChatMessage[], config?: AIServiceConfig): string {
-    const messagesString = JSON.stringify(messages)
-    const configString = JSON.stringify(config || {})
-    return `${messagesString}:${configString}`
+  private generateCacheKey(
+    messages: ChatMessage[],
+    config?: AIServiceConfig
+  ): string {
+    const messagesString = JSON.stringify(messages);
+    const configString = JSON.stringify(config || {});
+    return `${messagesString}:${configString}`;
   }
 
   private getFromCache(key: string): CacheEntry | null {
-    const entry = this.cache.get(key)
+    const entry = this.cache.get(key);
 
     if (!entry) {
-      return null
+      return null;
     }
 
     // Check if expired
     if (Date.now() > entry.expiresAt) {
-      this.cache.delete(key)
-      return null
+      this.cache.delete(key);
+      return null;
     }
 
-    return entry
+    return entry;
   }
 
   private setInCache(key: string, response: AIServiceResponse): void {
@@ -1611,20 +1650,20 @@ export class CachedAIService implements IAIService {
       response,
       timestamp: Date.now(),
       expiresAt: Date.now() + this.defaultTTL,
-    }
+    };
 
-    this.cache.set(key, entry)
+    this.cache.set(key, entry);
 
     // Prevent memory leak - limit cache size
     if (this.cache.size > 1000) {
-      const firstKey = this.cache.keys().next().value
-      this.cache.delete(firstKey)
+      const firstKey = this.cache.keys().next().value;
+      this.cache.delete(firstKey);
     }
   }
 
   public clearCache(): void {
-    this.cache.clear()
-    logger.info("AI service cache cleared")
+    this.cache.clear();
+    logger.info("AI service cache cleared");
   }
 
   public getCacheStats() {
@@ -1635,7 +1674,7 @@ export class CachedAIService implements IAIService {
         timestamp: entry.timestamp,
         expiresIn: entry.expiresAt - Date.now(),
       })),
-    }
+    };
   }
 }
 ```
@@ -1647,8 +1686,13 @@ Add automatic fallback to alternative models if primary fails:
 **File:** `src/lib/services/ai/fallback-ai-service.ts`
 
 ```typescript
-import { logger } from "@/lib/logger"
-import type { IAIService, ChatMessage, AIServiceConfig, AIServiceResponse } from "./ai-service-interface"
+import { logger } from "@/lib/logger";
+import type {
+  IAIService,
+  ChatMessage,
+  AIServiceConfig,
+  AIServiceResponse,
+} from "./ai-service-interface";
 
 export class FallbackAIService implements IAIService {
   constructor(
@@ -1656,45 +1700,55 @@ export class FallbackAIService implements IAIService {
     private fallbackServices: IAIService[]
   ) {}
 
-  async chat(messages: ChatMessage[], config?: AIServiceConfig): Promise<AIServiceResponse> {
+  async chat(
+    messages: ChatMessage[],
+    config?: AIServiceConfig
+  ): Promise<AIServiceResponse> {
     // Try primary service
     try {
-      logger.info("Attempting primary AI service")
-      return await this.primaryService.chat(messages, config)
+      logger.info("Attempting primary AI service");
+      return await this.primaryService.chat(messages, config);
     } catch (primaryError) {
-      logger.warn("Primary AI service failed, trying fallbacks", { error: primaryError })
+      logger.warn("Primary AI service failed, trying fallbacks", {
+        error: primaryError,
+      });
 
       // Try each fallback in order
       for (let i = 0; i < this.fallbackServices.length; i++) {
         try {
-          logger.info(`Attempting fallback service ${i + 1}`)
-          const result = await this.fallbackServices[i].chat(messages, config)
-          logger.info(`Fallback service ${i + 1} succeeded`)
-          return result
+          logger.info(`Attempting fallback service ${i + 1}`);
+          const result = await this.fallbackServices[i].chat(messages, config);
+          logger.info(`Fallback service ${i + 1} succeeded`);
+          return result;
         } catch (fallbackError) {
-          logger.warn(`Fallback service ${i + 1} failed`, { error: fallbackError })
-          continue
+          logger.warn(`Fallback service ${i + 1} failed`, {
+            error: fallbackError,
+          });
+          continue;
         }
       }
 
       // All services failed
-      logger.error("All AI services failed")
-      throw new Error("All AI services unavailable")
+      logger.error("All AI services failed");
+      throw new Error("All AI services unavailable");
     }
   }
 
-  async streamChat(messages: ChatMessage[], config?: AIServiceConfig): Promise<ReadableStream> {
+  async streamChat(
+    messages: ChatMessage[],
+    config?: AIServiceConfig
+  ): Promise<ReadableStream> {
     // For streaming, try primary then first fallback only
     try {
-      return await this.primaryService.streamChat(messages, config)
+      return await this.primaryService.streamChat(messages, config);
     } catch (error) {
-      logger.warn("Primary stream failed, trying first fallback", { error })
+      logger.warn("Primary stream failed, trying first fallback", { error });
 
       if (this.fallbackServices.length > 0) {
-        return await this.fallbackServices[0].streamChat(messages, config)
+        return await this.fallbackServices[0].streamChat(messages, config);
       }
 
-      throw error
+      throw error;
     }
   }
 }
@@ -1707,16 +1761,16 @@ Build a factory to create configured AI services:
 **File:** `src/lib/services/ai/ai-service-factory.ts`
 
 ```typescript
-import { env } from "@/lib/env"
-import { VertexAIAdapter } from "./vertex-ai-adapter"
-import { CachedAIService } from "./cached-ai-service"
-import { FallbackAIService } from "./fallback-ai-service"
-import type { IAIService } from "./ai-service-interface"
+import { env } from "@/lib/env";
+import { VertexAIAdapter } from "./vertex-ai-adapter";
+import { CachedAIService } from "./cached-ai-service";
+import { FallbackAIService } from "./fallback-ai-service";
+import type { IAIService } from "./ai-service-interface";
 
 export interface AIServiceOptions {
-  enableCache?: boolean
-  cacheTTL?: number
-  enableFallback?: boolean
+  enableCache?: boolean;
+  cacheTTL?: number;
+  enableFallback?: boolean;
 }
 
 export function createAIService(options: AIServiceOptions = {}): IAIService {
@@ -1724,17 +1778,17 @@ export function createAIService(options: AIServiceOptions = {}): IAIService {
     enableCache = true,
     cacheTTL = 3600000, // 1 hour
     enableFallback = true,
-  } = options
+  } = options;
 
   // Create primary Vertex AI service
   let primaryService: IAIService = new VertexAIAdapter(
     env.GOOGLE_PROJECT_ID,
     env.GOOGLE_LOCATION
-  )
+  );
 
   // Add caching if enabled
   if (enableCache) {
-    primaryService = new CachedAIService(primaryService, cacheTTL)
+    primaryService = new CachedAIService(primaryService, cacheTTL);
   }
 
   // Add fallback if enabled
@@ -1743,12 +1797,12 @@ export function createAIService(options: AIServiceOptions = {}): IAIService {
     const fallbackService = new VertexAIAdapter(
       env.GOOGLE_PROJECT_ID,
       env.GOOGLE_LOCATION
-    )
+    );
 
-    primaryService = new FallbackAIService(primaryService, [fallbackService])
+    primaryService = new FallbackAIService(primaryService, [fallbackService]);
   }
 
-  return primaryService
+  return primaryService;
 }
 ```
 
@@ -1759,13 +1813,13 @@ Update your chat API route to use the factory:
 **File:** `src/app/api/chat/route.ts`
 
 ```typescript
-import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { z } from "zod"
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { z } from "zod";
 
-import { authOptions } from "@/lib/auth/config"
-import { createAIService } from "@/lib/services/ai/ai-service-factory"
-import { logger } from "@/lib/logger"
+import { authOptions } from "@/lib/auth/config";
+import { createAIService } from "@/lib/services/ai/ai-service-factory";
+import { logger } from "@/lib/logger";
 
 const chatRequestSchema = z.object({
   messages: z.array(
@@ -1777,31 +1831,31 @@ const chatRequestSchema = z.object({
   ),
   modelId: z.string().optional(),
   systemPrompt: z.string().optional(),
-})
+});
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await req.json()
-    const { messages, modelId, systemPrompt } = chatRequestSchema.parse(body)
+    const body = await req.json();
+    const { messages, modelId, systemPrompt } = chatRequestSchema.parse(body);
 
     // Create AI service with caching and fallback
     const aiService = createAIService({
       enableCache: true,
       cacheTTL: 3600000, // 1 hour
       enableFallback: true,
-    })
+    });
 
     // Stream response
     const stream = await aiService.streamChat(messages, {
       provider: "vertex-ai",
       modelId: modelId || "gemini-2.5-flash",
       systemPrompt,
-    })
+    });
 
     return new NextResponse(stream, {
       headers: {
@@ -1809,13 +1863,13 @@ export async function POST(req: NextRequest) {
         "Cache-Control": "no-cache",
         Connection: "keep-alive",
       },
-    })
+    });
   } catch (error) {
-    logger.error("Chat API error", { error })
+    logger.error("Chat API error", { error });
     return NextResponse.json(
       { error: "Failed to process request" },
       { status: 500 }
-    )
+    );
   }
 }
 ```
@@ -1827,10 +1881,13 @@ Create a test to verify everything works:
 **File:** `tests/unit/ai-service.test.ts`
 
 ```typescript
-import { describe, it, expect, vi, beforeEach } from "vitest"
-import { CachedAIService } from "@/lib/services/ai/cached-ai-service"
-import { FallbackAIService } from "@/lib/services/ai/fallback-ai-service"
-import type { IAIService, ChatMessage } from "@/lib/services/ai/ai-service-interface"
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { CachedAIService } from "@/lib/services/ai/cached-ai-service";
+import { FallbackAIService } from "@/lib/services/ai/fallback-ai-service";
+import type {
+  IAIService,
+  ChatMessage,
+} from "@/lib/services/ai/ai-service-interface";
 
 describe("CachedAIService", () => {
   it("should cache responses", async () => {
@@ -1840,20 +1897,20 @@ describe("CachedAIService", () => {
         model: "test-model",
       }),
       streamChat: vi.fn(),
-    }
+    };
 
-    const cachedService = new CachedAIService(mockService, 60000)
+    const cachedService = new CachedAIService(mockService, 60000);
 
-    const messages: ChatMessage[] = [{ role: "user", content: "Hi" }]
+    const messages: ChatMessage[] = [{ role: "user", content: "Hi" }];
 
     // First call
-    await cachedService.chat(messages)
-    expect(mockService.chat).toHaveBeenCalledTimes(1)
+    await cachedService.chat(messages);
+    expect(mockService.chat).toHaveBeenCalledTimes(1);
 
     // Second call - should use cache
-    await cachedService.chat(messages)
-    expect(mockService.chat).toHaveBeenCalledTimes(1) // Still 1, not called again
-  })
+    await cachedService.chat(messages);
+    expect(mockService.chat).toHaveBeenCalledTimes(1); // Still 1, not called again
+  });
 
   it("should expire cached responses", async () => {
     const mockService: IAIService = {
@@ -1862,29 +1919,29 @@ describe("CachedAIService", () => {
         model: "test-model",
       }),
       streamChat: vi.fn(),
-    }
+    };
 
-    const cachedService = new CachedAIService(mockService, 100) // 100ms TTL
+    const cachedService = new CachedAIService(mockService, 100); // 100ms TTL
 
-    const messages: ChatMessage[] = [{ role: "user", content: "Hi" }]
+    const messages: ChatMessage[] = [{ role: "user", content: "Hi" }];
 
-    await cachedService.chat(messages)
-    expect(mockService.chat).toHaveBeenCalledTimes(1)
+    await cachedService.chat(messages);
+    expect(mockService.chat).toHaveBeenCalledTimes(1);
 
     // Wait for cache to expire
-    await new Promise((resolve) => setTimeout(resolve, 150))
+    await new Promise((resolve) => setTimeout(resolve, 150));
 
-    await cachedService.chat(messages)
-    expect(mockService.chat).toHaveBeenCalledTimes(2) // Called again after expiry
-  })
-})
+    await cachedService.chat(messages);
+    expect(mockService.chat).toHaveBeenCalledTimes(2); // Called again after expiry
+  });
+});
 
 describe("FallbackAIService", () => {
   it("should use fallback on primary failure", async () => {
     const primaryService: IAIService = {
       chat: vi.fn().mockRejectedValue(new Error("Primary failed")),
       streamChat: vi.fn(),
-    }
+    };
 
     const fallbackService: IAIService = {
       chat: vi.fn().mockResolvedValue({
@@ -1892,17 +1949,17 @@ describe("FallbackAIService", () => {
         model: "fallback-model",
       }),
       streamChat: vi.fn(),
-    }
+    };
 
-    const service = new FallbackAIService(primaryService, [fallbackService])
+    const service = new FallbackAIService(primaryService, [fallbackService]);
 
-    const messages: ChatMessage[] = [{ role: "user", content: "Hi" }]
-    const response = await service.chat(messages)
+    const messages: ChatMessage[] = [{ role: "user", content: "Hi" }];
+    const response = await service.chat(messages);
 
-    expect(response.content).toBe("Fallback response")
-    expect(fallbackService.chat).toHaveBeenCalledTimes(1)
-  })
-})
+    expect(response.content).toBe("Fallback response");
+    expect(fallbackService.chat).toHaveBeenCalledTimes(1);
+  });
+});
 ```
 
 ### Testing Locally
@@ -1933,25 +1990,25 @@ Add an admin endpoint to check cache stats:
 **File:** `src/app/api/admin/cache-stats/route.ts`
 
 ```typescript
-import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth/config"
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/config";
 
 // Global cache instance (in production, use a singleton pattern)
-let cacheService: any = null
+let cacheService: any = null;
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions);
   if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!cacheService) {
-    return NextResponse.json({ message: "Cache not initialized" })
+    return NextResponse.json({ message: "Cache not initialized" });
   }
 
-  const stats = cacheService.getCacheStats()
-  return NextResponse.json(stats)
+  const stats = cacheService.getCacheStats();
+  return NextResponse.json(stats);
 }
 ```
 
@@ -1963,15 +2020,15 @@ export async function GET(req: NextRequest) {
 
 ```typescript
 // In your update handler
-await updateData()
-cacheService.clearCache()
+await updateData();
+cacheService.clearCache();
 ```
 
 3. **Monitor Cache Hit Rate:** Track hits vs misses to optimize TTL:
 
 ```typescript
-const hitRate = (cacheHits / totalRequests) * 100
-logger.info(`Cache hit rate: ${hitRate}%`)
+const hitRate = (cacheHits / totalRequests) * 100;
+logger.info(`Cache hit rate: ${hitRate}%`);
 ```
 
 ### Extension Ideas

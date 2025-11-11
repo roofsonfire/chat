@@ -67,6 +67,7 @@ Reference images in markdown:
 
 ```markdown
 <!-- Examples will be added when actual screenshots are captured -->
+
 ![Alt text](../images/filename.png)
 _Figure caption describing the image_
 ```

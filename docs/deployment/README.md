@@ -38,7 +38,7 @@ Complete deployment guides, CI/CD configuration, and production deployment proce
 ## Deployment Architecture
 
 ```
-GitHub Repository → GitHub Actions → Build Docker Image → 
+GitHub Repository → GitHub Actions → Build Docker Image →
 Google Artifact Registry → Cloud Run (us-central1) → Production
 ```
 

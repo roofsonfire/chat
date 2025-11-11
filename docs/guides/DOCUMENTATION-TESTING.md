@@ -130,6 +130,7 @@ function broken() {
 ## Section Title
 
 ❌ Missing space:
+
 ## Section Title
 
 ✅ Code block with language:
