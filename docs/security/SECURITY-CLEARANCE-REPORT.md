@@ -1,8 +1,8 @@
 # 🔒 Security Clearance Report
 
-**Repository**: roofsonfire/chat  
-**Assessment Date**: January 2025  
-**Reviewer**: Automated Security Scan + GitHub MCP Tools  
+**Repository**: roofsonfire/chat
+**Assessment Date**: January 2025
+**Reviewer**: Automated Security Scan + GitHub MCP Tools
 **Status**: ✅ **CLEARED FOR PUBLIC RELEASE**
 
 ---
@@ -41,7 +41,7 @@ All sensitive data is properly managed through:
 
 ### 1. Code Search: Credential Keywords
 
-**Query**: `password OR secret OR key OR token OR credentials`  
+**Query**: `password OR secret OR key OR token OR credentials`
 **Results**: 4 matches (all safe)
 
 | File                              | Context                                                 | Status                        |
@@ -57,7 +57,7 @@ All sensitive data is properly managed through:
 
 ### 2. Code Search: API Key Patterns
 
-**Query**: `'sk-' OR 'pk_' OR 'gcp' OR 'AIza'`  
+**Query**: `'sk-' OR 'pk_' OR 'gcp' OR 'AIza'`
 **Results**: 0 matches
 
 **Verdict**: ✅ **No API keys found**
@@ -66,7 +66,7 @@ All sensitive data is properly managed through:
 
 ### 3. Code Search: Database Connection Strings
 
-**Query**: `"mongodb://" OR "mysql://" OR "postgres://" OR "redis://" OR "AKIA" OR "amazonaws"`  
+**Query**: `"mongodb://" OR "mysql://" OR "postgres://" OR "redis://" OR "AKIA" OR "amazonaws"`
 **Results**: 0 matches
 
 **Verdict**: ✅ **No database credentials or AWS keys found**
@@ -160,7 +160,7 @@ Production credentials stored in GCP Secret Manager:
 - `auth-password-hash`
 - `google-vertex-ai-model-id`
 
-**Service**: `chat-production` on Cloud Run  
+**Service**: `chat-production` on Cloud Run
 **Region**: `us-central1`
 
 ---
@@ -173,7 +173,7 @@ Google OAuth credentials managed through:
 - **Production**: Google Cloud Secret Manager
 - **Setup Scripts**: `scripts/interactive-oauth-setup.sh` (creates secrets, doesn't expose them)
 
-**Client IDs** are public by design (not secrets)  
+**Client IDs** are public by design (not secrets)
 **Client Secrets** never committed to git
 
 ---
@@ -197,13 +197,13 @@ Google OAuth credentials managed through:
 
 ### Risk 1: Public Repository Visibility
 
-**Risk Level**: ⚠️ Medium  
+**Risk Level**: ⚠️ Medium
 **Description**: Making repo public exposes code to everyone
 
 **Mitigation**:
-✅ No secrets in code  
-✅ All credentials in secure vaults  
-✅ GitHub Actions secrets properly configured  
+✅ No secrets in code
+✅ All credentials in secure vaults
+✅ GitHub Actions secrets properly configured
 ✅ OAuth redirect URIs can be public
 
 **Status**: **Mitigated**
@@ -212,12 +212,12 @@ Google OAuth credentials managed through:
 
 ### Risk 2: Test Credentials Visible in Workflow Files
 
-**Risk Level**: ✅ None  
+**Risk Level**: ✅ None
 **Description**: CI workflow references `${{ secrets.TEST_* }}`
 
 **Mitigation**:
-✅ Actual values stored in GitHub Secrets (encrypted)  
-✅ Only placeholders visible in workflow YAML  
+✅ Actual values stored in GitHub Secrets (encrypted)
+✅ Only placeholders visible in workflow YAML
 ✅ Test credentials are dummy values anyway
 
 **Status**: **No risk**
@@ -226,12 +226,12 @@ Google OAuth credentials managed through:
 
 ### Risk 3: OAuth Client ID Visible
 
-**Risk Level**: ✅ None  
+**Risk Level**: ✅ None
 **Description**: Google OAuth Client IDs may be visible in documentation
 
 **Mitigation**:
-✅ OAuth Client IDs are **designed to be public**  
-✅ Only Client Secrets need protection (and they're secured)  
+✅ OAuth Client IDs are **designed to be public**
+✅ Only Client Secrets need protection (and they're secured)
 ✅ Redirect URIs are properly configured
 
 **Status**: **No risk**
@@ -293,7 +293,7 @@ Google OAuth credentials managed through:
 
 ---
 
-**Report Generated**: January 2025  
-**Valid Until**: Repository remains unchanged  
-**Audit Method**: Automated + Manual Review  
+**Report Generated**: January 2025
+**Valid Until**: Repository remains unchanged
+**Audit Method**: Automated + Manual Review
 **Clearance Level**: Public Release Approved ✅

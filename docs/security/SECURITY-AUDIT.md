@@ -1,8 +1,8 @@
 # Comprehensive Security Assessment
 
-**Date:** November 7, 2025  
-**Repository:** roofsonfire/chat  
-**Assessor:** GitHub Copilot (Security Auditor)  
+**Date:** November 7, 2025
+**Repository:** roofsonfire/chat
+**Assessor:** GitHub Copilot (Security Auditor)
 **Overall Risk Rating:** **High** – immediate remediation required before public exposure.
 
 ---
@@ -133,27 +133,38 @@ Generate full CycloneDX SBOM and track in artifact repository for continuous mon
 ## Appendix – Evidence & References
 
 - **src/lib/logger.ts**
+
   ```ts
   const scrubbed = redactSensitiveFields(payload);
   safeWriter[level]({ ...context, payload: scrubbed });
   ```
+
 - **src/middleware/security.ts**
+
   ```ts
   `script-src 'self' 'strict-dynamic' https://accounts.google.com https://www.gstatic.com 'nonce-${nonce}'`,
   ```
+
 - **src/middleware/rate-limit.ts**
+
   ```ts
   const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
   ```
+
 - **tests/unit/chat-schema.test.ts**
+
   ```ts
   expect(() => chatRequestSchema.parse(buildPayload())).not.toThrow();
   ```
+
 - **tests/unit/rate-limit.test.ts**
+
   ```ts
   await limiter.consume(request, "127.0.0.1");
   ```
+
 - **tests/unit/security-headers.test.ts**
+
   ```ts
   expect(csp).not.toMatch(/unsafe-inline|unsafe-eval/);
   ```

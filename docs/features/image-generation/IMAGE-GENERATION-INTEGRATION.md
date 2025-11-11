@@ -8,8 +8,8 @@ This document outlines the implementation plan for integrating Gemini 2.5 Flash 
 
 ### gemini-2.5-flash-image ("Nano Banana")
 
-**Official Name**: Gemini 2.5 Flash with Image Generation  
-**Nickname**: Nano Banana 🍌  
+**Official Name**: Gemini 2.5 Flash with Image Generation
+**Nickname**: Nano Banana 🍌
 **Model ID**: `gemini-2.5-flash-image`
 
 ### Capabilities
@@ -110,7 +110,7 @@ export interface GeneratedImage {
 
 **File**: `src/lib/streaming/stream-utils.ts`
 
-Current behavior: Only extracts `text` from response parts  
+Current behavior: Only extracts `text` from response parts
 New behavior: Extract **both** `text` and `inline_data` parts
 
 ```typescript
@@ -261,8 +261,8 @@ Model: [generates final vibrant version]
 
 ## API Pricing
 
-**Image Generation Tokens**: 1290 tokens per image (flat rate, up to 1024x1024px)  
-**Cost**: $30 per 1 million tokens  
+**Image Generation Tokens**: 1290 tokens per image (flat rate, up to 1024x1024px)
+**Cost**: $30 per 1 million tokens
 **Per Image**: ~$0.04 per generated image
 
 Compare to:
@@ -309,5 +309,5 @@ table, dramatic side lighting, 4:3 aspect ratio
 
 ---
 
-**Status**: 🚧 In Progress  
+**Status**: 🚧 In Progress
 **Next Step**: Implement multi-part stream processing

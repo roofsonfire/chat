@@ -1,7 +1,7 @@
 # Git History Cleanup Guide - Removing Exposed Email Addresses
 
-**Date:** November 7, 2025  
-**Reason:** Remove hardcoded email addresses from git history before making repository public  
+**Date:** November 7, 2025
+**Reason:** Remove hardcoded email addresses from git history before making repository public
 **Status:** ⚠️ REQUIRES CAREFUL EXECUTION
 
 ---

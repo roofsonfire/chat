@@ -1,7 +1,7 @@
 # OAuth Allowlist Runtime Fix
 
-**Date**: November 9, 2025  
-**Issue**: OAuthCallback error preventing login  
+**Date**: November 9, 2025
+**Issue**: OAuthCallback error preventing login
 **Status**: ✅ FIXED & DEPLOYED
 
 ## Problem
@@ -116,13 +116,13 @@ This fix resolves the OAuth callback error that appeared after:
 
 **Always use functions for runtime configuration**, not static imports:
 
-❌ **Bad**: `import { config } from "./config"`  
+❌ **Bad**: `import { config } from "./config"`
 ✅ **Good**: `import { getConfig } from "./config"`
 
 Static imports are evaluated once at module load (build time), while function calls evaluate at runtime and can access environment variables properly.
 
 ---
 
-**Production Status**: ✅ LIVE  
-**All Systems**: ✅ OPERATIONAL  
+**Production Status**: ✅ LIVE
+**All Systems**: ✅ OPERATIONAL
 **OAuth Login**: ✅ WORKING

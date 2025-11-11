@@ -291,13 +291,13 @@ export async function POST(req: NextRequest) {
 
 ### View Metrics
 
-#### In Development:
+#### In Development
 
 - Open browser DevTools Console
 - Look for `[Performance]` and `[Event]` logs
 - Use Chrome DevTools Performance panel (Ctrl+Shift+I → Performance)
 
-#### In Production (with analytics):
+#### In Production (with analytics)
 
 - **Google Analytics**: Behavior → Site Speed → Overview
 - **Vercel Analytics**: Dashboard → Analytics tab
@@ -359,6 +359,7 @@ function reportMetric(metric) {
    - Slow server responses
 
 3. **Optimize Bundle**:
+
    ```bash
    npm run build
    # Check .next/build-manifest.json for bundle sizes

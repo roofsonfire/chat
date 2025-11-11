@@ -215,6 +215,7 @@ gh run view <CI_ID> --json conclusion
    - Catch issues before merging to main
 
 3. **Check CI status before expecting deployment**
+
    ```bash
    gh run list --branch=main --limit 5
    ```
@@ -260,6 +261,7 @@ Based on latest failure, fix these issues:
    ```
 
 3. **Type Check**
+
    ```bash
    npx tsc --noEmit
    # Fix all type errors
@@ -292,9 +294,9 @@ Then:
 
 ---
 
-**Status**: Workflows configured correctly ✅  
-**Action Required**: Fix CI test failures  
+**Status**: Workflows configured correctly ✅
+**Action Required**: Fix CI test failures
 **Safety**: Deployment protection working as expected ✅
 
-**Last Updated**: October 6, 2025  
+**Last Updated**: October 6, 2025
 **Commit**: e1159a9

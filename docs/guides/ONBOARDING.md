@@ -27,41 +27,57 @@ Use this interactive checklist to track your progress:
 ### Repository Setup (3 minutes)
 
 - [ ] **Clone repository**
+
   ```bash
   git clone https://github.com/roofsonfire/chat.git
   cd chat
   ```
+
 - [ ] **Install dependencies**
+
   ```bash
   npm install
   ```
+
   - **Expected**: ~2000 packages installed, ~30 seconds
   - **If fails**: Delete `node_modules/` and `package-lock.json`, try again
 
 ### Environment Configuration (10 minutes)
 
 - [ ] **Create environment file**
+
   ```bash
   cp .env.example .env.local
   ```
+
 - [ ] **Generate NextAuth secret**
+
   ```bash
   openssl rand -base64 32
   ```
+
   - Copy output to `NEXTAUTH_SECRET` in `.env.local`
+
 - [ ] **Set NextAuth URL**
+
   ```env
   NEXTAUTH_URL=http://localhost:3000
   ```
+
 - [ ] **Set authorized user email**
+
   ```env
   AUTH_USER_EMAIL=your-email@example.com
   ```
+
   - Use the email you'll sign in with (must be in allowlist)
+
 - [ ] **Generate password hash**
+
   ```bash
   npm run hash-password
   ```
+
   - Enter your password when prompted
   - Copy hash to `AUTH_USER_PASSWORD_HASH` in `.env.local`
 
@@ -72,36 +88,43 @@ Use this interactive checklist to track your progress:
   - Create new project or select existing
   - Note project ID (e.g., `my-chat-project-123`)
 - [ ] **Enable Vertex AI API**
+
   ```bash
   gcloud services enable aiplatform.googleapis.com
   ```
+
   - Or enable in Cloud Console: APIs & Services → Enable APIs
+
 - [ ] **Set up authentication** (choose one):
-  
+
   **Option A - Application Default Credentials (recommended for dev):**
+
   ```bash
   gcloud auth application-default login
   ```
-  
+
   **Option B - Service Account:**
+
   ```bash
   # Create service account
   gcloud iam service-accounts create chat-dev \
     --display-name="Chat Development"
-  
+
   # Grant Vertex AI User role
   gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --member="serviceAccount:chat-dev@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/aiplatform.user"
-  
+
   # Create key
   gcloud iam service-accounts keys create ~/chat-key.json \
     --iam-account=chat-dev@YOUR_PROJECT_ID.iam.gserviceaccount.com
-  
+
   # Set environment variable
   export GOOGLE_APPLICATION_CREDENTIALS=~/chat-key.json
   ```
+
 - [ ] **Configure environment variables**
+
   ```env
   GOOGLE_PROJECT_ID=your-project-id
   GOOGLE_LOCATION=us-central1
@@ -118,11 +141,14 @@ Only needed if using Google OAuth (production feature):
   - Application type: Web application
   - Authorized redirect URIs: `http://localhost:3000/api/auth/callback/google`
 - [ ] **Add credentials to environment**
+
   ```env
   GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
   GOOGLE_CLIENT_SECRET=your-client-secret
   ```
+
 - [ ] **Enable test credentials** (for local dev)
+
   ```env
   ENABLE_TEST_CREDENTIALS=true
   ```
@@ -130,32 +156,41 @@ Only needed if using Google OAuth (production feature):
 ### Verification (4 minutes)
 
 - [ ] **Run development server**
+
   ```bash
   npm run dev
   ```
+
   - **Expected**: Server starts on http://localhost:3000
   - **Expected output**:
+
     ```text
     ▲ Next.js 15.0.4
     - Local:        http://localhost:3000
     - Environments: .env.local
-    
+
     ✓ Starting...
     ✓ Ready in 2.1s
     ```
+
 - [ ] **Test in browser**
   - Open http://localhost:3000
   - Should see login page or chat interface
 - [ ] **Run linters**
+
   ```bash
   npm run lint
   npm run type-check
   ```
+
   - **Expected**: No errors (warnings are OK)
+
 - [ ] **Run tests**
+
   ```bash
   npm run test
   ```
+
   - **Expected**: All tests pass
 
 ### Final Checks (2 minutes)
@@ -165,10 +200,13 @@ Only needed if using Google OAuth (production feature):
   - Should receive AI response within 5 seconds
   - Check browser console for errors (F12)
 - [ ] **Check environment validation**
+
   ```bash
   npm run validate-env
   ```
+
   - If this script doesn't exist, all required vars are validated at runtime
+
 - [ ] **Review documentation**
   - Read: [DEVELOPMENT.md](../DEVELOPMENT.md)
   - Skim: [PROJECT-NAVIGATION.md](../PROJECT-NAVIGATION.md)
@@ -189,6 +227,7 @@ Now that you're set up:
    - Test that change appears in browser
 
 3. **Run a full dev cycle**
+
    ```bash
    # Make changes to code
    npm run lint        # Check code style
@@ -207,11 +246,13 @@ Now that you're set up:
 ### Issue: "Authentication failed" when starting dev server
 
 **Symptoms:**
+
 ```
 Error: Could not load the default credentials
 ```
 
 **Solution:**
+
 ```bash
 # Re-authenticate with Google Cloud
 gcloud auth application-default login
@@ -225,11 +266,13 @@ echo $GOOGLE_APPLICATION_CREDENTIALS
 ### Issue: npm install fails with ERESOLVE
 
 **Symptoms:**
+
 ```
 npm ERR! ERESOLVE unable to resolve dependency tree
 ```
 
 **Solution:**
+
 ```bash
 # Delete existing files
 rm -rf node_modules package-lock.json
@@ -246,11 +289,13 @@ npm install
 ### Issue: Port 3000 already in use
 
 **Symptoms:**
+
 ```
 Error: listen EADDRINUSE: address already in use :::3000
 ```
 
 **Solution:**
+
 ```bash
 # Find process using port 3000
 lsof -i :3000  # macOS/Linux
@@ -269,12 +314,14 @@ PORT=3001 npm run dev
 ### Issue: "Invalid environment variables" error
 
 **Symptoms:**
+
 ```
 ❌ Environment validation failed:
   - NEXTAUTH_SECRET: String must contain at least 32 character(s)
 ```
 
 **Solution:**
+
 ```bash
 # Regenerate secret
 openssl rand -base64 32
@@ -288,11 +335,13 @@ openssl rand -base64 32
 ### Issue: Vertex AI quota exceeded
 
 **Symptoms:**
+
 ```
 Error 429: Quota exceeded for quota metric 'Gemini API requests'
 ```
 
 **Solution:**
+
 - Wait a few minutes (rate limit resets)
 - Request quota increase: [console.cloud.google.com/iam-admin/quotas](https://console.cloud.google.com/iam-admin/quotas)
 - Use different model (e.g., `gemini-1.5-flash-002` instead of `gemini-1.5-pro-002`)
@@ -302,10 +351,12 @@ Error 429: Quota exceeded for quota metric 'Gemini API requests'
 ### Issue: Hot reload not working
 
 **Symptoms:**
+
 - Make code changes but browser doesn't update
 - Have to manually refresh
 
 **Solution:**
+
 ```bash
 # Clear Next.js cache
 rm -rf .next
@@ -323,10 +374,12 @@ sudo sysctl -p
 ### Issue: TypeScript errors in editor but code runs
 
 **Symptoms:**
+
 - Red squiggly lines in VS Code
 - Code compiles and runs fine
 
 **Solution:**
+
 ```bash
 # Restart TypeScript server in VS Code
 # Cmd/Ctrl + Shift + P → "TypeScript: Restart TS Server"
@@ -340,11 +393,13 @@ npm run type-check
 ### Issue: "Module not found" after installing package
 
 **Symptoms:**
+
 ```
 Error: Cannot find module '@new/package'
 ```
 
 **Solution:**
+
 ```bash
 # Restart dev server
 # Ctrl+C, then npm run dev
@@ -361,12 +416,14 @@ npm install @new/package
 ### Issue: Pre-commit hooks fail
 
 **Symptoms:**
+
 ```
 ✖ eslint --fix [FAILED]
 ✖ lint-staged failed
 ```
 
 **Solution:**
+
 ```bash
 # Run linters manually to see details
 npm run lint
@@ -385,17 +442,21 @@ git commit --no-verify -m "message"
 ### Issue: Can't sign in with Google OAuth
 
 **Symptoms:**
+
 - Redirect to Google, then error page
 - "Error: Configuration error"
 
 **Solution:**
+
 1. Verify redirect URI matches exactly: `http://localhost:3000/api/auth/callback/google`
 2. Check OAuth credentials in `.env.local`
 3. Ensure email is in allowlist (check `src/lib/auth/config.ts`)
 4. Use test credentials instead:
+
    ```
    ENABLE_TEST_CREDENTIALS=true
    ```
+
    Then sign in with email/password
 
 ---
@@ -407,7 +468,7 @@ Create this script to validate your setup:
 **File:** `scripts/validate-setup.sh`
 
 ```bash
-#!/bin/bash
+# !/bin/bash
 
 echo "🔍 Validating development environment..."
 echo ""
@@ -466,7 +527,7 @@ fi
 echo -n "Checking environment file... "
 if [ -f ".env.local" ]; then
     echo -e "${GREEN}✓${NC} .env.local exists"
-    
+
     # Check required variables
     REQUIRED_VARS=(
         "NEXTAUTH_SECRET"
@@ -477,7 +538,7 @@ if [ -f ".env.local" ]; then
         "GOOGLE_LOCATION"
         "GOOGLE_VERTEX_AI_MODEL_ID"
     )
-    
+
     for VAR in "${REQUIRED_VARS[@]}"; do
         echo -n "  - $VAR... "
         if grep -q "^$VAR=" .env.local && ! grep -q "^$VAR=$" .env.local; then
@@ -541,34 +602,38 @@ chmod +x scripts/validate-setup.sh
 
 Based on typical developer experience:
 
-| Task | First Time | Experienced Developer |
-|------|------------|----------------------|
-| Prerequisites | 5-10 min | 0 min (already installed) |
-| Repository setup | 3-5 min | 1-2 min |
-| Environment config | 10-15 min | 5 min |
-| Google Cloud setup | 10-20 min | 5 min |
-| OAuth setup (optional) | 5-10 min | 3 min |
-| Verification | 5 min | 2 min |
-| **Total** | **38-65 min** | **16-19 min** |
+| Task                   | First Time    | Experienced Developer     |
+| ---------------------- | ------------- | ------------------------- |
+| Prerequisites          | 5-10 min      | 0 min (already installed) |
+| Repository setup       | 3-5 min       | 1-2 min                   |
+| Environment config     | 10-15 min     | 5 min                     |
+| Google Cloud setup     | 10-20 min     | 5 min                     |
+| OAuth setup (optional) | 5-10 min      | 3 min                     |
+| Verification           | 5 min         | 2 min                     |
+| **Total**              | **38-65 min** | **16-19 min**             |
 
 ## 📖 Additional Resources
 
 ### Documentation
+
 - [Development Guide](../DEVELOPMENT.md) - Comprehensive development workflows
 - [API Reference](../API.md) - All API endpoints and contracts
 - [Project Navigation](../PROJECT-NAVIGATION.md) - Finding your way around the codebase
 - [Editor Setup](../EDITOR-SETUP.md) - VS Code and Zed configuration
 
 ### Architecture
+
 - [Architecture Diagrams](ARCHITECTURE-DIAGRAMS.md) - Visual system overview
 - [Architecture Decisions](../adr/README.md) - ADRs explaining key choices
 - [Code Patterns](.github/patterns/) - Reusable code patterns
 
 ### Deployment
+
 - [Deployment Guide](../deployment/DEPLOY.md) - Deploying to Cloud Run
 - [CI/CD Pipeline](../deployment/CI-CD.md) - Automated deployment workflows
 
 ### Community
+
 - [Contributing Guide](../CONTRIBUTING.md) - How to contribute
 - [Code of Conduct](../CODE_OF_CONDUCT.md) - Community standards
 - [Project Status](../PROJECT-STATUS.md) - Current release state
@@ -593,5 +658,5 @@ You're successfully onboarded when you can:
 
 **Questions or issues?** Open a GitHub issue or check existing documentation.
 
-**Last updated:** November 2025  
+**Last updated:** November 2025
 **Maintained by:** Core Development Team

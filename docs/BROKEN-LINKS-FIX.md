@@ -1,7 +1,7 @@
 # Broken Links Fix Plan
 
-**Date:** November 7, 2025  
-**Status:** In Progress  
+**Date:** November 7, 2025
+**Status:** In Progress
 **Issue:** Documentation Quality Checks workflow failing due to broken links
 
 ---

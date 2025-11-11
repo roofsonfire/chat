@@ -67,14 +67,14 @@ Pre-configured settings in `.vscode/settings.json`:
 
 Pre-configured launch configurations in `.vscode/launch.json`:
 
-#### Available Debug Configurations:
+#### Available Debug Configurations
 
 1. **🚀 Debug Next.js (Dev Server)** - Full server debugging
 2. **🌐 Debug Next.js (Chrome)** - Client-side debugging
 3. **🔗 Attach to Next.js** - Attach to running process
 4. **🧪 Debug Unit Tests (Vitest)** - Debug specific tests
 
-#### Quick Debug Actions:
+#### Quick Debug Actions
 
 ```bash
 # Start debugging session
@@ -398,6 +398,7 @@ cd scripts/deployment
    ```
 
 3. **File Watching**:
+
    ```json
    {
      "files.watcherExclude": {

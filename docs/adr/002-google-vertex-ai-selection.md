@@ -1,7 +1,7 @@
 # 002. Select Google Vertex AI for AI Capabilities
 
-**Status:** Accepted  
-**Date:** 2024-10-20  
+**Status:** Accepted
+**Date:** 2024-10-20
 **Deciders:** Core Development Team
 
 ## Context

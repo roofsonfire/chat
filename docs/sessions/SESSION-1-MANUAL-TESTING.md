@@ -1,16 +1,16 @@
 # Session 1 Manual Testing Guide
 
-**Finding #1 Cookie Security Implementation**  
-**Date:** November 8, 2025  
-**Tester:** Developer  
+**Finding #1 Cookie Security Implementation**
+**Date:** November 8, 2025
+**Tester:** Developer
 **Duration:** 30-45 minutes
 
 ---
 
 ## Prerequisites
 
-✅ Code committed: `7a9c8cb`  
-✅ Unit tests passing: 22/22  
+✅ Code committed: `7a9c8cb`
+✅ Unit tests passing: 22/22
 ✅ Branch: `security-remediation`
 
 ---
@@ -23,7 +23,7 @@
 npm run dev
 ```
 
-Wait for: `✓ Ready in Xms`  
+Wait for: `✓ Ready in Xms`
 URL: http://localhost:3000
 
 ### 2. Open Browser DevTools
@@ -50,10 +50,10 @@ URL: http://localhost:3000
 2. Check DevTools → Cookies
 3. Verify no `next-auth.*` cookies present
 
-**Expected Result:**  
+**Expected Result:**
 ❌ No cookies (clean state)
 
-**Actual Result:**  
+**Actual Result:**
 [ ] Pass [ ] Fail
 
 ---
@@ -94,7 +94,7 @@ For **each cookie**, verify these attributes:
 - [ ] NO `__Secure-` prefix (secure disabled in dev)
 - [ ] NO `__Host-` prefix on CSRF (secure disabled in dev)
 
-**Actual Result:**  
+**Actual Result:**
 [ ] Pass [ ] Fail
 
 **Notes:**
@@ -113,13 +113,13 @@ For **each cookie**, verify these attributes:
 document.cookie;
 ```
 
-**Expected Result:**  
+**Expected Result:**
 Empty string `""` or cookies WITHOUT `next-auth.*` tokens
 
 **Why:** httpOnly cookies cannot be accessed by JavaScript, preventing XSS attacks.
 
-**Actual Result:**  
-[ ] Pass - Cannot read next-auth cookies  
+**Actual Result:**
+[ ] Pass - Cannot read next-auth cookies
 [ ] Fail - Can read next-auth cookies
 
 **Console Output:**
@@ -138,10 +138,10 @@ Empty string `""` or cookies WITHOUT `next-auth.*` tokens
 2. Confirm sign out
 3. Check DevTools → Cookies
 
-**Expected Result:**  
+**Expected Result:**
 ❌ All `next-auth.*` cookies deleted
 
-**Actual Result:**  
+**Actual Result:**
 [ ] Pass [ ] Fail
 
 ---
@@ -192,7 +192,7 @@ docker run -p 3000:3000 --env-file .env.local \
 - Domain = empty (set by browser)
 - Path = /
 
-**Actual Result:**  
+**Actual Result:**
 [ ] Pass [ ] Fail [ ] Skipped
 
 ---
@@ -234,8 +234,8 @@ After testing, verify:
 
 ## Sign-off
 
-**Tested By:** \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  
-**Date:** \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  
+**Tested By:** \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+**Date:** \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 **Status:** [ ] APPROVED [ ] NEEDS WORK
 
 ---

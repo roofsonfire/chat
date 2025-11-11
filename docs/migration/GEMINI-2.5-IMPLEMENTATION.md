@@ -195,7 +195,7 @@ Users can now:
 
 ## Troubleshooting
 
-### If a model returns 404:
+### If a model returns 404
 
 1. **Check Model Garden**:
    - Visit: https://console.cloud.google.com/vertex-ai/publishers/google/model-garden
@@ -217,7 +217,7 @@ node --env-file=.env.local test-available-models.mjs
 gcloud services list --enabled | grep aiplatform
 ```
 
-### If you need additional models:
+### If you need additional models
 
 1. Check Model Garden for newly released models
 2. Run the discovery script to test
@@ -226,7 +226,7 @@ gcloud services list --enabled | grep aiplatform
 
 ## Benefits of Gemini 2.5
 
-### Improvements over Gemini 2.0/1.5:
+### Improvements over Gemini 2.0/1.5
 
 - 🚀 **Better performance**: Faster response times
 - 🧠 **Enhanced reasoning**: Improved complex task handling
@@ -302,7 +302,7 @@ await chatService.stream(messages, "gemini-2.5-pro");
 
 ---
 
-**Date**: October 5, 2025  
-**Models**: Gemini 2.5 Flash (default), Gemini 2.5 Pro, Gemini 2.0 Flash Exp  
-**Project**: norse-breaker-474323-n8  
+**Date**: October 5, 2025
+**Models**: Gemini 2.5 Flash (default), Gemini 2.5 Pro, Gemini 2.0 Flash Exp
+**Project**: norse-breaker-474323-n8
 **Region**: us-central1

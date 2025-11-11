@@ -2,7 +2,7 @@
 
 ## ✅ Verified Working Model
 
-**Model**: `gemini-2.5-flash-image`  
+**Model**: `gemini-2.5-flash-image`
 **Status**: Production ready in `us-central1`
 
 ## 🚀 Quick Test (30 seconds)
@@ -23,7 +23,7 @@ Use your credentials from `.env.local`
 
 ### 4. Select the model
 
-Click the model selector dropdown and choose:  
+Click the model selector dropdown and choose:
 **"Gemini 2.5 Flash (Image Gen) 🖼️"**
 
 ### 5. Generate an image
@@ -154,5 +154,5 @@ For detailed architecture, type definitions, and advanced usage:
 
 ---
 
-**Ready to generate images?** 🎨  
+**Ready to generate images?** 🎨
 Run `npm run dev` and start creating!

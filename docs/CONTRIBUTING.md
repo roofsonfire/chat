@@ -56,44 +56,45 @@ Ready to contribute code? Follow these steps:
 
 To get started with local development, follow these steps:
 
-1.  **Clone the repository:**
+1. **Clone the repository:**
 
-    ```bash
-    git clone https://github.com/roofsonfire/chat.git
-    cd chat
-    ```
+   ```bash
+   git clone https://github.com/roofsonfire/chat.git
+   cd chat
+   ```
 
-2.  **Install dependencies:**
+2. **Install dependencies:**
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
-3.  **Set up environment variables:**
+3. **Set up environment variables:**
 
-    ```bash
-    cp .env.example .env.local
-    # Edit .env.local with your configuration
-    # See docs/DEVELOPMENT.md for detailed setup instructions
-    ```
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   # See docs/DEVELOPMENT.md for detailed setup instructions
+   ```
 
-4.  **Generate password hash (for authentication):**
+4. **Generate password hash (for authentication):**
 
-    ```bash
-    npm run hash-password
-    ```
+   ```bash
+   npm run hash-password
+   ```
 
-5.  **Run the development server:**
+5. **Run the development server:**
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
-6.  **Verify setup with tests:**
-    ```bash
-    npm run test          # Unit tests
-    npm run lint          # Code quality checks
-    ```
+6. **Verify setup with tests:**
+
+   ```bash
+   npm run test          # Unit tests
+   npm run lint          # Code quality checks
+   ```
 
 ## 📏 Development Standards
 

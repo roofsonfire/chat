@@ -1,8 +1,8 @@
 # Logging Runbook Execution – November 7, 2025
 
-**Project:** `norse-breaker-474323-n8`  
-**Application:** `chat-production` (Cloud Run)  
-**Engineer:** GitHub Copilot  
+**Project:** `norse-breaker-474323-n8`
+**Application:** `chat-production` (Cloud Run)
+**Engineer:** GitHub Copilot
 **Date:** 2025-11-07
 
 ## 1. Retention Bucket Verification

@@ -457,5 +457,5 @@ sequenceDiagram
 
 ---
 
-**Last Updated:** November 2025  
+**Last Updated:** November 2025
 **Maintained by:** Core Development Team

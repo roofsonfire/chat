@@ -1,8 +1,8 @@
 # 🚀 Production Deployment Quick Reference
 
-**Target**: https://chat.daza.ar  
-**Service**: chat-production  
-**Region**: us-central1  
+**Target**: https://chat.daza.ar
+**Service**: chat-production
+**Region**: us-central1
 **Project**: norse-breaker-474323-n8
 
 ---

@@ -2,9 +2,9 @@
 
 ## 🌐 Project Information
 
-**Repository**: [roofsonfire/chat](https://github.com/roofsonfire/chat)  
-**Live Demo**: [https://chat.daza.ar](https://chat.daza.ar)  
-**Platform**: Google Cloud Run  
+**Repository**: [roofsonfire/chat](https://github.com/roofsonfire/chat)
+**Live Demo**: [https://chat.daza.ar](https://chat.daza.ar)
+**Platform**: Google Cloud Run
 **Target URL**: https://chat.daza.ar
 
 ## 📋 Prerequisites

@@ -1,7 +1,7 @@
 # Logging Retention & Alerting Runbook
 
-**Last Updated:** November 7, 2025  
-**Owners:** Platform / Security Engineering  
+**Last Updated:** November 7, 2025
+**Owners:** Platform / Security Engineering
 **Scope:** Cloud Run production service `chat-production`
 
 ---

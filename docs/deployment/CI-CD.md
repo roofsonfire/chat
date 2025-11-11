@@ -31,13 +31,13 @@ The CI pipeline runs on every push and pull request to `main` and includes:
 
 Configure these in GitHub repository settings (`Settings > Secrets and variables > Actions`):
 
-### Optional:
+### Optional
 
 - `CODECOV_TOKEN`: For code coverage reporting
 
 ## Local Development
 
-### Run all checks locally:
+### Run all checks locally
 
 ```bash
 # Lint and format check

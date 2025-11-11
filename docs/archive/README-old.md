@@ -222,6 +222,7 @@ git push origin feature/my-feature
    ```
 
 4. **Configure DNS** (for custom domain):
+
    ```
    Type: CNAME
    Name: chat
@@ -404,7 +405,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 

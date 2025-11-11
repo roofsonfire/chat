@@ -76,5 +76,5 @@ _Figure 1: Main chat interface with streaming responses_
 
 ---
 
-**Note**: Screenshots will be captured in a future session when the application is running.  
+**Note**: Screenshots will be captured in a future session when the application is running.
 For now, diagrams in [ARCHITECTURE-DIAGRAMS.md](ARCHITECTURE-DIAGRAMS.md) provide visual documentation.

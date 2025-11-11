@@ -96,11 +96,11 @@ env:
 
 ## Benefits
 
-✅ **Zero External Dependencies** - No Redis service needed  
-✅ **Simplified Setup** - Removes 2 environment variables  
-✅ **Lower Costs** - No paid service required  
-✅ **Faster Development** - Works immediately without configuration  
-✅ **Same Security** - Still protects against abuse with IP-based rate limiting  
+✅ **Zero External Dependencies** - No Redis service needed
+✅ **Simplified Setup** - Removes 2 environment variables
+✅ **Lower Costs** - No paid service required
+✅ **Faster Development** - Works immediately without configuration
+✅ **Same Security** - Still protects against abuse with IP-based rate limiting
 ✅ **Production Ready** - Battle-tested library (1.2M weekly downloads)
 
 ## Trade-offs
@@ -200,6 +200,6 @@ When scaling to production with multiple servers, the upgrade path is clear and 
 
 ---
 
-**Migration completed:** October 5, 2025  
-**Library:** rate-limiter-flexible v8.0.1  
+**Migration completed:** October 5, 2025
+**Library:** rate-limiter-flexible v8.0.1
 **Status:** ✅ Production-ready for single-instance deployments

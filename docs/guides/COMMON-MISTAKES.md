@@ -586,5 +586,5 @@ Error message about port in use
 
 ---
 
-_Last Updated: November 11, 2025_  
+_Last Updated: November 11, 2025_
 _Contributions: Add your mistakes here via PR to help future developers!_
