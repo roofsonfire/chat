@@ -219,6 +219,132 @@ fix(auth): handle expired JWT tokens
 docs(api): add OpenAPI schema
 ```
 
+### 📦 Versioning and Releases
+
+This project follows [Semantic Versioning](https://semver.org/) (SemVer) and uses automated changelog generation based on [Conventional Commits](https://www.conventionalcommits.org/).
+
+#### Version Format: MAJOR.MINOR.PATCH
+
+- **MAJOR** (1.0.0 → 2.0.0): Incompatible API changes or breaking changes
+- **MINOR** (1.0.0 → 1.1.0): New features added in a backward-compatible manner
+- **PATCH** (1.0.0 → 1.0.1): Backward-compatible bug fixes
+
+#### Commit Types and Version Bumps
+
+Your commit type determines which version number changes:
+
+| Commit Type                                       | Version Impact | Example                                       |
+| ------------------------------------------------- | -------------- | --------------------------------------------- |
+| `feat:`                                           | MINOR bump     | `feat(chat): add voice input` → 0.1.0 → 0.2.0 |
+| `fix:`                                            | PATCH bump     | `fix(auth): resolve timeout` → 0.1.0 → 0.1.1  |
+| `BREAKING CHANGE:`                                | MAJOR bump     | `feat!: redesign API` → 0.1.0 → 1.0.0         |
+| `docs:`, `style:`, `refactor:`, `test:`, `chore:` | No bump        | No version change                             |
+
+#### Breaking Changes
+
+Indicate breaking changes in two ways:
+
+**Method 1: Commit footer**
+
+```bash
+feat(api): redesign chat endpoint
+
+BREAKING CHANGE: The /api/chat endpoint now requires authentication
+and uses a different request format. Clients must update to the new
+format documented in docs/API.md.
+```
+
+**Method 2: ! in commit type**
+
+```bash
+feat(api)!: redesign chat endpoint for improved performance
+```
+
+#### Release Workflow
+
+**For Maintainers:**
+
+1. **Ensure all changes are merged to `main`**
+
+   ```bash
+   git checkout main
+   git pull origin main
+   ```
+
+2. **Generate new version and changelog**
+
+   ```bash
+   # Automatic version bump based on commits:
+   npm run version
+
+   # Or specify version explicitly:
+   npm run release -- --release-as patch   # 0.1.0 → 0.1.1
+   npm run release -- --release-as minor   # 0.1.0 → 0.2.0
+   npm run release -- --release-as major   # 0.1.0 → 1.0.0
+   ```
+
+3. **Review the updated CHANGELOG.md**
+   - Verify all commits are categorized correctly
+   - Edit manually if needed (add/remove entries)
+   - Ensure breaking changes are clearly documented
+
+4. **Commit and push the release**
+
+   ```bash
+   # Commit is created automatically by standard-version
+   git push --follow-tags origin main
+   ```
+
+5. **GitHub Actions will deploy automatically**
+   - CI/CD pipeline triggers on new tag
+   - Runs tests, builds Docker image
+   - Deploys to Google Cloud Run (production)
+
+#### Dry Run (Test Before Release)
+
+Always test the release process first:
+
+```bash
+# Preview what will happen without making changes:
+npm run release -- --dry-run --release-as patch
+
+# Review output:
+# ✔ bumping version in package.json from 0.1.0 to 0.1.1
+# ✔ outputting changes to CHANGELOG.md
+# ✔ committing package.json and CHANGELOG.md
+# ✔ tagging release v0.1.1
+```
+
+#### Manual Changelog Updates
+
+You can also manually update `CHANGELOG.md`:
+
+```bash
+# Regenerate from all commits:
+npm run changelog
+
+# Then review and commit:
+git add CHANGELOG.md
+git commit -m "docs: update changelog"
+```
+
+#### Pre-release Versions
+
+For beta/alpha releases:
+
+```bash
+# Create pre-release version
+npm run release -- --prerelease alpha   # 0.1.0 → 0.1.1-alpha.0
+npm run release -- --prerelease beta    # 0.1.0 → 0.1.1-beta.0
+
+# Promote pre-release to stable
+npm run release -- --release-as patch   # 0.1.1-beta.0 → 0.1.1
+```
+
+#### Version History
+
+See [CHANGELOG.md](../CHANGELOG.md) for complete version history and release notes.
+
 ### 🧪 Testing Requirements
 
 #### Unit Tests (Required for new features)
