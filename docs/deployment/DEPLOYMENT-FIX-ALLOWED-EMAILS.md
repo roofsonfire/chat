@@ -8,7 +8,7 @@
 
 After merging PR #88 (which added the `ALLOWED_EMAILS` environment variable to the CI build job), the production deployment to Google Cloud Run was failing with this error:
 
-```
+```text
 Error: Environment variable validation failed:
   - ALLOWED_EMAILS: Invalid input: expected string, received undefined
 ```

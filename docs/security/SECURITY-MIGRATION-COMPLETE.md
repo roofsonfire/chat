@@ -107,7 +107,7 @@ gcloud run services update chat-staging \
 
 In GitHub Settings → Secrets:
 
-```
+```text
 Name: TEST_ALLOWED_EMAILS
 Value: test@example.com,user@example.com
 ```
