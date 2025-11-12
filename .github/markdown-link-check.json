@@ -39,6 +39,38 @@
       "pattern": "https://console\\.cloud\\.google\\.com/vertex-ai/"
     },
     {
+      "comment": "Gemini CLI documentation pages that return 404",
+      "pattern": "https://github\\.com/google/generative-ai-docs/tree/main/demos/gemini-cli"
+    },
+    {
+      "comment": "Gemini API CLI docs that return 404",
+      "pattern": "https://ai\\.google\\.dev/gemini-api/docs/cli"
+    },
+    {
+      "comment": "React discussions page that returns 404",
+      "pattern": "https://github\\.com/facebook/react/discussions"
+    },
+    {
+      "comment": "Localhost URLs used in documentation examples",
+      "pattern": "^http://127\\.0\\.0\\.1:"
+    },
+    {
+      "comment": "Mailto links (package version references incorrectly formatted)",
+      "pattern": "^mailto:"
+    },
+    {
+      "comment": "Relative docs/ paths in archive that don't resolve correctly",
+      "pattern": "^docs/(PROJECT-NAVIGATION|USER-MANAGEMENT|CONTRIBUTING-DOCS|PROJECT-STATUS|OAUTH-SETUP|features/MODEL-SELECTION)\\.md$"
+    },
+    {
+      "comment": "LICENSE file outside docs",
+      "pattern": "\\.\\./(LICENSE|CHANGELOG\\.md)$"
+    },
+    {
+      "comment": "Pull request template",
+      "pattern": "\\.github/PULL_REQUEST_TEMPLATE\\.md$"
+    },
+    {
       "comment": "Ignore links to .github/patterns/ - these exist but are outside docs/",
       "pattern": "^\\.github/patterns/"
     },
