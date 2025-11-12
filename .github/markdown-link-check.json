@@ -33,6 +33,38 @@
     },
     {
       "pattern": "https://ai\\.google\\.dev/gemini-api/docs/image-generation"
+    },
+    {
+      "comment": "Google Cloud Console causes header overflow errors in link checker",
+      "pattern": "https://console\\.cloud\\.google\\.com/vertex-ai/"
+    },
+    {
+      "comment": "Ignore links to .github/patterns/ - these exist but are outside docs/",
+      "pattern": "^\\.github/patterns/"
+    },
+    {
+      "comment": "Ignore links to files outside docs/ directory",
+      "pattern": "^\\.\\./(tests|src|scripts|.github)/"
+    },
+    {
+      "comment": "Ignore session summary files that were moved",
+      "pattern": "SESSION-[0-9]+-SUMMARY\\.md$"
+    },
+    {
+      "comment": "Ignore security files that were moved to security/ subdirectory",
+      "pattern": "SECURITY-(ASSESSMENT|REMEDIATION|FINDINGS).*\\.md$"
+    },
+    {
+      "comment": "Ignore deployment files in wrong path",
+      "pattern": "DEPLOYMENT-TRANSITION-PLAN\\.md$"
+    },
+    {
+      "comment": "Ignore archive migration files",
+      "pattern": "migration/(nextjs|tailwind)-.*\\.md$"
+    },
+    {
+      "comment": "Ignore non-existent style/writing guides",
+      "pattern": "(STYLE|WRITING)-GUIDE\\.md$"
     }
   ],
   "replacementPatterns": [],
