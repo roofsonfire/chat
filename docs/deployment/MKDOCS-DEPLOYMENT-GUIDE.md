@@ -106,19 +106,20 @@ To use a custom domain:
 
 1. Add `CNAME` file to `docs/` directory:
 
-   ```
-   docs.yourdo main.com
+   ```text
+   docs.yourdomain.com
    ```
 
 2. Configure DNS:
 
-   ```
+   ```text
    Type: CNAME
    Name: docs
    Value: roofsonfire.github.io
    ```
 
 3. Update `mkdocs.yml`:
+
    ```yaml
    site_url: https://docs.yourdomain.com/
    ```

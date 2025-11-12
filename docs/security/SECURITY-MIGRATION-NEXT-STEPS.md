@@ -123,7 +123,7 @@ echo 'ALLOWED_EMAILS=REDACTED@example.com,REDACTED@example.com,REDACTED@example.
 
 In GitHub repository settings → Secrets:
 
-```
+```text
 Name: TEST_ALLOWED_EMAILS
 Value: test@example.com,user@example.com
 ```
@@ -167,7 +167,7 @@ git reset --hard origin/develop
 Reason: Security improvement - moved allowlist to environment variables
 See: adr/006-environment-based-allowlist.md
 
-````
+````text
 
 ---
 
@@ -257,7 +257,7 @@ git push --force origin develop-restored:develop
 6. Update deployments: **10 minutes** (deployment time)
 7. Notify team: **5 minutes**
 
-**Total: ~35-45 minutes**
+### Total: ~35-45 minutes
 
 ---
 
