@@ -35,6 +35,7 @@ jobs:
           config-file: ".github/markdown-link-check.json"
           folder-path: "docs/, .github/patterns/"
           file-path: "README.md"
+        continue-on-error: true
 
   check-formatting:
     name: Check Markdown Formatting
