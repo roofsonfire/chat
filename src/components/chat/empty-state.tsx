@@ -1,7 +1,6 @@
 import { MessageSquare, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_PROMPTS } from "@/lib/constants/chat";
 
 /**
  * EmptyState Component
@@ -11,15 +10,14 @@ import { DEFAULT_PROMPTS } from "@/lib/constants/chat";
  *
  * @component
  * @param {Object} props - Component props
- * @param {(prompt: string) => void} [props.onStartChat] - Optional callback with selected prompt
- * @param {readonly string[]} [props.suggestedPrompts] - Custom prompts to display (defaults to DEFAULT_PROMPTS)
+ * @param {() => void} [props.onStartChat] - Optional callback when user wants to start chatting
  * @returns {JSX.Element} Empty state UI for chat
  *
  * @example
  * ```tsx
  * // Show when no messages exist
  * {messages.length === 0 && (
- *   <EmptyState onStartChat={(prompt) => handlePrompt(prompt)} />
+ *   <EmptyState onStartChat={() => inputRef.current?.focus()} />
  * )}
  * ```
  *
@@ -30,24 +28,27 @@ import { DEFAULT_PROMPTS } from "@/lib/constants/chat";
  * - Clear call-to-action with suggested prompts
  */
 interface EmptyStateProps {
-  onStartChat?: (prompt: string) => void;
-  suggestedPrompts?: readonly string[];
+  onStartChat?: () => void;
 }
 
-export function EmptyState({
-  onStartChat,
-  suggestedPrompts = DEFAULT_PROMPTS,
-}: EmptyStateProps) {
+export function EmptyState({ onStartChat }: EmptyStateProps) {
+  const suggestedPrompts = [
+    "Explain quantum computing in simple terms",
+    "Write a creative story about a robot",
+    "Help me debug this TypeScript code",
+    "Suggest ideas for a mobile app",
+  ];
+
   return (
     <div className="flex h-full items-center justify-center p-[var(--spacing-4)]">
       <Card className="w-full max-w-2xl border-dashed">
         <CardContent className="flex flex-col items-center gap-[var(--spacing-6)] py-[var(--spacing-12)] text-center">
           {/* Icon */}
           <div className="relative">
-            <div className="bg-primary/10 rounded-full p-[var(--spacing-6)]">
-              <MessageSquare className="text-primary h-12 w-12" />
+            <div className="rounded-full bg-primary/10 p-[var(--spacing-6)]">
+              <MessageSquare className="h-12 w-12 text-primary" />
             </div>
-            <Sparkles className="text-accent absolute -top-1 -right-1 h-6 w-6 animate-pulse" />
+            <Sparkles className="absolute -right-1 -top-1 h-6 w-6 text-accent animate-pulse" />
           </div>
 
           {/* Heading */}
@@ -63,7 +64,7 @@ export function EmptyState({
 
           {/* Suggested prompts */}
           <div className="w-full space-y-[var(--spacing-3)]">
-            <p className="text-muted-foreground text-sm font-medium">
+            <p className="text-sm font-medium text-muted-foreground">
               Try asking:
             </p>
             <div className="grid gap-[var(--spacing-2)] sm:grid-cols-2">
@@ -71,8 +72,11 @@ export function EmptyState({
                 <Button
                   key={index}
                   variant="outline"
-                  className="h-auto justify-start px-[var(--spacing-4)] py-[var(--spacing-3)] text-left whitespace-normal"
-                  onClick={() => onStartChat?.(prompt)}
+                  className="justify-start text-left h-auto py-[var(--spacing-3)] px-[var(--spacing-4)] whitespace-normal"
+                  onClick={() => {
+                    // Could emit this prompt to parent component
+                    onStartChat?.();
+                  }}
                 >
                   <span className="text-sm">{prompt}</span>
                 </Button>
@@ -81,7 +85,7 @@ export function EmptyState({
           </div>
 
           {/* Additional info */}
-          <div className="bg-muted text-muted-foreground mt-[var(--spacing-4)] rounded-lg p-[var(--spacing-4)] text-sm">
+          <div className="mt-[var(--spacing-4)] rounded-lg bg-muted p-[var(--spacing-4)] text-sm text-muted-foreground">
             <p>
               💡 <strong>Tip:</strong> You can upload images along with your
               messages for visual analysis.

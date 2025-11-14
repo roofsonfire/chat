@@ -9,7 +9,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { motion } from "framer-motion";
-import { ANIMATION_PRESETS } from "@/lib/constants/animations";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -89,7 +88,14 @@ export function ChatMessage({ message }: ChatMessageProps) {
       role="article"
       aria-label={`${isUser ? "User" : "Assistant"} message`}
       data-testid={`message-${isUser ? "user" : "assistant"}`}
-      {...ANIMATION_PRESETS.chatMessage}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ 
+        type: "spring" as const,
+        stiffness: 260,
+        damping: 20,
+        duration: 0.4
+      }}
     >
       {!isUser && (
         <HoverCard>

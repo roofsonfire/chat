@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { ErrorState } from "./error-state";
+import { ErrorState, InlineError } from "./error-state";
 
 const meta: Meta<typeof ErrorState> = {
   title: "Chat/ErrorState",
@@ -18,7 +18,7 @@ type Story = StoryObj<typeof ErrorState>;
  */
 export const Default: Story = {
   render: () => (
-    <div className="bg-background h-[600px]">
+    <div className="h-[600px] bg-background">
       <ErrorState />
     </div>
   ),
@@ -29,7 +29,7 @@ export const Default: Story = {
  */
 export const CustomMessage: Story = {
   render: () => (
-    <div className="bg-background h-[600px]">
+    <div className="h-[600px] bg-background">
       <ErrorState
         title="Failed to send message"
         message="Could not connect to the AI service. Please check your connection."
@@ -43,7 +43,7 @@ export const CustomMessage: Story = {
  */
 export const WithRetry: Story = {
   render: () => (
-    <div className="bg-background h-[600px]">
+    <div className="h-[600px] bg-background">
       <ErrorState
         title="Connection timeout"
         message="The request timed out. Please try again."
@@ -58,7 +58,7 @@ export const WithRetry: Story = {
  */
 export const WithActions: Story = {
   render: () => (
-    <div className="bg-background h-[600px]">
+    <div className="h-[600px] bg-background">
       <ErrorState
         title="Something went wrong"
         message="An unexpected error occurred. You can try again or go back home."
@@ -74,7 +74,7 @@ export const WithActions: Story = {
  */
 export const WarningVariant: Story = {
   render: () => (
-    <div className="bg-background h-[600px]">
+    <div className="h-[600px] bg-background">
       <ErrorState
         variant="warning"
         title="Invalid input"
@@ -89,7 +89,7 @@ export const WarningVariant: Story = {
  */
 export const DarkMode: Story = {
   render: () => (
-    <div className="dark bg-background h-[600px]">
+    <div className="dark h-[600px] bg-background">
       <ErrorState
         title="Connection failed"
         message="Could not establish connection to the server."
@@ -100,4 +100,32 @@ export const DarkMode: Story = {
   parameters: {
     backgrounds: { default: "dark" },
   },
+};
+
+// Inline Error Stories
+const inlineMeta: Meta<typeof InlineError> = {
+  title: "Chat/InlineError",
+  component: InlineError,
+  parameters: {
+    layout: "padded",
+  },
+  tags: ["autodocs"],
+};
+
+export { inlineMeta as InlineErrorMeta };
+
+export const InlineErrorDefault: StoryObj<typeof InlineError> = {
+  render: () => (
+    <div className="max-w-md">
+      <InlineError message="This field is required" />
+    </div>
+  ),
+};
+
+export const InlineErrorLongMessage: StoryObj<typeof InlineError> = {
+  render: () => (
+    <div className="max-w-md">
+      <InlineError message="Your message is too long. Please keep it under 10,000 characters." />
+    </div>
+  ),
 };

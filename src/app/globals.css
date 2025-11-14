@@ -41,63 +41,84 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Design Token System - Tailwind Integration */
+  --color-success: var(--color-success-500);
+  --color-error: var(--color-error-500);
+  --color-warning: var(--color-warning-500);
+  --color-info: var(--color-info-500);
+
+  /* Spacing tokens for Tailwind */
+  --spacing-0: var(--spacing-0);
+  --spacing-1: var(--spacing-1);
+  --spacing-2: var(--spacing-2);
+  --spacing-3: var(--spacing-3);
+  --spacing-4: var(--spacing-4);
+  --spacing-5: var(--spacing-5);
+  --spacing-6: var(--spacing-6);
+  --spacing-8: var(--spacing-8);
+  --spacing-10: var(--spacing-10);
+  --spacing-12: var(--spacing-12);
+  --spacing-16: var(--spacing-16);
+  --spacing-20: var(--spacing-20);
+  --spacing-24: var(--spacing-24);
 }
 
 :root {
   /* ===================================
      BRAND THEME CUSTOMIZATION
      =================================== */
-
+  
   /* Border Radius - Softer, more modern feel */
   --radius: 0.75rem; /* Increased from 0.625rem for a softer look */
 
   /* Brand Colors - Light Mode */
   --background: oklch(0.99 0.002 270); /* Slight purple tint for warmth */
   --foreground: oklch(0.15 0.01 270); /* Deep purple-black for readability */
-
+  
   /* Primary - Vibrant Purple (Brand Identity) */
   --primary: var(--color-primary-600); /* Deep vibrant purple */
   --primary-foreground: oklch(0.99 0 0); /* Pure white text */
-
+  
   /* Secondary - Neutral Gray with purple hint */
   --secondary: oklch(0.95 0.005 270); /* Light gray with purple undertone */
   --secondary-foreground: var(--color-primary-700); /* Dark purple text */
-
+  
   /* Accent - Complementary Teal for CTAs */
   --accent: var(--color-accent-500); /* Teal/cyan accent */
   --accent-foreground: oklch(0.99 0 0); /* White text on accent */
-
+  
   /* Muted - Subtle backgrounds */
   --muted: oklch(0.96 0.003 270); /* Very light purple-gray */
   --muted-foreground: var(--color-secondary-700); /* Medium gray text */
-
+  
   /* Destructive - Error/Delete actions */
   --destructive: var(--color-error-500); /* Brand error red */
   --destructive-foreground: oklch(0.99 0 0); /* White text */
-
+  
   /* Card - Elevated surface */
   --card: oklch(1 0 0); /* Pure white for cards */
   --card-foreground: oklch(0.15 0.01 270); /* Deep purple-black */
-
+  
   /* Popover - Floating elements */
   --popover: oklch(1 0 0); /* Pure white */
   --popover-foreground: oklch(0.15 0.01 270); /* Deep purple-black */
-
+  
   /* Border & Input */
-  --border: oklch(0.9 0.005 270); /* Light purple-gray border */
-  --input: oklch(0.9 0.005 270); /* Consistent with border */
+  --border: oklch(0.90 0.005 270); /* Light purple-gray border */
+  --input: oklch(0.90 0.005 270); /* Consistent with border */
   --ring: var(--color-primary-500); /* Purple focus ring */
-
+  
   /* Chart Colors - Vibrant data visualization */
   --chart-1: var(--color-primary-500); /* Purple */
   --chart-2: var(--color-accent-500); /* Teal */
   --chart-3: var(--color-warning-500); /* Orange */
   --chart-4: var(--color-success-500); /* Green */
   --chart-5: var(--color-info-500); /* Blue */
-
+  
   /* Sidebar - App navigation */
   --sidebar: oklch(0.98 0.003 270); /* Very light purple background */
-  --sidebar-foreground: oklch(0.2 0.02 270); /* Dark purple text */
+  --sidebar-foreground: oklch(0.20 0.02 270); /* Dark purple text */
   --sidebar-primary: var(--color-primary-600); /* Purple for active items */
   --sidebar-primary-foreground: oklch(0.99 0 0); /* White text */
   --sidebar-accent: oklch(0.94 0.008 270); /* Slightly darker purple */
@@ -118,7 +139,7 @@
   --color-primary-500: oklch(0.45 0.025 270); /* Base */
   --color-primary-600: oklch(0.38 0.025 270);
   --color-primary-700: oklch(0.28 0.022 270);
-  --color-primary-800: oklch(0.2 0.02 270);
+  --color-primary-800: oklch(0.20 0.02 270);
   --color-primary-900: oklch(0.15 0.015 270);
 
   /* Color Palette - Secondary */
@@ -138,9 +159,9 @@
   --color-accent-100: oklch(0.95 0.04 150);
   --color-accent-200: oklch(0.88 0.06 150);
   --color-accent-300: oklch(0.75 0.08 150);
-  --color-accent-400: oklch(0.62 0.1 150);
+  --color-accent-400: oklch(0.62 0.10 150);
   --color-accent-500: oklch(0.52 0.12 150); /* Base */
-  --color-accent-600: oklch(0.42 0.1 150);
+  --color-accent-600: oklch(0.42 0.10 150);
   --color-accent-700: oklch(0.32 0.08 150);
   --color-accent-800: oklch(0.24 0.06 150);
   --color-accent-900: oklch(0.18 0.04 150);
@@ -148,10 +169,10 @@
   /* Semantic Colors - Success */
   --color-success-50: oklch(0.97 0.03 145);
   --color-success-100: oklch(0.93 0.06 145);
-  --color-success-200: oklch(0.85 0.1 145);
+  --color-success-200: oklch(0.85 0.10 145);
   --color-success-300: oklch(0.72 0.14 145);
-  --color-success-400: oklch(0.6 0.16 145);
-  --color-success-500: oklch(0.5 0.17 145); /* Base */
+  --color-success-400: oklch(0.60 0.16 145);
+  --color-success-500: oklch(0.50 0.17 145); /* Base */
   --color-success-600: oklch(0.42 0.15 145);
   --color-success-700: oklch(0.32 0.12 145);
   --color-success-800: oklch(0.24 0.09 145);
@@ -161,21 +182,21 @@
   --color-error-50: oklch(0.97 0.03 25);
   --color-error-100: oklch(0.93 0.08 25);
   --color-error-200: oklch(0.85 0.14 25);
-  --color-error-300: oklch(0.72 0.2 25);
+  --color-error-300: oklch(0.72 0.20 25);
   --color-error-400: oklch(0.62 0.24 25);
   --color-error-500: oklch(0.55 0.25 25); /* Base */
   --color-error-600: oklch(0.48 0.23 25);
-  --color-error-700: oklch(0.38 0.2 25);
+  --color-error-700: oklch(0.38 0.20 25);
   --color-error-800: oklch(0.28 0.16 25);
-  --color-error-900: oklch(0.2 0.12 25);
+  --color-error-900: oklch(0.20 0.12 25);
 
   /* Semantic Colors - Warning */
   --color-warning-50: oklch(0.98 0.03 80);
   --color-warning-100: oklch(0.95 0.08 80);
   --color-warning-200: oklch(0.88 0.14 80);
   --color-warning-300: oklch(0.78 0.18 80);
-  --color-warning-400: oklch(0.68 0.2 80);
-  --color-warning-500: oklch(0.6 0.21 80); /* Base */
+  --color-warning-400: oklch(0.68 0.20 80);
+  --color-warning-500: oklch(0.60 0.21 80); /* Base */
   --color-warning-600: oklch(0.52 0.19 80);
   --color-warning-700: oklch(0.42 0.16 80);
   --color-warning-800: oklch(0.32 0.12 80);
@@ -184,24 +205,24 @@
   /* Semantic Colors - Info */
   --color-info-50: oklch(0.97 0.02 240);
   --color-info-100: oklch(0.93 0.05 240);
-  --color-info-200: oklch(0.85 0.1 240);
+  --color-info-200: oklch(0.85 0.10 240);
   --color-info-300: oklch(0.72 0.14 240);
-  --color-info-400: oklch(0.6 0.16 240);
-  --color-info-500: oklch(0.5 0.17 240); /* Base */
+  --color-info-400: oklch(0.60 0.16 240);
+  --color-info-500: oklch(0.50 0.17 240); /* Base */
   --color-info-600: oklch(0.42 0.15 240);
   --color-info-700: oklch(0.32 0.12 240);
   --color-info-800: oklch(0.24 0.09 240);
   --color-info-900: oklch(0.18 0.06 240);
 
   /* Typography Scale */
-  --font-size-xs: 0.75rem; /* 12px */
-  --font-size-sm: 0.875rem; /* 14px */
-  --font-size-base: 1rem; /* 16px */
-  --font-size-md: 1.125rem; /* 18px */
-  --font-size-lg: 1.25rem; /* 20px */
-  --font-size-xl: 1.5rem; /* 24px */
-  --font-size-2xl: 2rem; /* 32px */
-  --font-size-3xl: 2.5rem; /* 40px */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-md: 1.125rem;   /* 18px */
+  --font-size-lg: 1.25rem;    /* 20px */
+  --font-size-xl: 1.5rem;     /* 24px */
+  --font-size-2xl: 2rem;      /* 32px */
+  --font-size-3xl: 2.5rem;    /* 40px */
 
   /* Line Heights */
   --line-height-tight: 1.25;
@@ -219,71 +240,71 @@
 
   /* Spacing Scale (8pt grid: 4, 8, 16, 24, 32, 40, 48, 64, 80, 96) */
   --spacing-0: 0;
-  --spacing-1: 0.25rem; /* 4px */
-  --spacing-2: 0.5rem; /* 8px */
-  --spacing-3: 0.75rem; /* 12px */
-  --spacing-4: 1rem; /* 16px */
-  --spacing-5: 1.25rem; /* 20px */
-  --spacing-6: 1.5rem; /* 24px */
-  --spacing-8: 2rem; /* 32px */
-  --spacing-10: 2.5rem; /* 40px */
-  --spacing-12: 3rem; /* 48px */
-  --spacing-16: 4rem; /* 64px */
-  --spacing-20: 5rem; /* 80px */
-  --spacing-24: 6rem; /* 96px */
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;      /* 16px */
+  --spacing-5: 1.25rem;   /* 20px */
+  --spacing-6: 1.5rem;    /* 24px */
+  --spacing-8: 2rem;      /* 32px */
+  --spacing-10: 2.5rem;   /* 40px */
+  --spacing-12: 3rem;     /* 48px */
+  --spacing-16: 4rem;     /* 64px */
+  --spacing-20: 5rem;     /* 80px */
+  --spacing-24: 6rem;     /* 96px */
 }
 
 .dark {
   /* ===================================
      BRANDED DARK THEME CUSTOMIZATION
      =================================== */
-
+  
   /* Core backgrounds - dark with subtle purple tint */
   --background: oklch(0.145 0.005 270);
   --foreground: oklch(0.985 0 0);
-
+  
   /* Card backgrounds - slightly lighter than base */
   --card: oklch(0.205 0.008 270);
   --card-foreground: oklch(0.985 0 0);
-
+  
   /* Popover backgrounds */
   --popover: oklch(0.205 0.008 270);
   --popover-foreground: oklch(0.985 0 0);
-
+  
   /* Primary - vibrant purple (brighter for dark mode) */
   --primary: var(--color-primary-400); /* oklch(0.68 0.17 270) */
   --primary-foreground: oklch(0.98 0 0);
-
+  
   /* Secondary - muted purple-tinted gray */
   --secondary: oklch(0.25 0.01 270);
   --secondary-foreground: oklch(0.98 0 0);
-
+  
   /* Muted - darker purple-tinted backgrounds */
   --muted: oklch(0.269 0.01 270);
   --muted-foreground: oklch(0.708 0.005 270);
-
+  
   /* Accent - vibrant teal (brighter for dark mode) */
   --accent: var(--color-accent-400); /* oklch(0.68 0.12 180) */
   --accent-foreground: oklch(0.985 0 0);
-
+  
   /* Destructive - warm red */
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.985 0 0);
-
+  
   /* Borders and inputs - lighter for visibility */
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 18%);
-
+  
   /* Ring - purple brand color */
   --ring: var(--color-primary-400);
-
+  
   /* Chart colors - full spectrum with brand colors first */
   --chart-1: var(--color-primary-400); /* Purple */
-  --chart-2: var(--color-accent-400); /* Teal */
+  --chart-2: var(--color-accent-400);  /* Teal */
   --chart-3: oklch(0.769 0.188 70.08); /* Yellow-green */
   --chart-4: oklch(0.627 0.265 303.9); /* Magenta */
   --chart-5: oklch(0.645 0.246 16.439); /* Orange */
-
+  
   /* Sidebar - darker with purple tint */
   --sidebar: oklch(0.18 0.008 270);
   --sidebar-foreground: oklch(0.985 0 0);

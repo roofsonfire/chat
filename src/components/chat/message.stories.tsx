@@ -117,8 +117,7 @@ export const ConversationFlow: Story = {
       <ChatMessage
         message={{
           role: "assistant",
-          content:
-            "Sure! Each message animates in with a smooth slide and fade effect. Notice how I gently spring into view!",
+          content: "Sure! Each message animates in with a smooth slide and fade effect. Notice how I gently spring into view!",
           timestamp: new Date(Date.now() - 5000),
         }}
       />
