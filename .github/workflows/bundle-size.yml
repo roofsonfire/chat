@@ -1,0 +1,119 @@
+name: Bundle Size Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  bundle-size:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and analyze bundle (PR)
+        run: |
+          npm run build
+          echo "PR_SIZE=$(du -sb .next | cut -f1)" >> $GITHUB_ENV
+
+      - name: Checkout base branch
+        run: |
+          git checkout ${{ github.base_ref }}
+          npm ci
+
+      - name: Build and analyze bundle (base)
+        run: |
+          npm run build
+          echo "BASE_SIZE=$(du -sb .next | cut -f1)" >> $GITHUB_ENV
+
+      - name: Calculate size difference
+        id: size-diff
+        run: |
+          PR_SIZE=${{ env.PR_SIZE }}
+          BASE_SIZE=${{ env.BASE_SIZE }}
+          DIFF=$((PR_SIZE - BASE_SIZE))
+          DIFF_PCT=$((DIFF * 100 / BASE_SIZE))
+          
+          echo "diff=$DIFF" >> $GITHUB_OUTPUT
+          echo "diff_pct=$DIFF_PCT" >> $GITHUB_OUTPUT
+          echo "pr_size=$PR_SIZE" >> $GITHUB_OUTPUT
+          echo "base_size=$BASE_SIZE" >> $GITHUB_OUTPUT
+
+      - name: Format sizes
+        id: format
+        run: |
+          PR_SIZE=${{ steps.size-diff.outputs.pr_size }}
+          BASE_SIZE=${{ steps.size-diff.outputs.base_size }}
+          DIFF=${{ steps.size-diff.outputs.diff }}
+          
+          # Convert to human-readable format
+          PR_SIZE_MB=$(echo "scale=2; $PR_SIZE / 1024 / 1024" | bc)
+          BASE_SIZE_MB=$(echo "scale=2; $BASE_SIZE / 1024 / 1024" | bc)
+          DIFF_MB=$(echo "scale=2; $DIFF / 1024 / 1024" | bc)
+          
+          echo "pr_size_mb=${PR_SIZE_MB}MB" >> $GITHUB_OUTPUT
+          echo "base_size_mb=${BASE_SIZE_MB}MB" >> $GITHUB_OUTPUT
+          echo "diff_mb=${DIFF_MB}MB" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const diffPct = ${{ steps.size-diff.outputs.diff_pct }};
+            const diff = ${{ steps.size-diff.outputs.diff }};
+            const prSize = '${{ steps.format.outputs.pr_size_mb }}';
+            const baseSize = '${{ steps.format.outputs.base_size_mb }}';
+            const diffMb = '${{ steps.format.outputs.diff_mb }}';
+            
+            const status = diffPct > 10 ? '❌' : diffPct > 5 ? '⚠️' : '✅';
+            const trend = diff > 0 ? '📈' : diff < 0 ? '📉' : '➡️';
+            
+            const comment = `## ${status} Bundle Size Report
+            
+            | Metric | Value |
+            |--------|-------|
+            | **Base Size** | ${baseSize} |
+            | **PR Size** | ${prSize} |
+            | **Difference** | ${trend} ${diffMb} (${diffPct}%) |
+            
+            ${diffPct > 10 ? '❌ **Bundle size increased by more than 10%!**' : ''}
+            ${diffPct > 5 && diffPct <= 10 ? '⚠️ **Bundle size increased by more than 5%**' : ''}
+            ${diffPct <= 5 && diff > 0 ? '✅ Bundle size increase is within acceptable limits' : ''}
+            ${diff < 0 ? '🎉 Bundle size decreased!' : ''}
+            ${diff === 0 ? '✅ No change in bundle size' : ''}
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Check bundle size threshold
+        run: |
+          DIFF_PCT=${{ steps.size-diff.outputs.diff_pct }}
+          if [ $DIFF_PCT -gt 10 ]; then
+            echo "❌ Bundle size increased by more than 10% ($DIFF_PCT%)"
+            echo "This is above the acceptable threshold."
+            exit 1
+          elif [ $DIFF_PCT -gt 5 ]; then
+            echo "⚠️ Bundle size increased by $DIFF_PCT%"
+            echo "Consider reviewing this increase."
+          else
+            echo "✅ Bundle size change is acceptable ($DIFF_PCT%)"
+          fi
