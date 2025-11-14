@@ -73,3 +73,69 @@ export const CodeBlock: Story = {
     },
   },
 };
+
+/**
+ * Demonstrates the fade-in and slide-up animation
+ * Reload this story to see the animation again
+ */
+export const AnimatedEntrance: Story = {
+  args: {
+    message: {
+      role: "assistant",
+      content:
+        "✨ Watch me fade in and slide up with a smooth spring animation! This demonstrates the microinteraction added in Issue #110.",
+      timestamp: new Date(),
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "New messages animate in with a fade-in, slide-up, and subtle scale effect using Framer Motion. The animation uses a spring transition for a natural, bouncy feel.",
+      },
+    },
+  },
+};
+
+/**
+ * Shows multiple messages appearing in sequence
+ * Demonstrates how animations work in a chat conversation
+ */
+export const ConversationFlow: Story = {
+  args: {
+    message: userMessage, // Required by type but not used in custom render
+  },
+  render: () => (
+    <div className="space-y-2">
+      <ChatMessage
+        message={{
+          role: "user",
+          content: "Can you show me the animations?",
+          timestamp: new Date(Date.now() - 10000),
+        }}
+      />
+      <ChatMessage
+        message={{
+          role: "assistant",
+          content: "Sure! Each message animates in with a smooth slide and fade effect. Notice how I gently spring into view!",
+          timestamp: new Date(Date.now() - 5000),
+        }}
+      />
+      <ChatMessage
+        message={{
+          role: "user",
+          content: "That looks great!",
+          timestamp: new Date(),
+        }}
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A conversation showing how multiple messages animate in sequence, creating a polished chat experience.",
+      },
+    },
+  },
+};
