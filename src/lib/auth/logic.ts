@@ -3,7 +3,7 @@ import type { AuthOptions, Account, User, Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { allowlist } from "@/lib/auth/allowlist";
+import { getAllowlist } from "@/lib/auth/allowlist";
 import { validateCredentials } from "@/lib/auth/provider";
 import { logger } from "@/lib/logger";
 
@@ -33,6 +33,7 @@ async function handleSignIn({
   account: Account | null;
   profile?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }) {
+  const allowlist = getAllowlist(); // Get allowlist at runtime
   logger.info("[NextAuth][signIn] Callback triggered", {
     userEmail: maskEmail(user?.email),
     provider: account?.provider,
@@ -168,13 +169,13 @@ export const authOptions: AuthOptions = {
       );
     },
   },
-  // ✅ SECURITY FIX: Explicit cookie security configuration
+  // ✅ SECURITY HARDENING: Production-grade cookie security configuration
   cookies: {
     sessionToken: {
       name: `${env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.session-token`,
       options: {
         httpOnly: true, // Prevents JavaScript access (XSS protection)
-        sameSite: "lax", // CSRF protection
+        sameSite: "strict", // ⬆️ UPGRADED: Strict CSRF protection (was "lax")
         path: "/",
         secure: env.NODE_ENV === "production", // HTTPS only in production
         domain: env.NODE_ENV === "production" ? ".daza.ar" : undefined,
@@ -184,7 +185,7 @@ export const authOptions: AuthOptions = {
       name: `${env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.callback-url`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: "strict", // ⬆️ UPGRADED: Strict CSRF protection
         path: "/",
         secure: env.NODE_ENV === "production",
       },
@@ -193,17 +194,17 @@ export const authOptions: AuthOptions = {
       name: `${env.NODE_ENV === "production" ? "__Host-" : ""}next-auth.csrf-token`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: "strict", // ⬆️ UPGRADED: Strict CSRF protection
         path: "/",
         secure: env.NODE_ENV === "production",
       },
     },
   },
-  // ✅ SECURITY FIX: Session timeout configuration
+  // ✅ SECURITY HARDENING: Session timeout configuration
   session: {
     strategy: "jwt",
     maxAge: 24 * 60 * 60, // 24 hours
-    updateAge: 60 * 60, // Update every hour
+    updateAge: 60 * 60, // Update every hour to refresh security context
   },
   pages: {
     signIn: "/login",

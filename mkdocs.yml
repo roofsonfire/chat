@@ -1,0 +1,173 @@
+site_name: Chat Application Documentation
+site_description: Production-grade AI chat application built with Next.js 15 and Google Vertex AI
+site_author: Core Development Team
+site_url: https://roofsonfire.github.io/chat/
+
+repo_name: roofsonfire/chat
+repo_url: https://github.com/roofsonfire/chat
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2025 roofsonfire
+
+theme:
+  name: material
+  language: en
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - toc.follow
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+plugins:
+  - search:
+      lang: en
+      separator: '[\s\-\.]+'
+  - mermaid2:
+      version: 10.6.1
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - meta
+  - tables
+  - toc:
+      permalink: true
+      title: On this page
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/roofsonfire/chat
+      name: GitHub Repository
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX # Replace with actual GA4 property ID
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Quick Start: guides/QUICKSTART.md
+      - Development Setup: DEVELOPMENT.md
+      - Editor Setup: EDITOR-SETUP.md
+      - Project Navigation: PROJECT-NAVIGATION.md
+  - Architecture:
+      - Overview: .github/patterns/architecture-summary.md
+      - Visual Diagrams: guides/ARCHITECTURE-DIAGRAMS.md
+      - ADRs:
+          - Index: adr/README.md
+          - Next.js App Router: adr/001-use-nextjs-app-router.md
+          - Vertex AI Selection: adr/002-google-vertex-ai-selection.md
+          - In-Memory Rate Limiting: adr/005-in-memory-rate-limiting.md
+          - Environment-Based Allowlist: adr/006-environment-based-allowlist.md
+  - Code Patterns:
+      - API Routes: .github/patterns/api-route-pattern.md
+      - Server Components: .github/patterns/server-component-pattern.md
+      - Service Layer: .github/patterns/service-layer-pattern.md
+      - Error Handling: .github/patterns/error-handling-pattern.md
+      - Validation: .github/patterns/validation-pattern.md
+  - API Reference:
+      - API Endpoints: API.md
+      - Authentication: USER-MANAGEMENT.md
+      - Model Selection: features/MODEL-SELECTION.md
+  - Deployment:
+      - Overview: deployment/DEPLOY.md
+      - Cloud Run: deployment/CLOUD-RUN-DEPLOYMENT.md
+      - Manual Commands: deployment/MANUAL-DEPLOY-COMMANDS.md
+      - GitHub Actions:
+          - Setup: deployment/GITHUB-ACTIONS-SETUP.md
+          - Deployment: deployment/GITHUB-ACTIONS-DEPLOYMENT.md
+          - Status: deployment/GITHUB-ACTIONS-STATUS.md
+          - CI/CD: deployment/CI-CD.md
+      - Workflows: deployment/WORKFLOWS-EXPLAINED.md
+  - Security:
+      - Security Policy: SECURITY.md
+      - Security Audit: security/SECURITY-AUDIT.md
+      - Threat Model: security/THREAT-MODEL.md
+      - Logging: security/LOGGING-RUNBOOK.md
+      - Middleware: features/MIDDLEWARE-SECURITY-SUMMARY.md
+  - Operations:
+      - Performance: PERFORMANCE.md
+      - Project Status: PROJECT-STATUS.md
+      - Common Mistakes: guides/COMMON-MISTAKES.md
+  - Contributing:
+      - Guidelines: CONTRIBUTING.md
+      - Documentation: CONTRIBUTING-DOCS.md
+      - Code of Conduct: CODE_OF_CONDUCT.md
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js

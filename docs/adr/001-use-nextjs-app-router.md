@@ -1,7 +1,7 @@
 # 001. Use Next.js App Router
 
-**Status:** Accepted  
-**Date:** 2024-10-15  
+**Status:** Accepted
+**Date:** 2024-10-15
 **Deciders:** Core Development Team
 
 ## Context

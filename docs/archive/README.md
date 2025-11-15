@@ -42,7 +42,7 @@ Archive contents are reviewed annually to:
 - Update links to current alternatives
 - Ensure historical context remains accurate
 
-**Last Review:** November 2025  
+**Last Review:** November 2025
 **Next Review:** November 2026
 
 ## ✍️ Contributing to Archive
@@ -57,5 +57,5 @@ When archiving a document:
 
 ---
 
-**Questions about archived content?**  
+**Questions about archived content?**
 Open an issue with label `documentation` or contact the core team.

@@ -10,14 +10,64 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
 
+/**
+ * Props for the MessageInput component
+ */
 interface MessageInputProps {
+  /** Current input value */
   input: string;
+  /** Handler for input text changes */
   handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  /** Handler for form submission */
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  /** Loading state indicator */
   isLoading: boolean;
+  /** Function to set selected image data */
   setImage: (image: string | null) => void;
 }
 
+/**
+ * MessageInput Component
+ *
+ * Multimodal input component for chat messages with text and image support.
+ * Features auto-resizing textarea, image upload with preview, progress indicator,
+ * and keyboard shortcuts.
+ *
+ * @component
+ * @param {MessageInputProps} props - Component props
+ * @param {string} props.input - Current text input value
+ * @param {Function} props.handleInputChange - Callback when text input changes
+ * @param {Function} props.handleSubmit - Callback when form is submitted
+ * @param {boolean} props.isLoading - Whether a message is currently being generated
+ * @param {Function} props.setImage - Callback to update selected image
+ *
+ * @returns {JSX.Element} Rendered message input form with textarea and image upload
+ *
+ * @example
+ * ```tsx
+ * <MessageInput
+ *   input={inputText}
+ *   handleInputChange={(e) => setInputText(e.target.value)}
+ *   handleSubmit={(e) => {
+ *     e.preventDefault();
+ *     sendMessage(inputText);
+ *   }}
+ *   isLoading={false}
+ *   setImage={(img) => setSelectedImage(img)}
+ * />
+ * ```
+ *
+ * Features:
+ * - Auto-resizing textarea (1-10 lines)
+ * - Image upload with client-side preview
+ * - Progress indicator during upload
+ * - File type validation (JPEG, PNG, WebP, GIF)
+ * - File size validation (max 10MB)
+ * - Error handling with user-friendly messages
+ * - Keyboard shortcuts (Cmd/Ctrl+Enter to submit)
+ * - Disabled state during message generation
+ * - Mobile-responsive design
+ */
 export function MessageInput({
   input,
   handleInputChange,
@@ -85,7 +135,7 @@ export function MessageInput({
           value={input}
           onChange={handleInputChange}
           placeholder="Type a message..."
-          className="min-h-[40px] flex-1 resize-none bg-transparent focus-within:outline-none"
+          className="min-h-10 flex-1 resize-none bg-transparent focus-within:outline-none"
           rows={1}
           disabled={isLoading}
           aria-label="Message input"

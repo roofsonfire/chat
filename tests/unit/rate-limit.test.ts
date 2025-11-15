@@ -73,7 +73,8 @@ describe("rateLimitMiddleware", () => {
 
     const allowedResponses: Array<RateLimiterRes | NextResponse> = [];
 
-    for (let i = 0; i < 3; i += 1) {
+    // Chat API limit is now 5 requests per 60 seconds
+    for (let i = 0; i < 5; i += 1) {
       const result = await rateLimitMiddleware(request());
       allowedResponses.push(result);
     }

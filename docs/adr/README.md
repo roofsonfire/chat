@@ -13,8 +13,8 @@ Each ADR follows this structure:
 ```markdown
 # [Number]. [Title]
 
-**Status:** [Proposed | Accepted | Deprecated | Superseded]  
-**Date:** YYYY-MM-DD  
+**Status:** [Proposed | Accepted | Deprecated | Superseded]
+**Date:** YYYY-MM-DD
 **Deciders:** [Names/Roles]
 
 ## Context
@@ -94,5 +94,5 @@ Skip ADRs for:
 
 ---
 
-**Last Updated:** November 2025  
+**Last Updated:** November 2025
 **Maintainers:** Core Development Team

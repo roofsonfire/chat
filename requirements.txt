@@ -1,0 +1,5 @@
+# MkDocs and plugins for documentation site
+mkdocs==1.6.1
+mkdocs-material==9.6.23
+pymdown-extensions==10.16.1
+mkdocs-mermaid2-plugin==1.2.3

@@ -131,9 +131,11 @@ export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/key.json"
 2. Click **Create Credentials > OAuth client ID**
 3. Choose **Web application**
 4. Set **Authorized redirect URIs**:
+
    ```
    http://localhost:3000/api/auth/callback/google
    ```
+
 5. Copy **Client ID** and **Client Secret** to `.env.local`
 
 **Detailed guide:** [docs/OAUTH-SETUP.md](../OAUTH-SETUP.md)
@@ -245,10 +247,12 @@ const RATE_LIMIT_WINDOW_SECONDS = 10;
 **Solution:**
 
 1. Clear cache and reinstall:
+
    ```bash
    rm -rf .next node_modules package-lock.json
    npm install
    ```
+
 2. Verify Node.js version: `node --version` (should be 22.x)
 3. Run type check: `npm run type-check`
 
@@ -261,9 +265,11 @@ const RATE_LIMIT_WINDOW_SECONDS = 10;
 **Solution:**
 
 1. Verify redirect URI in Google Cloud Console matches exactly:
+
    ```
    http://localhost:3000/api/auth/callback/google
    ```
+
 2. Check `NEXTAUTH_URL=http://localhost:3000` (no trailing slash)
 3. Clear browser cookies and try again
 
@@ -376,7 +382,7 @@ Just commit normally, and hooks handle the rest.
 
 ---
 
-## 🎉 You're Ready!
+## 🎉 You're Ready
 
 Congratulations! You now have a fully functional local development environment.
 
@@ -386,5 +392,5 @@ Congratulations! You now have a fully functional local development environment.
 
 ---
 
-**Last Updated:** November 2025  
+**Last Updated:** November 2025
 **Maintainers:** Core Development Team
