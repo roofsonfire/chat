@@ -23,7 +23,7 @@ jobs:
       ALLOWED_EMAILS: test@example.com
       DISABLE_RATE_LIMIT: "true"
       SKIP_VERTEX_MODEL_VALIDATION: "true"
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -62,7 +62,7 @@ jobs:
         run: |
           DIFF=$((PR_SIZE - BASE_SIZE))
           DIFF_PCT=$((DIFF * 100 / BASE_SIZE))
-          
+
           {
             echo "diff=$DIFF"
             echo "diff_pct=$DIFF_PCT"
@@ -81,7 +81,7 @@ jobs:
           PR_SIZE_MB=$(echo "scale=2; $PR_SIZE / 1024 / 1024" | bc)
           BASE_SIZE_MB=$(echo "scale=2; $BASE_SIZE / 1024 / 1024" | bc)
           DIFF_MB=$(echo "scale=2; $DIFF / 1024 / 1024" | bc)
-          
+
           {
             echo "pr_size_mb=${PR_SIZE_MB}MB"
             echo "base_size_mb=${BASE_SIZE_MB}MB"
@@ -97,25 +97,25 @@ jobs:
             const prSize = '${{ steps.format.outputs.pr_size_mb }}';
             const baseSize = '${{ steps.format.outputs.base_size_mb }}';
             const diffMb = '${{ steps.format.outputs.diff_mb }}';
-            
+
             const status = diffPct > 10 ? '❌' : diffPct > 5 ? '⚠️' : '✅';
             const trend = diff > 0 ? '📈' : diff < 0 ? '📉' : '➡️';
-            
+
             const comment = `## ${status} Bundle Size Report
-            
+
             | Metric | Value |
             |--------|-------|
             | **Base Size** | ${baseSize} |
             | **PR Size** | ${prSize} |
             | **Difference** | ${trend} ${diffMb} (${diffPct}%) |
-            
+
             ${diffPct > 10 ? '❌ **Bundle size increased by more than 10%!**' : ''}
             ${diffPct > 5 && diffPct <= 10 ? '⚠️ **Bundle size increased by more than 5%**' : ''}
             ${diffPct <= 5 && diff > 0 ? '✅ Bundle size increase is within acceptable limits' : ''}
             ${diff < 0 ? '🎉 Bundle size decreased!' : ''}
             ${diff === 0 ? '✅ No change in bundle size' : ''}
             `;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
