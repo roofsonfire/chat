@@ -9,6 +9,14 @@ on:
 jobs:
   bundle-size:
     runs-on: ubuntu-latest
+    env:
+      # Required for Next.js build
+      NEXTAUTH_SECRET: ${{ secrets.TEST_NEXTAUTH_SECRET }}
+      NEXTAUTH_URL: http://localhost:3000
+      GOOGLE_CLIENT_ID: ${{ secrets.TEST_GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.TEST_GOOGLE_CLIENT_SECRET }}
+      DISABLE_RATE_LIMIT: "true"
+      SKIP_VERTEX_MODEL_VALIDATION: "true"
     
     steps:
       - name: Checkout code
