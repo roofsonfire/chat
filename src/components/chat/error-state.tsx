@@ -74,7 +74,7 @@ export function ErrorState({
 
             {/* Action buttons */}
             {(onRetry || onGoHome) && (
-              <div className="flex gap-[var(--spacing-2)] mt-[var(--spacing-4)]">
+              <div className="mt-[var(--spacing-4)] flex gap-[var(--spacing-2)]">
                 {onRetry && (
                   <Button
                     variant={isError ? "default" : "outline"}
@@ -96,11 +96,11 @@ export function ErrorState({
           </Alert>
 
           {/* Additional help text */}
-          <div className="mt-[var(--spacing-6)] rounded-lg bg-muted p-[var(--spacing-4)] text-sm text-muted-foreground">
-            <p className="font-medium mb-[var(--spacing-2)]">
+          <div className="bg-muted text-muted-foreground mt-[var(--spacing-6)] rounded-lg p-[var(--spacing-4)] text-sm">
+            <p className="mb-[var(--spacing-2)] font-medium">
               Common solutions:
             </p>
-            <ul className="list-disc list-inside space-y-[var(--spacing-1)] text-sm">
+            <ul className="list-inside list-disc space-y-[var(--spacing-1)] text-sm">
               <li>Check your internet connection</li>
               <li>Refresh the page and try again</li>
               <li>Clear your browser cache</li>

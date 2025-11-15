@@ -38,17 +38,16 @@ export function EmptyState({
   onStartChat,
   suggestedPrompts = DEFAULT_PROMPTS,
 }: EmptyStateProps) {
-
   return (
     <div className="flex h-full items-center justify-center p-[var(--spacing-4)]">
       <Card className="w-full max-w-2xl border-dashed">
         <CardContent className="flex flex-col items-center gap-[var(--spacing-6)] py-[var(--spacing-12)] text-center">
           {/* Icon */}
           <div className="relative">
-            <div className="rounded-full bg-primary/10 p-[var(--spacing-6)]">
-              <MessageSquare className="h-12 w-12 text-primary" />
+            <div className="bg-primary/10 rounded-full p-[var(--spacing-6)]">
+              <MessageSquare className="text-primary h-12 w-12" />
             </div>
-            <Sparkles className="absolute -right-1 -top-1 h-6 w-6 text-accent animate-pulse" />
+            <Sparkles className="text-accent absolute -top-1 -right-1 h-6 w-6 animate-pulse" />
           </div>
 
           {/* Heading */}
@@ -64,7 +63,7 @@ export function EmptyState({
 
           {/* Suggested prompts */}
           <div className="w-full space-y-[var(--spacing-3)]">
-            <p className="text-sm font-medium text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-medium">
               Try asking:
             </p>
             <div className="grid gap-[var(--spacing-2)] sm:grid-cols-2">
@@ -72,7 +71,7 @@ export function EmptyState({
                 <Button
                   key={index}
                   variant="outline"
-                  className="justify-start text-left h-auto py-[var(--spacing-3)] px-[var(--spacing-4)] whitespace-normal"
+                  className="h-auto justify-start px-[var(--spacing-4)] py-[var(--spacing-3)] text-left whitespace-normal"
                   onClick={() => onStartChat?.(prompt)}
                 >
                   <span className="text-sm">{prompt}</span>
@@ -82,7 +81,7 @@ export function EmptyState({
           </div>
 
           {/* Additional info */}
-          <div className="mt-[var(--spacing-4)] rounded-lg bg-muted p-[var(--spacing-4)] text-sm text-muted-foreground">
+          <div className="bg-muted text-muted-foreground mt-[var(--spacing-4)] rounded-lg p-[var(--spacing-4)] text-sm">
             <p>
               💡 <strong>Tip:</strong> You can upload images along with your
               messages for visual analysis.

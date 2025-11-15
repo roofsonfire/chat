@@ -22,7 +22,7 @@ interface InlineErrorProps {
 
 export function InlineError({ message }: InlineErrorProps) {
   return (
-    <div className="flex items-center gap-[var(--spacing-2)] rounded-md bg-destructive/10 p-[var(--spacing-3)] text-sm text-destructive">
+    <div className="bg-destructive/10 text-destructive flex items-center gap-[var(--spacing-2)] rounded-md p-[var(--spacing-3)] text-sm">
       <AlertCircle className="h-4 w-4 flex-shrink-0" />
       <p>{message}</p>
     </div>
