@@ -146,6 +146,10 @@
     {
       "filename": "**/*.json",
       "ignoreRegExpList": ["/\"[^\"]*\"/g"]
+    },
+    {
+      "filename": "**/cspell.json",
+      "ignoreWords": ["colour"]
     }
   ]
 }
