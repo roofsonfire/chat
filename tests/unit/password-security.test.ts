@@ -91,11 +91,13 @@ describe("Password Security", () => {
       expect(isValid).toBe(false);
     });
 
-    it("should handle invalid hash format", async () => {
+    it("should handle invalid hash format gracefully", async () => {
       const password = "testPassword123!";
       const invalidHash = "not-a-valid-hash";
 
-      await expect(verifyPassword(password, invalidHash)).rejects.toThrow();
+      // Bcrypt returns false for invalid hashes instead of throwing
+      const isValid = await verifyPassword(password, invalidHash);
+      expect(isValid).toBe(false);
     });
 
     it("should reject password with slight modification", async () => {
