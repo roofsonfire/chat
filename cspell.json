@@ -87,7 +87,7 @@
     "Diagnóstico",
     "Síntoma",
     "fallido",
-    "revisiones",
+    "revisions",
     "cuotas",
     "límites",
     "Recomendación",
@@ -123,7 +123,7 @@
     "Ahora",
     "obligatorio",
     "exponer",
-    "secretos",
+    "secrets",
     "recurso",
     "proveedor",
     "servicio",
@@ -146,6 +146,10 @@
     {
       "filename": "**/*.json",
       "ignoreRegExpList": ["/\"[^\"]*\"/g"]
+    },
+    {
+      "filename": "**/*lock*.json",
+      "ignoreWords": ["colour"]
     }
   ]
 }

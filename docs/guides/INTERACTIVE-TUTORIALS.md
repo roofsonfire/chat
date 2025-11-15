@@ -1096,7 +1096,7 @@ interface StreamingMetrics {
   chunkCount: number;
   totalTokens: number;
   streamingTime: number;
-  cancelled: boolean;
+  canceled: boolean;
 }
 
 export function useAdvancedStreaming() {
@@ -1107,7 +1107,7 @@ export function useAdvancedStreaming() {
     chunkCount: 0,
     totalTokens: 0,
     streamingTime: 0,
-    cancelled: false,
+    canceled: false,
   });
 
   const cancelRef = useRef<(() => void) | null>(null);
@@ -1129,7 +1129,7 @@ export function useAdvancedStreaming() {
       chunkCount: 0,
       totalTokens: 0,
       streamingTime: 0,
-      cancelled: false,
+      canceled: false,
     });
 
     startTimeRef.current = Date.now();
@@ -1192,7 +1192,7 @@ export function useAdvancedStreaming() {
       if (error instanceof Error && error.name === "AbortError") {
         setMetrics((prev) => ({
           ...prev,
-          cancelled: true,
+          canceled: true,
           streamingTime: Date.now() - startTimeRef.current,
         }));
       } else {
@@ -1319,9 +1319,9 @@ export function AdvancedStreamingChat() {
             <span className="text-muted-foreground">Time:</span>
             <span className="font-mono">{(metrics.streamingTime / 1000).toFixed(2)}s</span>
           </div>
-          {metrics.cancelled && (
+          {metrics.canceled && (
             <Badge variant="outline" className="w-full justify-center">
-              Cancelled
+              Canceled
             </Badge>
           )}
         </CardContent>
@@ -1970,7 +1970,7 @@ describe("FallbackAIService", () => {
 npm run test -- tests/unit/ai-service.test.ts
 ```
 
-2. **Test the API manually:**
+1. **Test the API manually:**
 
 ```bash
 curl -X POST http://localhost:3000/api/chat \
@@ -1983,7 +1983,7 @@ curl -X POST http://localhost:3000/api/chat \
   }'
 ```
 
-3. **Monitor cache performance:**
+2. **Monitor cache performance:**
 
 Add an admin endpoint to check cache stats:
 
@@ -2024,7 +2024,7 @@ await updateData();
 cacheService.clearCache();
 ```
 
-3. **Monitor Cache Hit Rate:** Track hits vs misses to optimize TTL:
+2. **Monitor Cache Hit Rate:** Track hits vs misses to optimize TTL:
 
 ```typescript
 const hitRate = (cacheHits / totalRequests) * 100;
