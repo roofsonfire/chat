@@ -221,7 +221,7 @@ Typography and spacing tokens remain consistent across both modes.
 All design tokens are exposed to Tailwind through the `@theme inline` directive. You can use them with Tailwind's arbitrary value syntax:
 
 ```tsx
-<div className="text-[var(--color-primary-500)] p-[var(--spacing-4)]">
+<div className="p-[var(--spacing-4)] text-[var(--color-primary-500)]">
   Content
 </div>
 ```
@@ -250,6 +250,7 @@ All core shadcn/ui components have been updated to use the 8pt grid spacing syst
 ```
 
 **Token mapping:**
+
 - `gap`: Uses `--spacing-2` (8px) for icon/text spacing
 - `height`: Uses `--spacing-8` (32px) or `--spacing-10` (40px) depending on size
 - `padding-x`: Uses `--spacing-3` to `--spacing-6` depending on size
@@ -266,6 +267,7 @@ All core shadcn/ui components have been updated to use the 8pt grid spacing syst
 ```
 
 **Token mapping:**
+
 - Inner gap: `--spacing-6` (24px) between card sections
 - Horizontal padding: `--spacing-6` (24px) for all card parts
 - Header gap: `--spacing-2` (8px) between title and description
@@ -278,6 +280,7 @@ All core shadcn/ui components have been updated to use the 8pt grid spacing syst
 ```
 
 **Token mapping:**
+
 - `height`: `--spacing-8` (32px) for consistent vertical rhythm
 - `padding-x`: `--spacing-3` (12px) for comfortable text entry
 - `padding-y`: `--spacing-1` (4px) for vertical balance
@@ -294,15 +297,15 @@ When creating new components, follow these spacing guidelines:
 ### Migration Example
 
 **Before (hardcoded Tailwind values):**
+
 ```tsx
-<div className="px-4 py-2 gap-6">
-  {/* content */}
-</div>
+<div className="gap-6 px-4 py-2">{/* content */}</div>
 ```
 
 **After (design tokens):**
+
 ```tsx
-<div className="px-[var(--spacing-4)] py-[var(--spacing-2)] gap-[var(--spacing-6)]">
+<div className="gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-2)]">
   {/* content */}
 </div>
 ```

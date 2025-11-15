@@ -61,7 +61,7 @@ All animations serve a purpose:
 
 ```tsx
 // Tailwind classes added to buttonVariants
-className: "transition-all duration-200 active:scale-[0.98] hover:scale-[1.02]"
+className: "transition-all duration-200 active:scale-[0.98] hover:scale-[1.02]";
 ```
 
 **Why CSS instead of Framer Motion?**
@@ -73,7 +73,7 @@ className: "transition-all duration-200 active:scale-[0.98] hover:scale-[1.02]"
 
 **Visual Demo**:
 
-```
+```tsx
 Rest State:     scale(1.0)
       ↓
 Hover State:    scale(1.02)  [slightly bigger]
@@ -102,11 +102,11 @@ Release:        scale(1.0)   [back to normal]
 <motion.div
   initial={{ opacity: 0, y: 20, scale: 0.95 }}
   animate={{ opacity: 1, y: 0, scale: 1 }}
-  transition={{ 
+  transition={{
     type: "spring",
     stiffness: 260,
     damping: 20,
-    duration: 0.4
+    duration: 0.4,
   }}
 >
   {/* Message content */}
@@ -115,7 +115,7 @@ Release:        scale(1.0)   [back to normal]
 
 **Animation Flow**:
 
-```
+```tsx
 1. Initial State (hidden):
    - opacity: 0
    - y: +20px (below final position)
@@ -146,23 +146,23 @@ Spring animations feel more natural than linear easing:
 
 ### Button Transitions
 
-| Property   | Value  | Reasoning                                    |
-| ---------- | ------ | -------------------------------------------- |
-| Duration   | 200ms  | Fast enough to feel instant, visible enough  |
-| Hover      | 1.02x  | Subtle growth, not distracting               |
-| Active     | 0.98x  | Visual "press" feedback                      |
-| Timing     | Ease   | Standard easing for simple transitions       |
+| Property | Value | Reasoning                                   |
+| -------- | ----- | ------------------------------------------- |
+| Duration | 200ms | Fast enough to feel instant, visible enough |
+| Hover    | 1.02x | Subtle growth, not distracting              |
+| Active   | 0.98x | Visual "press" feedback                     |
+| Timing   | Ease  | Standard easing for simple transitions      |
 
 ### Message Animations
 
-| Property   | Value        | Reasoning                                     |
-| ---------- | ------------ | --------------------------------------------- |
-| Duration   | 400ms        | Long enough to be noticeable, not sluggish    |
-| Stiffness  | 260          | Moderate spring, balanced bounce              |
-| Damping    | 20           | Smooth deceleration, minimal overshoot        |
-| Opacity    | 0 → 1        | Gentle fade prevents jarring appearance       |
-| Y Offset   | 20px → 0     | Slide creates sense of messages "arriving"    |
-| Scale      | 0.95 → 1.0   | Adds depth, emphasizes new content            |
+| Property  | Value      | Reasoning                                  |
+| --------- | ---------- | ------------------------------------------ |
+| Duration  | 400ms      | Long enough to be noticeable, not sluggish |
+| Stiffness | 260        | Moderate spring, balanced bounce           |
+| Damping   | 20         | Smooth deceleration, minimal overshoot     |
+| Opacity   | 0 → 1      | Gentle fade prevents jarring appearance    |
+| Y Offset  | 20px → 0   | Slide creates sense of messages "arriving" |
+| Scale     | 0.95 → 1.0 | Adds depth, emphasizes new content         |
 
 ## Code Examples
 
@@ -206,12 +206,12 @@ Framer Motion automatically respects `prefers-reduced-motion`, but you can custo
 <motion.div
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
-  transition={{ 
+  transition={{
     duration: 0.3,
     // Disable animation if user prefers reduced motion
-    ...(window.matchMedia('(prefers-reduced-motion: reduce)').matches && {
+    ...(window.matchMedia("(prefers-reduced-motion: reduce)").matches && {
       duration: 0,
-    })
+    }),
   }}
 />
 ```
@@ -271,12 +271,12 @@ For frequently animated elements:
 
 ### Performance Metrics
 
-| Metric                | Target | Actual | Status |
-| --------------------- | ------ | ------ | ------ |
-| Animation FPS         | 60     | 60     | ✅      |
-| Bundle Size Increase  | <20KB  | ~15KB  | ✅      |
-| First Paint Delay     | <50ms  | ~20ms  | ✅      |
-| Interaction Latency   | <100ms | ~50ms  | ✅      |
+| Metric               | Target | Actual | Status |
+| -------------------- | ------ | ------ | ------ |
+| Animation FPS        | 60     | 60     | ✅     |
+| Bundle Size Increase | <20KB  | ~15KB  | ✅     |
+| First Paint Delay    | <50ms  | ~20ms  | ✅     |
+| Interaction Latency  | <100ms | ~50ms  | ✅     |
 
 ## Browser Support
 
@@ -326,12 +326,12 @@ Currently animations are excluded from unit tests to avoid timing issues. Test t
 
 ```tsx
 // Storybook visual regression tests
-describe('ChatMessage animations', () => {
-  it('should render initial state correctly', () => {
+describe("ChatMessage animations", () => {
+  it("should render initial state correctly", () => {
     // Test the starting state (opacity 0, y offset)
   });
-  
-  it('should render final state correctly', () => {
+
+  it("should render final state correctly", () => {
     // Test the end state (opacity 1, y 0)
   });
 });

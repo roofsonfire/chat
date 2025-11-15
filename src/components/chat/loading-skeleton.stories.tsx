@@ -18,7 +18,7 @@ type Story = StoryObj<typeof LoadingSkeleton>;
  */
 export const Default: Story = {
   render: () => (
-    <div className="h-[600px] bg-background">
+    <div className="bg-background h-[600px]">
       <LoadingSkeleton />
     </div>
   ),
@@ -29,7 +29,7 @@ export const Default: Story = {
  */
 export const DarkMode: Story = {
   render: () => (
-    <div className="dark h-[600px] bg-background">
+    <div className="dark bg-background h-[600px]">
       <LoadingSkeleton />
     </div>
   ),

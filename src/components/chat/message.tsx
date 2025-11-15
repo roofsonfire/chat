@@ -90,11 +90,11 @@ export function ChatMessage({ message }: ChatMessageProps) {
       data-testid={`message-${isUser ? "user" : "assistant"}`}
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ 
+      transition={{
         type: "spring" as const,
         stiffness: 260,
         damping: 20,
-        duration: 0.4
+        duration: 0.4,
       }}
     >
       {!isUser && (

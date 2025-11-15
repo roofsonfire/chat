@@ -15,7 +15,8 @@ This guide helps you set up branch protection rules for the `main` branch in the
 ### Option 1: Via GitHub Web UI (Easiest)
 
 1. **Navigate to Settings**
-   ```
+
+   ```bash
    https://github.com/roofsonfire/chat/settings/branches
    ```
 
@@ -52,7 +53,7 @@ This guide helps you set up branch protection rules for the `main` branch in the
    - Add yourself and trusted collaborators
 
    ✅ **Allow force pushes**: ❌ DISABLED (recommended)
-   
+
    ✅ **Allow deletions**: ❌ DISABLED (recommended)
 
 4. **Save Changes**
@@ -151,6 +152,7 @@ If you're working solo or want a lighter setup:
 ```
 
 This prevents:
+
 - Direct pushes to main (requires PR)
 - Force pushes
 - Branch deletion
@@ -160,26 +162,30 @@ This prevents:
 ## Recommended Workflow After Protection
 
 1. **Create Feature Branch**
+
    ```bash
    git checkout -b feature/my-feature
    ```
 
 2. **Make Changes and Commit**
+
    ```bash
    git add .
    git commit -m "feat: add new feature"
    ```
 
 3. **Push to GitHub**
+
    ```bash
    git push origin feature/my-feature
    ```
 
 4. **Create Pull Request**
+
    ```bash
    # Via GitHub CLI
    gh pr create --title "Add new feature" --body "Description of changes"
-   
+
    # Or via web: https://github.com/roofsonfire/chat/compare
    ```
 
@@ -240,18 +246,22 @@ Create `.github/PULL_REQUEST_TEMPLATE.md`:
 
 ```markdown
 ## Description
+
 <!-- Describe your changes in detail -->
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
+
 <!-- How has this been tested? -->
 
 ## Checklist
+
 - [ ] Tests pass locally
 - [ ] Code follows project style
 - [ ] Documentation updated
