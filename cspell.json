@@ -148,7 +148,7 @@
       "ignoreRegExpList": ["/\"[^\"]*\"/g"]
     },
     {
-      "filename": "**/cspell.json",
+      "filename": "**/*lock*.json",
       "ignoreWords": ["colour"]
     }
   ]
