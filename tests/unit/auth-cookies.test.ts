@@ -8,8 +8,8 @@ describe("NextAuth Cookie Security", () => {
       expect(authOptions.cookies?.sessionToken?.options?.httpOnly).toBe(true);
     });
 
-    it("should have sameSite set to lax", () => {
-      expect(authOptions.cookies?.sessionToken?.options?.sameSite).toBe("lax");
+    it("should have sameSite set to strict", () => {
+      expect(authOptions.cookies?.sessionToken?.options?.sameSite).toBe("strict");
     });
 
     it("should have path set to root", () => {
@@ -51,8 +51,8 @@ describe("NextAuth Cookie Security", () => {
       expect(authOptions.cookies?.callbackUrl?.options?.httpOnly).toBe(true);
     });
 
-    it("should have sameSite set to lax", () => {
-      expect(authOptions.cookies?.callbackUrl?.options?.sameSite).toBe("lax");
+    it("should have sameSite set to strict", () => {
+      expect(authOptions.cookies?.callbackUrl?.options?.sameSite).toBe("strict");
     });
 
     it("should have path set to root", () => {
@@ -83,8 +83,8 @@ describe("NextAuth Cookie Security", () => {
       expect(authOptions.cookies?.csrfToken?.options?.httpOnly).toBe(true);
     });
 
-    it("should have sameSite set to lax", () => {
-      expect(authOptions.cookies?.csrfToken?.options?.sameSite).toBe("lax");
+    it("should have sameSite set to strict", () => {
+      expect(authOptions.cookies?.csrfToken?.options?.sameSite).toBe("strict");
     });
 
     it("should have path set to root", () => {
@@ -144,9 +144,9 @@ describe("NextAuth Cookie Security", () => {
     });
 
     it("should protect against CSRF with sameSite on all cookies", () => {
-      expect(authOptions.cookies?.sessionToken?.options?.sameSite).toBe("lax");
-      expect(authOptions.cookies?.callbackUrl?.options?.sameSite).toBe("lax");
-      expect(authOptions.cookies?.csrfToken?.options?.sameSite).toBe("lax");
+      expect(authOptions.cookies?.sessionToken?.options?.sameSite).toBe("strict");
+      expect(authOptions.cookies?.callbackUrl?.options?.sameSite).toBe("strict");
+      expect(authOptions.cookies?.csrfToken?.options?.sameSite).toBe("strict");
     });
   });
 });
