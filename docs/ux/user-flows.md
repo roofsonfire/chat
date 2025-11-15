@@ -18,6 +18,7 @@ The application provides an AI-powered chat interface with multimodal support (t
 ## 1. Happy Path: Send Text Message
 
 ### User Story
+
 As a user, I want to send a text message to the AI assistant and receive a response.
 
 ### Flow Diagram
@@ -33,34 +34,34 @@ sequenceDiagram
 
     User->>UI: Opens chat application
     UI->>User: Shows empty state with suggested prompts
-    
+
     User->>Input: Types message
     Input->>Input: Updates input state
-    
+
     User->>Input: Presses Enter or clicks Send
     Input->>Hook: handleSubmit(e)
-    
+
     Hook->>Hook: Validates input (not empty)
     Hook->>UI: Adds user message to chat
     Hook->>UI: Shows message in chat history
     Hook->>UI: Clears input field
     Hook->>UI: Shows loading skeleton
-    
+
     Hook->>API: POST /api/chat<br/>{messages, modelId}
     API->>API: Validates auth session
     API->>API: Validates request body (Zod)
     API->>API: Checks rate limit (5/10s)
-    
+
     API->>AI: generateContentStream()
     AI-->>API: Stream response chunks
-    
+
     loop For each chunk
         API-->>Hook: SSE: data: {text}
         Hook->>Hook: Parse stream chunk
         Hook->>UI: Update assistant message
         UI->>User: Shows streaming response
     end
-    
+
     AI-->>API: Stream complete (STOP)
     API-->>Hook: Close stream
     Hook->>UI: Hides loading skeleton
@@ -111,20 +112,21 @@ sequenceDiagram
 
 ### UI States
 
-| State | UI Elements |
-|-------|-------------|
-| Empty | EmptyState component with suggested prompts |
-| Ready | Input enabled, Send button ready |
-| Typing | Input updates, character count (optional) |
-| Sending | Loading skeleton, input disabled |
-| Streaming | Text appears incrementally |
-| Complete | Full response visible, input re-enabled |
+| State     | UI Elements                                 |
+| --------- | ------------------------------------------- |
+| Empty     | EmptyState component with suggested prompts |
+| Ready     | Input enabled, Send button ready            |
+| Typing    | Input updates, character count (optional)   |
+| Sending   | Loading skeleton, input disabled            |
+| Streaming | Text appears incrementally                  |
+| Complete  | Full response visible, input re-enabled     |
 
 ---
 
 ## 2. Happy Path: Send Message with Image
 
 ### User Story
+
 As a user, I want to send an image along with text to get visual analysis from the AI.
 
 ### Flow Diagram
@@ -142,11 +144,11 @@ sequenceDiagram
     User->>Input: Types message
     User->>Upload: Clicks image upload button
     Upload->>Upload: Opens file picker
-    
+
     User->>Upload: Selects image file
     Upload->>Upload: Validates file type<br/>(JPEG, PNG, WebP, GIF)
     Upload->>Upload: Validates file size (<10MB)
-    
+
     alt Valid Image
         Upload->>Upload: Reads file as base64
         Upload->>Hook: setImage(base64DataURL)
@@ -156,29 +158,29 @@ sequenceDiagram
         Upload->>UI: Shows InlineError
         UI->>User: "Invalid file type/size"
     end
-    
+
     User->>Input: Presses Enter or clicks Send
     Input->>Hook: handleSubmit(e)
-    
+
     Hook->>Hook: Validates input || image
     Hook->>UI: Adds user message with image
     Hook->>UI: Shows message with image thumbnail
     Hook->>UI: Clears input and image
     Hook->>UI: Shows loading skeleton
-    
+
     Hook->>API: POST /api/chat<br/>{messages: [{content, image}], modelId}
     API->>API: Validates auth & rate limit
     API->>API: Validates base64 image data
-    
+
     API->>AI: generateContentStream()<br/>with image part
     AI-->>API: Stream response chunks
-    
+
     loop For each chunk
         API-->>Hook: SSE: data: {text}
         Hook->>UI: Update assistant message
         UI->>User: Shows streaming response
     end
-    
+
     AI-->>API: Stream complete
     API-->>Hook: Close stream
     Hook->>UI: Hides loading skeleton
@@ -189,7 +191,7 @@ sequenceDiagram
 
 1. **Image Selection**
    - User clicks image upload button (📎 icon)
-   - File picker opens (accept: image/*)
+   - File picker opens (accept: image/\*)
    - User selects image file
 
 2. **Image Validation**
@@ -232,19 +234,20 @@ sequenceDiagram
 
 ### UI States
 
-| State | UI Elements |
-|-------|-------------|
-| No Image | Upload button visible, no preview |
-| Image Selected | Thumbnail preview, remove button |
-| Uploading | Loading indicator (if async) |
-| Invalid | InlineError with reason |
-| Sent | Image thumbnail in message bubble |
+| State          | UI Elements                       |
+| -------------- | --------------------------------- |
+| No Image       | Upload button visible, no preview |
+| Image Selected | Thumbnail preview, remove button  |
+| Uploading      | Loading indicator (if async)      |
+| Invalid        | InlineError with reason           |
+| Sent           | Image thumbnail in message bubble |
 
 ---
 
 ## 3. Error Handling: API Error Flow
 
 ### User Story
+
 As a user, when an error occurs, I want clear feedback and options to recover.
 
 ### Flow Diagram
@@ -255,45 +258,45 @@ flowchart TD
     Submit --> AddMsg[Add user message to UI]
     AddMsg --> Loading[Show loading skeleton]
     Loading --> API[POST /api/chat]
-    
+
     API --> Check{Request Type}
-    
+
     Check -->|Auth Error| Auth[401/403 Response]
     Check -->|Rate Limit| Rate[429 Response]
     Check -->|Network Error| Network[Fetch fails]
     Check -->|Timeout| Timeout[Request timeout]
     Check -->|AI Error| AIError[503 from Vertex AI]
     Check -->|Success| Success[Stream response]
-    
+
     Auth --> ErrorHandler[useChatErrorHandler]
     Rate --> ErrorHandler
     Network --> ErrorHandler
     Timeout --> ErrorHandler
     AIError --> ErrorHandler
-    
+
     ErrorHandler --> Classify{Classify Error}
-    
+
     Classify -->|Auth| AuthMsg["'Authentication issue.<br/>Please refresh the page.'"]
     Classify -->|Rate Limit| RateMsg["'Too many requests.<br/>Please wait a moment.'"]
     Classify -->|Network| NetMsg["'Connection issue.<br/>Check your internet.'"]
     Classify -->|Timeout| TimeMsg["'Request timed out.<br/>Please try again.'"]
     Classify -->|Unknown| GenMsg["'An error occurred.<br/>Please try again.'"]
-    
+
     AuthMsg --> AddError[Add error message to chat]
     RateMsg --> AddError
     NetMsg --> AddError
     TimeMsg --> AddError
     GenMsg --> AddError
-    
+
     AddError --> ShowError[Display as assistant message]
     ShowError --> HideLoad[Hide loading skeleton]
     HideLoad --> Enable[Re-enable input]
     Enable --> End([User can retry])
-    
+
     Success --> Stream[Stream response normally]
     Stream --> Complete[Show complete message]
     Complete --> End
-    
+
     style Auth fill:#ffcccc
     style Rate fill:#ffcccc
     style Network fill:#ffcccc
@@ -304,14 +307,14 @@ flowchart TD
 
 ### Error Types and Messages
 
-| Error Type | HTTP Code | User Message | Recovery Action |
-|------------|-----------|--------------|-----------------|
-| **Authentication** | 401, 403 | "There appears to be an authentication issue. Please refresh the page and try again." | Refresh page, re-login |
-| **Rate Limit** | 429 | "I'm receiving too many requests right now. Please wait a moment and try again." | Wait 10 seconds, retry |
-| **Network** | N/A (fetch fails) | "There seems to be a connection issue. Please check your internet connection and try again." | Check connection, retry |
-| **Timeout** | N/A (timeout) | "The request timed out. Please try again." | Retry immediately |
-| **AI Service** | 503 | "The AI service is temporarily unavailable. Please try again in a moment." | Wait, retry |
-| **Unknown** | 500, others | "Sorry, I encountered an error processing your request. Please try again." | Retry, report if persists |
+| Error Type         | HTTP Code         | User Message                                                                                 | Recovery Action           |
+| ------------------ | ----------------- | -------------------------------------------------------------------------------------------- | ------------------------- |
+| **Authentication** | 401, 403          | "There appears to be an authentication issue. Please refresh the page and try again."        | Refresh page, re-login    |
+| **Rate Limit**     | 429               | "I'm receiving too many requests right now. Please wait a moment and try again."             | Wait 10 seconds, retry    |
+| **Network**        | N/A (fetch fails) | "There seems to be a connection issue. Please check your internet connection and try again." | Check connection, retry   |
+| **Timeout**        | N/A (timeout)     | "The request timed out. Please try again."                                                   | Retry immediately         |
+| **AI Service**     | 503               | "The AI service is temporarily unavailable. Please try again in a moment."                   | Wait, retry               |
+| **Unknown**        | 500, others       | "Sorry, I encountered an error processing your request. Please try again."                   | Retry, report if persists |
 
 ### Error Handling Code Flow
 
@@ -358,6 +361,7 @@ try {
 ## 4. New Conversation Flow
 
 ### User Story
+
 As a user, I want to start a fresh conversation without previous context.
 
 ### Flow Diagram
@@ -365,65 +369,65 @@ As a user, I want to start a fresh conversation without previous context.
 ```mermaid
 flowchart TD
     Start([User opens app]) --> HasSession{Has valid<br/>session?}
-    
+
     HasSession -->|No| Login[Redirect to /login]
     Login --> OAuth[Google OAuth flow]
     OAuth --> Allowlist{Email in<br/>allowlist?}
     Allowlist -->|No| Denied[Access denied]
     Allowlist -->|Yes| CreateSession[Create JWT session]
     CreateSession --> LoadApp
-    
+
     HasSession -->|Yes| LoadApp[Load Chat Interface]
-    
+
     LoadApp --> CheckHistory{Has message<br/>history?}
-    
+
     CheckHistory -->|No| ShowEmpty[Show EmptyState]
     CheckHistory -->|Yes| ShowHistory[Show ChatHistory]
-    
+
     ShowEmpty --> Welcome["Display:
     - Welcome message
     - Sparkles icon
     - Suggested prompts
     - Image upload tip"]
-    
+
     Welcome --> UserAction{User Action}
-    
+
     UserAction -->|Types message| FirstMsg[Send first message]
     UserAction -->|Clicks prompt| FillInput[Pre-fill input]
     UserAction -->|Uploads image| ShowPreview[Show image preview]
-    
+
     FillInput --> FirstMsg
     ShowPreview --> FirstMsg
-    
+
     FirstMsg --> AddToHistory[Message added to history]
     AddToHistory --> APICall[API call initiated]
     APICall --> Response[Receive AI response]
     Response --> ConvStarted[Conversation started]
-    
+
     ShowHistory --> ExistingConv[Continue existing conversation]
-    
+
     ExistingConv --> ClearOption{User wants<br/>fresh start?}
-    
+
     ClearOption -->|Yes - Command Palette| CmdK["⌘K → New Conversation"]
     ClearOption -->|Yes - Sidebar| Sidebar[Settings → Clear History]
     ClearOption -->|No| Continue[Continue chatting]
-    
+
     CmdK --> Confirm{Confirm<br/>clear?}
     Sidebar --> Confirm
-    
+
     Confirm -->|Yes| ClearMessages[clearHistory called]
     Confirm -->|No| Cancel[Return to chat]
-    
+
     ClearMessages --> EmptyMessages[messages = empty array]
     EmptyMessages --> ShowEmpty
-    
+
     Continue --> AddMsg[Add new message]
     AddMsg --> ConvStarted
-    
+
     ConvStarted --> End([Active conversation])
     Denied --> End
     Cancel --> End
-    
+
     style ShowEmpty fill:#e1f5ff
     style Welcome fill:#e1f5ff
     style ConvStarted fill:#ccffcc
@@ -524,12 +528,12 @@ const clearHistory = () => {
 
 ### UI Transitions
 
-| From | To | Trigger | Transition |
-|------|----|---------|-----------| 
-| Empty | History | First message | EmptyState → ChatHistory |
-| History | Empty | Clear history | Fade out → EmptyState fade in |
-| Login | Empty | Auth success | Redirect → EmptyState |
-| Login | Login | Auth fail | Error message display |
+| From    | To      | Trigger       | Transition                    |
+| ------- | ------- | ------------- | ----------------------------- |
+| Empty   | History | First message | EmptyState → ChatHistory      |
+| History | Empty   | Clear history | Fade out → EmptyState fade in |
+| Login   | Empty   | Auth success  | Redirect → EmptyState         |
+| Login   | Login   | Auth fail     | Error message display         |
 
 ---
 
@@ -544,12 +548,12 @@ const clearHistory = () => {
 
 ### Keyboard Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| `Enter` | New line in message |
-| `Ctrl+Enter` / `⌘+Enter` | Send message |
-| `⌘K` / `Ctrl+K` | Open command palette |
-| `Esc` | Close dialogs/modals |
+| Shortcut                 | Action               |
+| ------------------------ | -------------------- |
+| `Enter`                  | New line in message  |
+| `Ctrl+Enter` / `⌘+Enter` | Send message         |
+| `⌘K` / `Ctrl+K`          | Open command palette |
+| `Esc`                    | Close dialogs/modals |
 
 ### Accessibility
 
