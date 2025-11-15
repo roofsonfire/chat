@@ -123,7 +123,7 @@ git diff main...feature-branch | @security-scout "Review these changes for secur
 We may add additional specialized modes:
 
 - **Documentation Writer** - Clear, comprehensive documentation
-- **Test Architect** - TDD, coverage, testing strategies  
+- **Test Architect** - TDD, coverage, testing strategies
 - **Performance Profiler** - Benchmarking, optimization, monitoring
 - **API Designer** - REST API design best practices
 - **Accessibility Guide** - WCAG compliance and a11y best practices
