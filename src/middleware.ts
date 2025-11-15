@@ -131,6 +131,17 @@ function handleCsrf(req: NextRequest): NextResponse | void {
 // --- Main Middleware ---
 
 export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // ✅ PRODUCTION: Skip middleware for health check endpoints
+  // These must be accessible by Cloud Run / Kubernetes probes without auth or rate limiting
+  if (pathname.startsWith("/api/health")) {
+    logger.debug("middleware: Health check endpoint - skipping middleware", {
+      pathname,
+    });
+    return NextResponse.next();
+  }
+
   logger.info("middleware: Request received", {
     url: req.url,
     method: req.method,

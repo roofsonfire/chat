@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * - `icon-lg`: Large square icon (40x40px / size-10)
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-[var(--spacing-2)] whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive active:scale-[0.98] hover:scale-[1.02]",
   {
     variants: {
       variant: {
@@ -41,12 +41,13 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
-        "icon-sm": "size-8",
-        "icon-lg": "size-10",
+        default:
+          "h-[var(--spacing-8)] px-[var(--spacing-4)] py-[var(--spacing-2)] has-[>svg]:px-[var(--spacing-3)]",
+        sm: "h-[var(--spacing-8)] rounded-md gap-[var(--spacing-1)] px-[var(--spacing-3)] has-[>svg]:px-[var(--spacing-2)]",
+        lg: "h-[var(--spacing-10)] rounded-md px-[var(--spacing-6)] has-[>svg]:px-[var(--spacing-4)]",
+        icon: "size-[var(--spacing-8)]",
+        "icon-sm": "size-[var(--spacing-8)]",
+        "icon-lg": "size-[var(--spacing-10)]",
       },
     },
     defaultVariants: {
@@ -119,7 +120,9 @@ const buttonVariants = cva(
  * - Accessibility (disabled, aria attributes)
  * - Polymorphic with `asChild` prop
  * - Invalid state styling
- * - Smooth transitions
+ * - Smooth transitions with CSS animations
+ * - Subtle hover (scale 1.02) and press (scale 0.98) effects
+ * - Performant CSS-based animations
  *
  * @see {@link https://ui.shadcn.com/docs/components/button} shadcn/ui Button Documentation
  */
@@ -128,6 +131,7 @@ function Button({
   variant,
   size,
   asChild = false,
+  onDrag,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -139,6 +143,7 @@ function Button({
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
+      onDrag={onDrag}
       {...props}
     />
   );

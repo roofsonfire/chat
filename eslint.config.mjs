@@ -20,6 +20,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "coverage/**",
+      "site/**", // MkDocs generated site
+      ".venv/**", // Python virtual environment
       "next-env.d.ts",
     ],
   },

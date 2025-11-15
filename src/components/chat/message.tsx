@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { motion } from "framer-motion";
+import { ANIMATION_PRESETS } from "@/lib/constants/animations";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -71,21 +73,23 @@ interface ChatMessageProps {
  * - Avatar with hover card showing AI model information
  * - Context menu with copy, feedback, and flag actions
  * - Image support with download functionality
- * - Responsive layout with smooth animations
+ * - Responsive layout with smooth framer-motion animations
+ * - Fade-in and slide-up animation for new messages
  * - Accessibility attributes (ARIA labels, semantic HTML)
  */
 export function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user";
 
   return (
-    <div
+    <motion.div
       className={cn(
-        "animate-in fade-in slide-in-from-bottom-4 my-4 flex items-start space-x-4 duration-500",
+        "my-4 flex items-start space-x-4",
         isUser ? "justify-end" : ""
       )}
       role="article"
       aria-label={`${isUser ? "User" : "Assistant"} message`}
       data-testid={`message-${isUser ? "user" : "assistant"}`}
+      {...ANIMATION_PRESETS.chatMessage}
     >
       {!isUser && (
         <HoverCard>
@@ -227,6 +231,6 @@ export function ChatMessage({ message }: ChatMessageProps) {
           )}
         </ContextMenuContent>
       </ContextMenu>
-    </div>
+    </motion.div>
   );
 }

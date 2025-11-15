@@ -40,6 +40,7 @@ This directory holds everything that expands on the main `README.md`. Use the se
 ## Build & Architecture
 
 - [API.md](API.md) – HTTP and streaming endpoints with request/response contracts.
+- [design-tokens.md](design-tokens.md) – Design token system for colors, typography, and spacing.
 - [adr/](adr/) – Architecture Decision Records (ADRs) documenting major technical decisions.
 - [PERFORMANCE.md](PERFORMANCE.md) – Runtime metrics, optimizations, and monitoring hooks.
 - [USER-MANAGEMENT.md](USER-MANAGEMENT.md) – Authentication model, session flow, and account policies.
