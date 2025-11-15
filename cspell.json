@@ -131,8 +131,7 @@
     "secreto",
     "repo",
     "repos",
-    "CSRF",
-    "colour"
+    "CSRF"
   ],
   "flagWords": [],
   "overrides": [
