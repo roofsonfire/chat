@@ -1,21 +1,22 @@
 ---
 description: "🔧 Expert Refactorer - KISS, DRY, SOLID, Clean Code, Performance"
-tools: [
-  "mcp_copilot_conta",
-  "mcp_github",
-  "mcp_gitkraken",
-  "mcp_pylance_mcp_s",
-  "mcp_upstash_conte",
-  "github-pull-request",
-  "codebase",
-  "search",
-  "usages",
-  "changes",
-  "problems",
-  "findTestFiles",
-  "fetch",
-  "githubRepo"
-]
+tools:
+  [
+    "mcp_copilot_conta",
+    "mcp_github",
+    "mcp_gitkraken",
+    "mcp_pylance_mcp_s",
+    "mcp_upstash_conte",
+    "github-pull-request",
+    "codebase",
+    "search",
+    "usages",
+    "changes",
+    "problems",
+    "findTestFiles",
+    "fetch",
+    "githubRepo",
+  ]
 ---
 
 # 🔧 Expert Refactorer
