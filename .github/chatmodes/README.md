@@ -4,7 +4,42 @@ This directory contains specialized chat mode configurations for GitHub Copilot 
 
 ## 🛡️ Available Chat Modes
 
-### Security Scout (`security-scout.chatmode.md`)
+### 🔧 Expert Refactorer (`expert-refactorer.md`)
+
+**Purpose**: Code refactoring, clean code practices, and performance optimization
+
+**Capabilities**:
+
+- Apply KISS, DRY, and SOLID principles
+- Refactor legacy code with clean code practices
+- Optimize performance bottlenecks
+- Review code with Linux philosophy and minimalism
+- Enforce TypeScript strict mode and type safety
+- Provide security-first development guidance
+- Extract reusable patterns and utilities
+
+**When to Use**:
+
+- Reviewing pull requests for code quality
+- Refactoring legacy or complex code
+- Optimizing performance-critical paths
+- Establishing code standards and conventions
+- Teaching best practices to team members
+- Simplifying over-engineered solutions
+
+**Example Usage**:
+
+```bash
+@expert-refactorer Review this component for clean code violations
+@expert-refactorer Refactor this function to follow SOLID principles
+@expert-refactorer Optimize this API route for better performance
+```
+
+**Personality**: No-nonsense engineer with colorful language, brutal honesty, and deep technical expertise.
+
+---
+
+### 🛡️ Security Scout (`security-scout.chatmode.md`)
 
 **Purpose**: Security-focused code review and vulnerability scanning
 
@@ -27,7 +62,7 @@ This directory contains specialized chat mode configurations for GitHub Copilot 
 
 **Example Usage**:
 
-```
+```bash
 @security-scout Review this authentication middleware for security issues
 @security-scout Check this API route for OWASP vulnerabilities
 @security-scout Analyze the password hashing implementation
@@ -53,6 +88,19 @@ These chat modes are designed to work seamlessly with our existing documentation
 
 ## 🎯 Usage Guidelines
 
+### For Code Refactoring
+
+```bash
+# Use expert refactorer for code quality improvements
+@expert-refactorer "Review this service class and suggest improvements"
+
+# Get clean code recommendations
+@expert-refactorer "How can I simplify this nested logic?"
+
+# Performance optimization
+@expert-refactorer "Optimize this function for better performance"
+```
+
 ### For Security Reviews
 
 ```bash
@@ -74,10 +122,12 @@ git diff main...feature-branch | @security-scout "Review these changes for secur
 
 We may add additional specialized modes:
 
-- **Performance Scout** - Performance optimization and monitoring
+- **Documentation Writer** - Clear, comprehensive documentation
+- **Test Architect** - TDD, coverage, testing strategies
+- **Performance Profiler** - Benchmarking, optimization, monitoring
 - **API Designer** - REST API design best practices
-- **Testing Assistant** - Test strategy and implementation
 - **Accessibility Guide** - WCAG compliance and a11y best practices
+- **DevOps Engineer** - CI/CD, deployment, infrastructure as code
 
 ## 📖 Related Documentation
 
@@ -88,5 +138,5 @@ We may add additional specialized modes:
 
 ---
 
-**Last Updated**: January 2025  
-**Maintained by**: Security Team & AI Integration Team
+**Last Updated**: November 2025  
+**Maintained by**: Core Development Team & AI Integration Team

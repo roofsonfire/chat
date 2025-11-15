@@ -73,7 +73,7 @@ className: "transition-all duration-200 active:scale-[0.98] hover:scale-[1.02]";
 
 **Visual Demo**:
 
-```
+```tsx
 Rest State:     scale(1.0)
       ↓
 Hover State:    scale(1.02)  [slightly bigger]
@@ -115,7 +115,7 @@ Release:        scale(1.0)   [back to normal]
 
 **Animation Flow**:
 
-```
+```tsx
 1. Initial State (hidden):
    - opacity: 0
    - y: +20px (below final position)
