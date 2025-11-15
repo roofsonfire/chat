@@ -12,3 +12,8 @@ export const DEFAULT_PROMPTS = [
   "Create a workout plan for beginners",
   "Suggest creative project ideas",
 ] as const;
+
+/**
+ * Type for suggested prompts
+ */
+export type SuggestedPrompt = (typeof DEFAULT_PROMPTS)[number];
