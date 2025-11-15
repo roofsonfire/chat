@@ -16,7 +16,7 @@ This guide helps you set up branch protection rules for the `main` branch in the
 
 1. **Navigate to Settings**
 
-   ```
+   ```bash
    https://github.com/roofsonfire/chat/settings/branches
    ```
 
