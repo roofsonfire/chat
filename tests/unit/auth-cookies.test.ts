@@ -9,7 +9,9 @@ describe("NextAuth Cookie Security", () => {
     });
 
     it("should have sameSite set to strict", () => {
-      expect(authOptions.cookies?.sessionToken?.options?.sameSite).toBe("strict");
+      expect(authOptions.cookies?.sessionToken?.options?.sameSite).toBe(
+        "strict"
+      );
     });
 
     it("should have path set to root", () => {
@@ -52,7 +54,9 @@ describe("NextAuth Cookie Security", () => {
     });
 
     it("should have sameSite set to strict", () => {
-      expect(authOptions.cookies?.callbackUrl?.options?.sameSite).toBe("strict");
+      expect(authOptions.cookies?.callbackUrl?.options?.sameSite).toBe(
+        "strict"
+      );
     });
 
     it("should have path set to root", () => {
@@ -144,8 +148,12 @@ describe("NextAuth Cookie Security", () => {
     });
 
     it("should protect against CSRF with sameSite on all cookies", () => {
-      expect(authOptions.cookies?.sessionToken?.options?.sameSite).toBe("strict");
-      expect(authOptions.cookies?.callbackUrl?.options?.sameSite).toBe("strict");
+      expect(authOptions.cookies?.sessionToken?.options?.sameSite).toBe(
+        "strict"
+      );
+      expect(authOptions.cookies?.callbackUrl?.options?.sameSite).toBe(
+        "strict"
+      );
       expect(authOptions.cookies?.csrfToken?.options?.sameSite).toBe("strict");
     });
   });
