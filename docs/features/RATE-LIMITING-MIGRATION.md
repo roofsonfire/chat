@@ -1,8 +1,8 @@
 # Rate Limiting Migration Guide
 
-**Status:** 📋 Future Migration (Not Currently Required)
-**Current Implementation:** In-memory rate limiting
-**Recommended Migration:** Upstash Redis (when scaling beyond 3 Cloud Run instances)
+**Status:** 📋 Future Migration (Not Currently Required)  
+**Current Implementation:** In-memory rate limiting  
+**Recommended Migration:** Upstash Redis (when scaling beyond 3 Cloud Run instances)  
 **Last Updated:** November 8, 2025
 
 ---
