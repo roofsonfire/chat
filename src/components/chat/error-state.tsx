@@ -62,32 +62,30 @@ export function ErrorState({
   const isError = variant === "error";
 
   return (
-    <div className="flex h-full items-center justify-center p-[var(--spacing-4)]">
+    <div className="flex h-full items-center justify-center p-4">
       <Card className="w-full max-w-lg">
-        <CardContent className="pt-[var(--spacing-6)]">
+        <CardContent className="pt-6">
           <Alert variant={isError ? "destructive" : "default"}>
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle className="mb-[var(--spacing-2)]">{title}</AlertTitle>
-            <AlertDescription className="mb-[var(--spacing-4)]">
-              {message}
-            </AlertDescription>
+            <AlertTitle className="mb-2">{title}</AlertTitle>
+            <AlertDescription className="mb-4">{message}</AlertDescription>
 
             {/* Action buttons */}
             {(onRetry || onGoHome) && (
-              <div className="mt-[var(--spacing-4)] flex gap-[var(--spacing-2)]">
+              <div className="mt-4 flex gap-2">
                 {onRetry && (
                   <Button
                     variant={isError ? "default" : "outline"}
                     size="sm"
                     onClick={onRetry}
                   >
-                    <RefreshCw className="mr-[var(--spacing-2)] h-4 w-4" />
+                    <RefreshCw className="mr-2 h-4 w-4" />
                     Try Again
                   </Button>
                 )}
                 {onGoHome && (
                   <Button variant="outline" size="sm" onClick={onGoHome}>
-                    <Home className="mr-[var(--spacing-2)] h-4 w-4" />
+                    <Home className="mr-2 h-4 w-4" />
                     Go Home
                   </Button>
                 )}
@@ -96,11 +94,9 @@ export function ErrorState({
           </Alert>
 
           {/* Additional help text */}
-          <div className="bg-muted text-muted-foreground mt-[var(--spacing-6)] rounded-lg p-[var(--spacing-4)] text-sm">
-            <p className="mb-[var(--spacing-2)] font-medium">
-              Common solutions:
-            </p>
-            <ul className="list-inside list-disc space-y-[var(--spacing-1)] text-sm">
+          <div className="bg-muted text-muted-foreground mt-6 rounded-lg p-4 text-sm">
+            <p className="mb-2 font-medium">Common solutions:</p>
+            <ul className="list-inside list-disc space-y-1 text-sm">
               <li>Check your internet connection</li>
               <li>Refresh the page and try again</li>
               <li>Clear your browser cache</li>
