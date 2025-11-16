@@ -175,7 +175,7 @@ export const authOptions: AuthOptions = {
       name: `${env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.session-token`,
       options: {
         httpOnly: true, // Prevents JavaScript access (XSS protection)
-        sameSite: "strict", // ⬆️ UPGRADED: Strict CSRF protection (was "lax")
+        sameSite: env.NODE_ENV === "production" ? "strict" : "lax", // Strict in prod, lax in dev for OAuth
         path: "/",
         secure: env.NODE_ENV === "production", // HTTPS only in production
         domain: env.NODE_ENV === "production" ? ".daza.ar" : undefined,
@@ -185,7 +185,7 @@ export const authOptions: AuthOptions = {
       name: `${env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.callback-url`,
       options: {
         httpOnly: true,
-        sameSite: "strict", // ⬆️ UPGRADED: Strict CSRF protection
+        sameSite: env.NODE_ENV === "production" ? "strict" : "lax", // Strict in prod, lax in dev for OAuth
         path: "/",
         secure: env.NODE_ENV === "production",
       },
@@ -194,7 +194,7 @@ export const authOptions: AuthOptions = {
       name: `${env.NODE_ENV === "production" ? "__Host-" : ""}next-auth.csrf-token`,
       options: {
         httpOnly: true,
-        sameSite: "strict", // ⬆️ UPGRADED: Strict CSRF protection
+        sameSite: env.NODE_ENV === "production" ? "strict" : "lax", // Strict in prod, lax in dev for OAuth
         path: "/",
         secure: env.NODE_ENV === "production",
       },
