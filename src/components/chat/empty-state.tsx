@@ -1,6 +1,7 @@
 import { MessageSquare, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { DEFAULT_PROMPTS } from "@/lib/constants/chat";
 
 /**
  * EmptyState Component
@@ -10,14 +11,15 @@ import { Button } from "@/components/ui/button";
  *
  * @component
  * @param {Object} props - Component props
- * @param {() => void} [props.onStartChat] - Optional callback when user wants to start chatting
+ * @param {(prompt: string) => void} [props.onStartChat] - Optional callback with selected prompt
+ * @param {readonly string[]} [props.suggestedPrompts] - Custom prompts to display (defaults to DEFAULT_PROMPTS)
  * @returns {JSX.Element} Empty state UI for chat
  *
  * @example
  * ```tsx
  * // Show when no messages exist
  * {messages.length === 0 && (
- *   <EmptyState onStartChat={() => inputRef.current?.focus()} />
+ *   <EmptyState onStartChat={(prompt) => handlePrompt(prompt)} />
  * )}
  * ```
  *
@@ -28,17 +30,14 @@ import { Button } from "@/components/ui/button";
  * - Clear call-to-action with suggested prompts
  */
 interface EmptyStateProps {
-  onStartChat?: () => void;
+  onStartChat?: (prompt: string) => void;
+  suggestedPrompts?: readonly string[];
 }
 
-export function EmptyState({ onStartChat }: EmptyStateProps) {
-  const suggestedPrompts = [
-    "Explain quantum computing in simple terms",
-    "Write a creative story about a robot",
-    "Help me debug this TypeScript code",
-    "Suggest ideas for a mobile app",
-  ];
-
+export function EmptyState({
+  onStartChat,
+  suggestedPrompts = DEFAULT_PROMPTS,
+}: EmptyStateProps) {
   return (
     <div className="flex h-full items-center justify-center p-[var(--spacing-4)]">
       <Card className="w-full max-w-2xl border-dashed">
@@ -73,10 +72,7 @@ export function EmptyState({ onStartChat }: EmptyStateProps) {
                   key={index}
                   variant="outline"
                   className="h-auto justify-start px-[var(--spacing-4)] py-[var(--spacing-3)] text-left whitespace-normal"
-                  onClick={() => {
-                    // Could emit this prompt to parent component
-                    onStartChat?.();
-                  }}
+                  onClick={() => onStartChat?.(prompt)}
                 >
                   <span className="text-sm">{prompt}</span>
                 </Button>

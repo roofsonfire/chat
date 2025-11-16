@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { ErrorState, InlineError } from "./error-state";
+import { ErrorState } from "./error-state";
 
 const meta: Meta<typeof ErrorState> = {
   title: "Chat/ErrorState",
@@ -100,32 +100,4 @@ export const DarkMode: Story = {
   parameters: {
     backgrounds: { default: "dark" },
   },
-};
-
-// Inline Error Stories
-const inlineMeta: Meta<typeof InlineError> = {
-  title: "Chat/InlineError",
-  component: InlineError,
-  parameters: {
-    layout: "padded",
-  },
-  tags: ["autodocs"],
-};
-
-export { inlineMeta as InlineErrorMeta };
-
-export const InlineErrorDefault: StoryObj<typeof InlineError> = {
-  render: () => (
-    <div className="max-w-md">
-      <InlineError message="This field is required" />
-    </div>
-  ),
-};
-
-export const InlineErrorLongMessage: StoryObj<typeof InlineError> = {
-  render: () => (
-    <div className="max-w-md">
-      <InlineError message="Your message is too long. Please keep it under 10,000 characters." />
-    </div>
-  ),
 };
