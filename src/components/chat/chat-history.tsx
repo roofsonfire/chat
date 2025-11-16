@@ -5,7 +5,6 @@ import { Message } from "@/lib/types";
 import { ChatMessage } from "./message";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { LoadingSkeleton } from "./loading-skeleton";
-import { EmptyState } from "./empty-state";
 
 /**
  * Props for the ChatHistory component
@@ -72,16 +71,13 @@ export function ChatHistory({ messages, isLoading = false }: ChatHistoryProps) {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  if (messages.length === 0) {
-    return <EmptyState data-testid="empty-chat" />;
-  }
-
   return (
     <ScrollArea className="h-full">
       <div className="space-y-4 p-4" data-testid="chat-messages">
-        {messages.map((message, index) => (
-          <ChatMessage key={index} message={message} />
-        ))}
+        {messages.length > 0 &&
+          messages.map((message, index) => (
+            <ChatMessage key={index} message={message} />
+          ))}
         {isLoading && <LoadingSkeleton data-testid="loading-indicator" />}
         <div ref={bottomRef} />
       </div>
