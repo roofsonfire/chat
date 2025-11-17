@@ -177,12 +177,14 @@ export function MessageInput({
       )}
       {imagePreview && (
         <div className="relative mt-4" data-testid="image-preview-container">
-          <div className="relative h-20 w-20">
+          <div className="relative inline-block max-h-20 max-w-20">
             <Image
               src={imagePreview}
               alt="Uploaded image attached to chat message"
-              fill
-              className="rounded-lg object-cover"
+              width={0}
+              height={0}
+              sizes="80px"
+              className="h-auto max-h-20 w-auto max-w-20 rounded-lg object-contain"
               data-testid="image-preview"
             />
           </div>

@@ -12,6 +12,18 @@ export function useStreamingParser() {
     let assistantText = "";
     const generatedImages: GeneratedImage[] = [];
     let buffer = "";
+    let assistantMessageCreated = false;
+
+    // Create initial assistant message immediately
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant" as const,
+        content: "",
+        timestamp: new Date(),
+      },
+    ]);
+    assistantMessageCreated = true;
 
     while (true) {
       const { done, value } = await reader.read();
@@ -49,35 +61,26 @@ export function useStreamingParser() {
         }
       }
 
-      // Update message with accumulated text and images after processing chunks
-      setMessages((prev) => {
-        const lastMessage = prev[prev.length - 1];
-        if (lastMessage && lastMessage.role === "assistant") {
-          const updatedMessage = {
-            ...lastMessage,
-            content:
-              assistantText ||
-              (generatedImages.length > 0
-                ? "I've generated an image for you."
-                : ""),
-            generatedImages:
-              generatedImages.length > 0 ? [...generatedImages] : undefined,
-          };
-          return [...prev.slice(0, -1), updatedMessage];
-        }
-        const newMessage: Message = {
-          role: "assistant" as const,
-          content:
-            assistantText ||
-            (generatedImages.length > 0
-              ? "I've generated an image for you."
-              : ""),
-          timestamp: new Date(),
-          generatedImages:
-            generatedImages.length > 0 ? [...generatedImages] : undefined,
-        };
-        return [...prev, newMessage];
-      });
+      // Update the assistant message with accumulated content
+      if (assistantMessageCreated) {
+        setMessages((prev) => {
+          const lastMessage = prev[prev.length - 1];
+          if (lastMessage && lastMessage.role === "assistant") {
+            const updatedMessage = {
+              ...lastMessage,
+              content:
+                assistantText ||
+                (generatedImages.length > 0
+                  ? "I've generated an image for you."
+                  : ""),
+              generatedImages:
+                generatedImages.length > 0 ? [...generatedImages] : undefined,
+            };
+            return [...prev.slice(0, -1), updatedMessage];
+          }
+          return prev;
+        });
+      }
     }
 
     // Final update after stream completes to ensure all data is saved
