@@ -10,6 +10,9 @@ const TEST_NONCE = "test-nonce-value";
 
 describe("securityHeadersMiddleware", () => {
   it("applies hardened security headers", () => {
+    // Mock NODE_ENV for this test
+    vi.stubEnv("NODE_ENV", "production");
+
     const response = new NextResponse();
 
     const secured = securityHeadersMiddleware(response, TEST_NONCE);
@@ -21,15 +24,24 @@ describe("securityHeadersMiddleware", () => {
     expect(csp).toContain("strict-dynamic");
     expect(csp).toContain("lh3.googleusercontent.com");
     expect(secured.headers.get("X-CSP-Nonce")).toBe(TEST_NONCE);
+
+    // Restore original NODE_ENV
+    vi.unstubAllEnvs();
   });
 });
 
 describe("buildContentSecurityPolicy", () => {
   it("returns a CSP string with the provided nonce", () => {
+    // Mock NODE_ENV for this test
+    vi.stubEnv("NODE_ENV", "production");
+
     const csp = buildContentSecurityPolicy(TEST_NONCE);
 
     expect(typeof csp).toBe("string");
     expect(csp).toContain(`nonce-${TEST_NONCE}`);
     expect(csp.split("; ")).toContain("default-src 'self'");
+
+    // Restore original NODE_ENV
+    vi.unstubAllEnvs();
   });
 });
