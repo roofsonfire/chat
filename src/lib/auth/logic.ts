@@ -169,13 +169,13 @@ export const authOptions: AuthOptions = {
       );
     },
   },
-  // ✅ SECURITY FIX: Explicit cookie security configuration
+  // ✅ SECURITY HARDENING: Production-grade cookie security configuration
   cookies: {
     sessionToken: {
       name: `${env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.session-token`,
       options: {
         httpOnly: true, // Prevents JavaScript access (XSS protection)
-        sameSite: "strict", // Enhanced CSRF protection
+        sameSite: env.NODE_ENV === "production" ? "strict" : "lax", // Strict in prod, lax in dev for OAuth
         path: "/",
         secure: env.NODE_ENV === "production", // HTTPS only in production
         domain: env.NODE_ENV === "production" ? ".daza.ar" : undefined,
@@ -185,7 +185,7 @@ export const authOptions: AuthOptions = {
       name: `${env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.callback-url`,
       options: {
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: env.NODE_ENV === "production" ? "strict" : "lax", // Strict in prod, lax in dev for OAuth
         path: "/",
         secure: env.NODE_ENV === "production",
       },
@@ -194,17 +194,17 @@ export const authOptions: AuthOptions = {
       name: `${env.NODE_ENV === "production" ? "__Host-" : ""}next-auth.csrf-token`,
       options: {
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: env.NODE_ENV === "production" ? "strict" : "lax", // Strict in prod, lax in dev for OAuth
         path: "/",
         secure: env.NODE_ENV === "production",
       },
     },
   },
-  // ✅ SECURITY FIX: Session timeout configuration
+  // ✅ SECURITY HARDENING: Session timeout configuration
   session: {
     strategy: "jwt",
     maxAge: 24 * 60 * 60, // 24 hours
-    updateAge: 60 * 60, // Update every hour
+    updateAge: 60 * 60, // Update every hour to refresh security context
   },
   pages: {
     signIn: "/login",
