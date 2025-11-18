@@ -7,7 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2025-01-30
+### Added (November 2025)
+
+- **Repository Structure Cleanup**
+  - Removed duplicate .md files from root directory
+  - Consolidated all documentation under docs/ structure
+  - Improved project organization and navigation
+
+### Fixed (November 2025)
+
+- **UI/UX Improvements** (PR #127)
+  - Fixed image aspect ratio issues (natural proportions vs forced ratios)
+  - Simplified loading states (single AI thinking dots vs multiple skeletons)
+  - Improved image preview responsiveness in message input
+  - Enhanced development CSP rules for hot reloading
+
+- **Workflow Stability** (PR #127)
+  - Resolved GitHub Actions test failures
+  - Fixed security headers tests with proper NODE_ENV mocking
+  - Updated rate limit tests to match actual API limits (3 req/30s)
+  - All 237 tests now pass successfully
+
+### Security (November 2025)
+
+- **Comprehensive Security Hardening**
+  - Remediated 9 security findings from professional audit
+  - Enhanced cookie security (httpOnly, secure, sameSite attributes)
+  - Strengthened CSRF protection (Origin/Referer validation)
+  - Increased bcrypt rounds to 12 (NIST compliance)
+  - Implemented automatic PII sanitization in logs
+  - Added 57 new security tests (295 total tests)
+
+## [0.1.0] - November 2025
+
+_Initial production-ready release with comprehensive security, AI capabilities, and modern web architecture._
+
+### Added
 
 ### Added
 
