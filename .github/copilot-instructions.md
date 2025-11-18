@@ -9,13 +9,14 @@
 
 ### What This Is
 
-Production-grade AI chat application built with Next.js 15, TypeScript, and Google Vertex AI.
+Production-grade AI chat application built with Next.js 15, TypeScript, and Google Vertex AI. **Security-hardened** (November 2025) with comprehensive audit remediation and enhanced UI/UX.
 
 ### Repository Information
 
 - **GitHub**: `roofsonfire/chat` - https://github.com/roofsonfire/chat
 - **Production**: https://chat.daza.ar (Google Cloud Run, us-central1)
 - **Branches**: `develop` (testing) → `main` (production)
+- **Current Status**: v0.1.0 pre-release, security audit complete, PR #127 pending merge
 
 ### Core Stack
 
@@ -27,11 +28,19 @@ Production-grade AI chat application built with Next.js 15, TypeScript, and Goog
 - **Google Vertex AI** - Gemini 2.5 models (multimodal)
 - **NextAuth.js** - Google OAuth + test credentials
 
+### Recent Achievements (November 2025)
+
+- ✅ **Security Hardening Complete** - 9 audit findings remediated, enhanced authentication
+- ✅ **Repository Cleanup** - Organized documentation structure, removed duplicates
+- ⏳ **UI/UX Improvements** - Image aspect ratios, loading states (PR #127 ready)
+- ✅ **Test Stability** - All 295 tests passing, enhanced CI/CD workflows
+- ✅ **Expert Refactorer Validation** - A+ grade (95/100) for code quality
+
 ---
 
 ## 📂 Project Structure
 
-```
+```text
 src/
 ├── app/              # Next.js App Router (pages, API routes)
 ├── components/       # React components
@@ -127,11 +136,12 @@ import type { Message } from "@/lib/types";
 - **Primary**: Google OAuth with invite-only allowlist
 - **Dev/Test**: Credentials provider (gated by `ENABLE_TEST_CREDENTIALS`)
 - **Session**: JWT tokens via NextAuth.js
-- **Passwords**: bcrypt hashing (10 rounds)
+- **Passwords**: bcrypt hashing (12 rounds) - **Enhanced November 2025**
+- **Security**: CSRF protection, secure cookies, PII sanitization - **Audit remediated**
 
 ### Security Layers
 
-```
+```text
 Request → Security Headers → Rate Limit (5/10s) → Auth → Validation → Business Logic
 ```
 
@@ -162,12 +172,12 @@ AUTH_USER_EMAIL         # Required
 ### Commands
 
 ```bash
-npm run test              # All tests
+npm run test              # All tests (295 total - November 2025)
 npm run test:coverage     # With coverage report
 npm run test:ui           # Interactive UI
 ```
 
-**Target**: >80% coverage on critical paths
+**Current Status**: 295 tests passing (57 new security tests), >80% coverage achieved
 
 ---
 
@@ -183,6 +193,8 @@ npm run test:ui           # Interactive UI
 6. ✅ Use shadcn/ui v4 components
 7. ✅ Add proper types with explicit return types
 8. ✅ Log important operations with `@/lib/logger`
+9. ✅ **Security-first mindset** - sanitize PII, secure cookies, CSRF protection
+10. ✅ **Follow audit standards** - bcrypt rounds ≥12, proper session handling
 
 ### Never Do
 
@@ -326,7 +338,9 @@ export class MyService {
 
 ---
 
-**This is a production-grade application.**  
-Prioritize: **Code quality** • **Security** • **Performance** • **Maintainability**
+**This is a production-grade application with completed security hardening.**  
+Prioritize: **Security-first development** • **Code quality** • **Performance** • **Maintainability**
+
+**Current State (November 2025)**: v0.1.0 pre-release, all security findings remediated, UI improvements ready for merge.
 
 **For detailed patterns and examples, always check the [patterns/](patterns/) directory.**

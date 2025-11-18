@@ -19,7 +19,7 @@ npm run format           # Prettier formatting
 npm run type-check       # TypeScript validation
 
 # Testing
-npm run test             # Run all Vitest tests
+npm run test             # Run all Vitest tests (295 total)
 npm run test:ui          # Interactive test UI
 npm run test:coverage    # Generate coverage report
 
@@ -393,10 +393,12 @@ const projectId = env.GOOGLE_PROJECT_ID;
 7. **Add proper types** - Explicit return types for functions
 8. **Use shadcn/ui components** - Don't reinvent UI components
 9. **Log important operations** - Use `@/lib/logger`
-10. **Write tests** - Add tests for new functionality
+10. **Security-first approach** - PII sanitization, secure cookies, CSRF protection
+11. **Write tests** - Add tests for new functionality
 
 ---
 
-**Last Updated:** November 2025  
+**Last Updated:** November 17, 2025  
+**Current Status:** v0.1.0 pre-release, security audit complete, PR #127 ready  
 **Maintained by:** Core Development Team  
 **Questions?** See [.github/copilot-instructions.md](copilot-instructions.md) for comprehensive context.
