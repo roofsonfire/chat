@@ -41,6 +41,27 @@ export function createCspNonce(): string {
 }
 
 export function buildContentSecurityPolicy(nonce: string): string {
+  const isDevelopment = process.env.NODE_ENV !== "production";
+
+  if (isDevelopment) {
+    // Relaxed CSP for development - no nonces to allow 'unsafe-inline'
+    const directives = [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://www.gstatic.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: blob: https://lh3.googleusercontent.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "connect-src 'self' https://accounts.google.com https://oauth2.googleapis.com ws://localhost:* ws://127.0.0.1:*",
+      "frame-src 'self' https://accounts.google.com",
+      "frame-ancestors 'none'",
+      "form-action 'self'",
+    ];
+    return directives.join("; ");
+  }
+
+  // Strict CSP for production with nonces
   const directives = [
     "default-src 'self'",
     "base-uri 'self'",

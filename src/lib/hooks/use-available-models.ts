@@ -25,7 +25,9 @@ export function useAvailableModels() {
         const response = await fetch("/api/models");
 
         if (!response.ok) {
-          throw new Error("Failed to fetch models");
+          throw new Error(
+            `Failed to fetch models: ${response.status} ${response.statusText}`
+          );
         }
 
         const data = await response.json();
@@ -48,7 +50,7 @@ export function useAvailableModels() {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Unknown error occurred";
-        logger.error("Error fetching models", { error: err });
+        logger.warn("Models API failed, using fallback models", { error: err });
         setError(new Error(errorMessage));
 
         // Fallback to hardcoded models

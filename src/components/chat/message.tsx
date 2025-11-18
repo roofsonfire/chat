@@ -7,7 +7,6 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { motion } from "framer-motion";
 import {
   ContextMenu,
@@ -135,15 +134,17 @@ export function ChatMessage({ message }: ChatMessageProps) {
             <CardContent className="p-4">
               {/* User uploaded image (input) */}
               {isUser && (message as UserMessage).image && (
-                <AspectRatio ratio={16 / 9} className="mb-2">
+                <div className="mb-2 max-w-[400px]">
                   <Image
                     src={(message as UserMessage).image!}
                     alt="User uploaded content"
-                    fill
-                    className="rounded-lg object-cover"
+                    width={0}
+                    height={0}
+                    sizes="(max-width: 400px) 100vw, 400px"
+                    className="h-auto w-full max-w-full rounded-lg object-contain"
                     data-testid="message-image"
                   />
-                </AspectRatio>
+                </div>
               )}
 
               {/* Message text */}
@@ -176,16 +177,14 @@ export function ChatMessage({ message }: ChatMessageProps) {
                   >
                     {(message as AssistantMessage).generatedImages!.map(
                       (img, idx) => (
-                        <AspectRatio
-                          key={idx}
-                          ratio={1}
-                          className="group relative max-w-[400px]"
-                        >
+                        <div key={idx} className="group relative max-w-[400px]">
                           <Image
                             src={`data:${img.mimeType};base64,${img.data}`}
                             alt={`AI-generated image ${idx + 1}`}
-                            fill
-                            className="rounded-lg object-cover"
+                            width={0}
+                            height={0}
+                            sizes="(max-width: 400px) 100vw, 400px"
+                            className="h-auto w-full max-w-full rounded-lg object-contain"
                             data-testid={`generated-image-${idx}`}
                           />
                           <Button
@@ -202,7 +201,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
                           >
                             <Download className="h-4 w-4" />
                           </Button>
-                        </AspectRatio>
+                        </div>
                       )
                     )}
                   </div>
