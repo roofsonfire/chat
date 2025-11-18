@@ -91,7 +91,9 @@ describe("NextAuth Cookie Security", () => {
 
     it("should have sameSite set based on environment", () => {
       const expectedSameSite = env.NODE_ENV === "production" ? "strict" : "lax";
-      expect(authOptions.cookies?.csrfToken?.options?.sameSite).toBe(expectedSameSite);
+      expect(authOptions.cookies?.csrfToken?.options?.sameSite).toBe(
+        expectedSameSite
+      );
     });
 
     it("should have path set to root", () => {
@@ -158,7 +160,9 @@ describe("NextAuth Cookie Security", () => {
       expect(authOptions.cookies?.callbackUrl?.options?.sameSite).toBe(
         expectedSameSite
       );
-      expect(authOptions.cookies?.csrfToken?.options?.sameSite).toBe(expectedSameSite);
+      expect(authOptions.cookies?.csrfToken?.options?.sameSite).toBe(
+        expectedSameSite
+      );
     });
   });
 });
