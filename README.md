@@ -1,11 +1,12 @@
 # AI Chat Assistant
 
-> Production-grade multimodal chat with Next.js 15, TypeScript, and Google Vertex AI  
-> **Live**: [chat.daza.ar](https://chat.daza.ar) • **Repo**: [github.com/roofsonfire/chat](https://github.com/roofsonfire/chat)
+> Open-source multimodal chat application built with Next.js 15, TypeScript, and Google Vertex AI  
+> **Community Project** • **MIT License** • **Contributions Welcome**
 
-[![Deploy to Cloud Run](https://img.shields.io/badge/Deploy-Cloud%20Run-blue?logo=googlecloud)](https://chat.daza.ar)
+[![Deploy to Cloud Run](https://img.shields.io/badge/Deploy-Cloud%20Run-blue?logo=googlecloud)](https://cloud.google.com/run)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15.5-black?logo=next.js)](https://nextjs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
@@ -14,8 +15,8 @@
 **5-minute setup:** [docs/guides/QUICKSTART.md](docs/guides/QUICKSTART.md)
 
 ```bash
-git clone https://github.com/roofsonfire/chat.git
-cd chat
+git clone https://github.com/YOUR_USERNAME/ai-chat-assistant.git
+cd ai-chat-assistant
 npm install
 cp .env.example .env.local
 # Edit .env.local with your credentials
@@ -47,7 +48,7 @@ npm run dev
 
 ## 📂 Project Structure
 
-```
+```text
 chat/
 ├── src/
 │   ├── app/              # Next.js App Router (pages, API routes)
@@ -227,8 +228,8 @@ gcloud run deploy chat-production \
 
 ## 🆘 Support
 
-- 🐛 **[Report Issues](https://github.com/roofsonfire/chat/issues/new/choose)** - Bug reports & feature requests
-- 💬 **[Discussions](https://github.com/roofsonfire/chat/discussions)** - Questions & ideas
+- 🐛 **Report Issues** - Bug reports & feature requests via GitHub Issues
+- 💬 **Discussions** - Questions & ideas via GitHub Discussions
 - 📚 **[Documentation](docs/README.md)** - Comprehensive guides
 - 🛡️ **[Security](docs/SECURITY.md)** - Security policy & vulnerability reporting
 
@@ -248,8 +249,8 @@ Built with [Next.js](https://nextjs.org/), [Google Vertex AI](https://cloud.goog
 
 <div align="center">
 
-**⭐ Star us on GitHub if this project helps you!**
+**⭐ Star this project if it helps you!**
 
-[🏠 Home](https://github.com/roofsonfire/chat) • [📚 Docs](docs/README.md) • [🌐 Demo](https://chat.daza.ar) • [💬 Discuss](https://github.com/roofsonfire/chat/discussions)
+[📚 Documentation](docs/README.md) • [🚀 Quick Start](docs/guides/QUICKSTART.md) • [🤝 Contributing](docs/CONTRIBUTING.md)
 
 </div>

@@ -15,7 +15,7 @@ This directory holds everything that expands on the main `README.md`. Use the se
 
 ## 📚 Documentation Optimization & Quality
 
-**✅ 4-Phase Documentation Optimization Project Complete (Nov 2025)**
+### ✅ 4-Phase Documentation Optimization Project Complete (Nov 2025)
 
 - **[DOCUMENTATION-PROJECT-SUMMARY.md](DOCUMENTATION-PROJECT-SUMMARY.md)** – Complete project overview (all 4 phases, ROI analysis)
 - **[PHASE-4-COMPLETION-SUMMARY.md](PHASE-4-COMPLETION-SUMMARY.md)** – Phase 4: Interactive & Advanced (latest phase)
@@ -132,9 +132,9 @@ This directory holds everything that expands on the main `README.md`. Use the se
 
 ---
 
-- Repository: [github.com/roofsonfire/chat](https://github.com/roofsonfire/chat)
-- Production: [chat.daza.ar](https://chat.daza.ar)
-- Platform: Google Cloud Run (us-central1)
-- Maintainers: Core development team
+- **License**: MIT License - Open Source
+- **Platform**: Google Cloud Run (configurable region)
+- **Maintainers**: Community driven development
+- **Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md)
 
-_Last reviewed: November 2025_
+Last reviewed: November 2025

@@ -24,7 +24,7 @@ This document provides context and guidelines for GitHub Copilot when working on
 ### Branch Strategy
 
 - **`develop`** - Development branch for active development (local testing on `localhost:3000`)
-- **`main`** - Production branch (auto-deploys to `chat.daza.ar`)
+- **`main`** - Production branch (configure your deployment)
 
 **Workflow**: `feature/* → develop → main`
 
@@ -63,7 +63,7 @@ This is a production-grade chat application built with Next.js 15, TypeScript, a
 
 ## Project Structure
 
-```
+```text
 src/
 ├── app/                    # Next.js App Router (pages and API routes)
 │   ├── api/               # API route handlers
@@ -424,7 +424,7 @@ export default async function Page() {
 ### Project Resources
 
 - [GitHub Repository](https://github.com/roofsonfire/chat) - Source code and issues
-- [Live Production Site](https://chat.daza.ar) - Current deployment
+- Deploy to your own Cloud Run instance
 - [Project Documentation](../docs/README.md) - Comprehensive documentation
 
 ### Technology Documentation
@@ -460,7 +460,7 @@ export default async function Page() {
 
 ## Specific Guidance
 
-### When working with AI/Chat features:
+### When working with AI/Chat features
 
 - Use `ChatService` class from `@/lib/services/chat-service`
 - Implement streaming responses for better UX
@@ -468,7 +468,7 @@ export default async function Page() {
 - Validate image formats and sizes
 - Add proper error handling for AI failures
 
-### When working with Authentication:
+### When working with Authentication
 
 - Never store passwords in plain text
 - Use bcrypt for password hashing
@@ -476,7 +476,7 @@ export default async function Page() {
 - Validate email formats with Zod
 - Use NextAuth.js session management
 
-### When working with UI Components:
+### When working with UI Components
 
 - Use **shadcn/ui v4 components** as the foundation for all UI elements
 - All components include modern `data-slot` attributes for proper styling
@@ -487,7 +487,7 @@ export default async function Page() {
 - Test accessibility with Playwright axe-core integration
 - Follow established component patterns and TypeScript conventions
 
-### When working with API Routes:
+### When working with API Routes
 
 - Validate all inputs with Zod
 - Check authentication via NextAuth
@@ -495,7 +495,7 @@ export default async function Page() {
 - Return consistent error responses
 - Log errors with context
 
-### When working with Deployment:
+### When working with Deployment
 
 - Use Google Cloud Run for serverless hosting
 - Store secrets in Google Cloud Secret Manager

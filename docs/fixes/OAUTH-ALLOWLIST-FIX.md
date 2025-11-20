@@ -59,7 +59,7 @@ Now the allowlist is evaluated **at runtime** when the user logs in, correctly r
 
 - Run ID: 19211866493
 - Status: ✅ Success
-- Production: https://chat.daza.ar
+- Production: https://your-domain.com
 
 ## How It Works Now
 
@@ -96,7 +96,7 @@ export function getAllowlist(): string[] {
 
 ## Verification
 
-Test login at https://chat.daza.ar:
+Test login at your deployed application:
 
 1. ✅ Click "Sign in with Google"
 2. ✅ Authenticate with Google account

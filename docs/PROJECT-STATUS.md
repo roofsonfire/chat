@@ -7,9 +7,9 @@
 
 ### Repository & Hosting
 
-- **GitHub Repository**: [roofsonfire/chat](https://github.com/roofsonfire/chat)
-- **Clone URL**: `git@github.com:roofsonfire/chat.git`
-- **Live Production**: [https://chat.daza.ar](https://chat.daza.ar)
+- **GitHub Repository**: `YOUR_USERNAME/ai-chat-assistant` (fork this repository)
+- **Clone URL**: `git@github.com:YOUR_USERNAME/ai-chat-assistant.git`
+- **Deployment**: Configure your own Cloud Run deployment
 - **Platform**: Google Cloud Run (Serverless)
 - **Project ID**: `norse-breaker-474323-n8`
 - **Region**: `us-central1` (Iowa)
@@ -17,14 +17,14 @@
 ### Branch Strategy
 
 - **`develop`** - Development branch (local testing only)
-- **`main`** - Production branch (auto-deploys to chat.daza.ar)
+- **`main`** - Production branch (configure your own deployment)
 
 ### Current Branch Status
 
 - **Default Branch**: `main`
 - **Active Branch**: `copilot/vscode1760670852695` (documentation refresh and UI polish)
 - **Current HEAD**: `6569cbf` – `feat: improve UI and remove E2E tests`
-- **Recent Activity**: UI hardening, documentation refresh, and PR [#70](https://github.com/roofsonfire/chat/pull/70) tracking overlay fixes
+- **Recent Activity**: UI hardening, documentation refresh, and continuous improvements
 
 ## 🚀 Current Tech Stack
 
@@ -55,7 +55,7 @@
 
 ### Production Environment
 
-```
+```text
 Service Name: chat-production
 Domain: https://chat.daza.ar
 Memory: 1GB
@@ -67,7 +67,7 @@ Concurrency: 80 requests/instance
 
 ### Environment Variables
 
-```
+```bash
 NODE_ENV=production
 NEXTAUTH_URL=https://chat.daza.ar
 NEXTAUTH_SECRET=***
@@ -98,7 +98,7 @@ ENABLE_TEST_CREDENTIALS=false # Optional toggle for local/manual testing
 - **Rate Limiting**: 5 requests per 10 seconds per IP
 - **Security Headers**: CSP, HSTS, X-Frame-Options via middleware
 - **Serverless Deployment**: Google Cloud Run with auto-scaling
-- **Custom Domain**: staging.chat.daza.ar with SSL
+- **Custom Domain**: Configure your staging domain with SSL
 - **Code Quality Tools**: ESLint, Prettier, Husky pre-commit hooks
 - **Performance Monitoring**: Web Vitals tracking
 - **Documentation**: Comprehensive docs in `/docs` directory
@@ -144,35 +144,10 @@ npm run storybook     # Interactive component regression review
 
 ## 📁 Current Project Structure
 
-```
+```text
 chat/
 ├── 📁 src/
 │   ├── 📁 app/                   # Next.js App Router
-│   │   ├── 📁 api/              # API routes (auth, chat, models)
-│   │   ├── 📁 login/            # Authentication pages
-│   │   ├── layout.tsx           # Root layout
-│   │   └── page.tsx             # Main chat interface
-│   ├── 📁 components/           # React components
-│   │   ├── 📁 ui/               # shadcn/ui components
-│   │   ├── 📁 chat/             # Chat-specific components
-│   │   └── 📁 auth/             # Authentication components
-│   ├── 📁 lib/                  # Core utilities
-│   │   ├── 📁 services/         # Service layer (ChatService)
-│   │   ├── 📁 auth/             # Authentication logic
-│   │   ├── 📁 hooks/            # Custom React hooks
-│   │   ├── 📁 utils/            # Utility functions
-│   │   ├── 📁 types/            # TypeScript definitions
-│   │   ├── 📁 validation/       # Zod schemas
-│   │   ├── env.ts               # Environment validation
-│   │   └── logger.ts            # Centralized logging
-│   └── middleware.ts            # Security & rate limiting
-├── 📁 scripts/                  # Utility scripts
-│   └── 📁 deployment/           # Deployment automation
-├── 📁 docs/                     # Comprehensive documentation
-├── 📁 tests/                    # All test files
-├── 📁 .github/                  # GitHub workflows & templates
-├── Dockerfile                   # Container configuration
-└── package.json                 # Current: v0.1.0
 ```
 
 ## 💰 Current Costs (Estimated Monthly)
@@ -249,8 +224,8 @@ chat/
 
 - **Guidelines**: [CONTRIBUTING.md](CONTRIBUTING.md)
 - **Code Standards**: [.github/copilot-instructions.md](../.github/copilot-instructions.md)
-- **Issues**: [GitHub Issues](https://github.com/roofsonfire/chat/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/roofsonfire/chat/discussions)
+- **Issues**: Report via GitHub Issues on your fork
+- **Discussions**: Use GitHub Discussions for community support
 
 ### Development Workflow
 
@@ -282,7 +257,7 @@ chat/
 
 **Overall Status**: 🟢 **Excellent**
 
-- ✅ **Production Ready**: Deployed and accessible at staging.chat.daza.ar
+- ✅ **Production Ready**: Ready for deployment to your chosen domain
 - ✅ **Well Documented**: Comprehensive documentation maintained
 - ✅ **High Code Quality**: ESLint, Prettier, TypeScript strict mode
 - ✅ **Secure**: Multiple security layers implemented

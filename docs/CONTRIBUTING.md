@@ -13,7 +13,7 @@ This project and everyone participating in it is governed by the [Code of Conduc
 Found a bug? Great! Before creating a bug report:
 
 1. **Search existing issues** to avoid duplicates
-2. **Use our bug report template** at [Issues → New Issue → Bug Report](https://github.com/roofsonfire/chat/issues/new/choose)
+2. **Use the bug report template** in the GitHub Issues section of this repository
 3. **Include comprehensive details**:
    - Clear, descriptive title
    - Step-by-step reproduction steps
@@ -27,7 +27,7 @@ Found a bug? Great! Before creating a bug report:
 Have an idea for improvement?
 
 1. **Check existing feature requests** in issues and discussions
-2. **Use our feature request template** at [Issues → New Issue → Feature Request](https://github.com/roofsonfire/chat/issues/new/choose)
+2. **Use the feature request template** in the GitHub Issues section of this repository
 3. **Start a discussion** for complex features to gather community feedback
 4. **Provide detailed use cases** and examples
 
@@ -35,7 +35,7 @@ Have an idea for improvement?
 
 Documentation improvements are always welcome:
 
-1. **Use our documentation template** at [Issues → New Issue → Documentation](https://github.com/roofsonfire/chat/issues/new/choose)
+1. **Use the documentation template** in the GitHub Issues section of this repository
 2. **Fix typos, improve clarity, or add missing information**
 3. **Update code examples** to match current implementation
 4. **Help with translations** (if applicable)
@@ -59,7 +59,7 @@ To get started with local development, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/roofsonfire/chat.git
+   git clone https://github.com/YOUR_USERNAME/ai-chat-assistant.git
    cd chat
    ```
 
@@ -245,7 +245,7 @@ Your commit type determines which version number changes:
 
 Indicate breaking changes in two ways:
 
-**Method 1: Commit footer**
+##### Method 1: Commit footer
 
 ```bash
 feat(api): redesign chat endpoint
@@ -255,7 +255,7 @@ and uses a different request format. Clients must update to the new
 format documented in docs/API.md.
 ```
 
-**Method 2: ! in commit type**
+##### Method 2: ! in commit type
 
 ```bash
 feat(api)!: redesign chat endpoint for improved performance
@@ -429,8 +429,8 @@ We welcome contributions in these areas:
 
 ### 💬 Community Support
 
-- **[GitHub Discussions](https://github.com/roofsonfire/chat/discussions)** - Ask questions, share ideas
-- **[Issue Templates](https://github.com/roofsonfire/chat/issues/new/choose)** - Report bugs or request features
+- **GitHub Discussions** - Ask questions, share ideas via the Discussions tab
+- **Issue Templates** - Report bugs or request features via GitHub Issues
 
 ### 📚 Resources
 
@@ -459,4 +459,4 @@ Contributors are recognized in several ways:
 
 ---
 
-**Thank you for contributing to making this project better! 🚀**
+Thank you for contributing to making this project better! 🚀

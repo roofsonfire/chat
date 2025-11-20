@@ -11,16 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Required for Next.js build (test values for bundle size analysis)
-      NEXTAUTH_SECRET: test-secret-min-32-chars-required-for-build-validation-only
-      NEXTAUTH_URL: http://localhost:3000
-      AUTH_USER_EMAIL: test@example.com
-      AUTH_USER_PASSWORD_HASH: dummy_hash_for_bundle_analysis
-      GOOGLE_PROJECT_ID: test-project
-      GOOGLE_LOCATION: us-central1
-      GOOGLE_VERTEX_AI_MODEL_ID: gemini-2.5-flash
-      GOOGLE_CLIENT_ID: test-client-id.apps.googleusercontent.com
-      GOOGLE_CLIENT_SECRET: test-client-secret
-      ALLOWED_EMAILS: test@example.com
+      NEXTAUTH_SECRET: "test-secret-min-32-chars-for-build-validation"
+      NEXTAUTH_URL: "http://localhost:3000"
+      AUTH_USER_EMAIL: "test@example.com"
+      AUTH_USER_PASSWORD_HASH: "dummy_hash_for_bundle_analysis"
+      GOOGLE_PROJECT_ID: "test-project"
+      GOOGLE_LOCATION: "us-central1"
+      GOOGLE_VERTEX_AI_MODEL_ID: "gemini-2.5-flash"
+      GOOGLE_CLIENT_ID: "test-client-id.apps.googleusercontent.com"
+      GOOGLE_CLIENT_SECRET: "test-client-secret"
       DISABLE_RATE_LIMIT: "true"
       SKIP_VERTEX_MODEL_VALIDATION: "true"
 

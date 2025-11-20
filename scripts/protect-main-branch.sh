@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Branch Protection Setup Script
-# Repository: roofsonfire/chat
+# Repository: YOUR_USERNAME/ai-chat-assistant
 # Branch: main
 
 set -e
 
-OWNER="roofsonfire"
-REPO="chat"
+OWNER="YOUR_USERNAME"
+REPO="ai-chat-assistant"
 BRANCH="main"
 
 echo "🔒 Setting up branch protection for ${OWNER}/${REPO}/${BRANCH}"

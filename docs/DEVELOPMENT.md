@@ -14,8 +14,8 @@ This guide provides detailed information for developers working on this project.
 ### 1. Clone and Install
 
 ```bash
-git clone https://github.com/roofsonfire/chat.git
-cd chat
+git clone https://github.com/YOUR_USERNAME/ai-chat-assistant.git
+cd ai-chat-assistant
 npm install
 ```
 
@@ -39,7 +39,7 @@ openssl rand -base64 32
 
 Set in `.env.local`:
 
-```
+```bash
 NEXTAUTH_SECRET=<generated-secret>
 NEXTAUTH_URL=http://localhost:3000
 ```
@@ -48,7 +48,7 @@ NEXTAUTH_URL=http://localhost:3000
 
 Set the authorized user email:
 
-```
+```bash
 AUTH_USER_EMAIL=your-email@example.com
 ```
 
@@ -61,7 +61,7 @@ npm run hash-password
 
 Copy the hash and set:
 
-```
+```bash
 AUTH_USER_PASSWORD_HASH=<generated-hash>
 ```
 
@@ -71,7 +71,7 @@ AUTH_USER_PASSWORD_HASH=<generated-hash>
 2. Enable Vertex AI API
 3. Set up application default credentials or service account
 
-```
+```bash
 GOOGLE_PROJECT_ID=your-project-id
 GOOGLE_LOCATION=us-central1
 GOOGLE_VERTEX_AI_MODEL_ID=gemini-1.5-flash-002
@@ -636,7 +636,7 @@ npm run type-check
 
 Follow conventional commits:
 
-```
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -656,7 +656,7 @@ Types:
 
 Examples:
 
-```
+```text
 feat(chat): add image upload support
 fix(auth): resolve login redirect issue
 docs(api): update chat endpoint documentation

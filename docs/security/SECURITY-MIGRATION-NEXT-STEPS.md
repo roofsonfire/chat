@@ -151,7 +151,7 @@ Option 1 (Recommended): Fresh clone
 ```bash
 cd ~/Projects/roofs
 mv chat chat-old-backup
-git clone https://github.com/roofsonfire/chat.git
+git clone https://github.com/YOUR_USERNAME/ai-chat-assistant.git
 cd chat
 ```
 ````

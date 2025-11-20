@@ -106,7 +106,7 @@ echo "════════════════════════�
 echo ""
 echo "The service is restarting with the new secret."
 echo "Wait ~30 seconds, then try logging in again at:"
-echo "  https://chat.daza.ar"
+echo "  https://your-production-domain.com"
 echo ""
 echo "To monitor the deployment:"
 echo "  gcloud run services describe $SERVICE_NAME --region=$REGION --project=$PROJECT_ID"

@@ -2,7 +2,7 @@
 
 ## Context
 
-- **System:** roofsonfire/chat (Next.js 15, React 19, Vertex AI)
+- **System:** AI Chat Assistant (Next.js 15, React 19, Vertex AI)
 - **Deployment:** Google Cloud Run (us-central1), Workload Identity Federation for CI/CD
 - **Authentication:** NextAuth (Google OAuth + restricted credentials provider)
 - **Data sensitivity:** Authentication metadata, user prompts, AI responses (possible confidential data), OAuth tokens

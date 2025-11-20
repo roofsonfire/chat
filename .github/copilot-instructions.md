@@ -13,8 +13,8 @@ Production-grade AI chat application built with Next.js 15, TypeScript, and Goog
 
 ### Repository Information
 
-- **GitHub**: `roofsonfire/chat` - https://github.com/roofsonfire/chat
-- **Production**: https://chat.daza.ar (Google Cloud Run, us-central1)
+- **GitHub**: Community-driven open-source project
+- **Deployment**: Google Cloud Run (configurable region)
 - **Branches**: `develop` (testing) → `main` (production)
 - **Current Status**: v0.1.0 pre-release, security audit complete, PR #127 pending merge
 

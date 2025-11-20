@@ -108,27 +108,30 @@ jobs:
       - name: Generate coverage report
         run: npx vitest run --coverage --project=unit
 
-      - name: Upload coverage to Codecov
-        if: github.event_name == 'push' && github.repository == 'roofsonfire/chat'
-        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
-        continue-on-error: true
-        with:
-          files: ./coverage/coverage-final.json
-          flags: unit-tests
-          fail_ci_if_error: false
-
   build:
-    name: Build Check
+    name: Build Application
     runs-on: ubuntu-latest
-    needs: [lint-and-type-check, unit-tests]
-    timeout-minutes: 15
-
+    needs: unit-tests
+    env:
+      # Required for Next.js build validation. These are dummy values.
+      NEXTAUTH_SECRET: "test-secret-for-build-only-minimum-32-characters"
+      NEXTAUTH_URL: "http://localhost:3000"
+      AUTH_USER_EMAIL: "build@example.com"
+      AUTH_USER_PASSWORD_HASH: "build-hash"
+      GOOGLE_PROJECT_ID: "build-project"
+      GOOGLE_LOCATION: "us-central1"
+      GOOGLE_VERTEX_AI_MODEL_ID: "gemini-2.5-flash"
+      GOOGLE_CLIENT_ID: "build-client-id"
+      GOOGLE_CLIENT_SECRET: "build-client-secret"
+      ALLOWED_EMAILS: "build@example.com"
+      DISABLE_RATE_LIMIT: "true"
+      SKIP_VERTEX_MODEL_VALIDATION: "true"
     steps:
       - name: Checkout code
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
@@ -136,27 +139,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build application
-        run: npx next build
-        env:
-          # Provide test secrets for build
-          NEXTAUTH_SECRET: ${{ secrets.TEST_NEXTAUTH_SECRET }}
-          NEXTAUTH_URL: http://localhost:3000
-          AUTH_USER_EMAIL: ${{ secrets.TEST_AUTH_USER_EMAIL }}
-          AUTH_USER_PASSWORD_HASH: ${{ secrets.TEST_AUTH_PASSWORD_HASH }}
-          ALLOWED_EMAILS: ${{ secrets.TEST_AUTH_USER_EMAIL }}
-          GOOGLE_CLIENT_ID: ${{ secrets.TEST_GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.TEST_GOOGLE_CLIENT_SECRET }}
-          GOOGLE_PROJECT_ID: dummy-project-id
-          GOOGLE_LOCATION: us-central1
-          GOOGLE_VERTEX_AI_MODEL_ID: gemini-2.5-flash-image
-          DISABLE_RATE_LIMIT: "true"
-          SKIP_VERTEX_MODEL_VALIDATION: "true"
+      - name: Build project
+        run: npm run build
 
-      - name: Check build artifacts
+      - name: Verify build output
         run: |
-          if [ ! -d ".next" ]; then
-            echo "Build failed: .next directory not found"
+          ls -la .next
+          if [ ! -d ".next/standalone" ]; then
+            echo "::error::Build output missing '.next/standalone' directory."
             exit 1
           fi
-          echo "Build successful!"
+          if [ ! -d ".next/static" ]; then
+            echo "::error::Build output missing '.next/static' directory."
+            exit 1
+          fi
+          echo "✅ Build output verified."

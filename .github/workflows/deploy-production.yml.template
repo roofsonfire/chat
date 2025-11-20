@@ -1,0 +1,289 @@
+# ------------------------------------------------------------------------------
+# [Community Fork] Deployment Workflow Template
+#
+# This workflow demonstrates how to deploy the application to Google Cloud Run.
+# To use it, you must:
+#   1. Rename this file from 'deploy-production.yml.template' to 'deploy-production.yml'.
+#   2. Configure repository secrets for Workload Identity Federation.
+#   3. Replace all placeholder values (e.g., YOUR_GCP_PROJECT_ID) with your own.
+#   4. Ensure your GCP project has the required APIs enabled (Cloud Run, Artifact Registry, Secret Manager).
+#
+# For a step-by-step guide, see: docs/deployment/COMMUNITY-DEPLOYMENT.md
+# ------------------------------------------------------------------------------
+name: Deploy to Cloud Run (Production)
+
+on:
+  # Deploy when CI workflow completes successfully on your main branch
+  workflow_run:
+    workflows: ["CI/CD Pipeline"]
+    types:
+      - completed
+    branches:
+      - main # Or your primary branch
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+# ------------------------------------------------------------------------------
+# TODO: CONFIGURE YOUR ENVIRONMENT
+# Replace these placeholder values with your actual GCP configuration.
+# ------------------------------------------------------------------------------
+env:
+  PROJECT_ID: "YOUR_GCP_PROJECT_ID" # Your Google Cloud project ID
+  REGION: "YOUR_GCP_REGION" # e.g., us-central1
+  SERVICE_NAME: "YOUR_CLOUDRUN_SERVICE_NAME" # e.g., ai-chat-prod
+  DOMAIN: "YOUR_CUSTOM_DOMAIN" # e.g., chat.your-domain.com (optional)
+# ------------------------------------------------------------------------------
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to Cloud Run
+    runs-on: ubuntu-latest
+    # This condition ensures deployment only happens on successful CI runs on the main branch
+    # or when manually triggered.
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event_name == 'workflow_run' &&
+          github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.event == 'push' &&
+          github.event.workflow_run.head_branch == 'main'
+        )
+      }}
+
+    permissions:
+      contents: read
+      id-token: write # Required for Workload Identity Federation
+
+    steps:
+      - name: Check deployment trigger
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "🎯 Deployment triggered by successful CI workflow"
+            echo "CI Run: ${{ github.event.workflow_run.html_url }}"
+            echo "Commit: ${{ github.event.workflow_run.head_sha }}"
+          else
+            echo "🎯 Deployment triggered manually"
+            echo "Commit: ${{ github.sha }}"
+          fi
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
+
+      # ------------------------------------------------------------------------
+      # TODO: CONFIGURE AUTHENTICATION
+      # You must set up Workload Identity Federation between GitHub Actions and GCP.
+      # Create these secrets in your repository's settings:
+      #   - GCP_WORKLOAD_IDENTITY_PROVIDER: Your WIF provider name.
+      #   - GCP_SERVICE_ACCOUNT_EMAIL: The email of the GCP service account to use.
+      # See: https://github.com/google-github-actions/auth#setting-up-workload-identity-federation
+      # ------------------------------------------------------------------------
+      - name: Validate Workload Identity configuration
+        run: |
+          if [ -z "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" ] || [ -z "${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}" ]; then
+            echo "::error::Missing Workload Identity Federation configuration. Set GCP_WORKLOAD_IDENTITY_PROVIDER and GCP_SERVICE_ACCOUNT_EMAIL secrets in your repository settings."
+            exit 1
+          fi
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+          access_token_scopes: https://www.googleapis.com/auth/cloud-platform
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+
+      # ------------------------------------------------------------------------
+      # TODO: CONFIGURE SECRETS
+      # This step grants the Cloud Run service account access to secrets in
+      # Google Secret Manager. Ensure these secrets exist in your GCP project.
+      # The names used here ('nextauth-secret', etc.) must match the names of
+      # the secrets you create in Secret Manager.
+      # ------------------------------------------------------------------------
+      - name: Ensure Cloud Run SA can read required secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Resolving project number for $PROJECT_ID"
+          PROJECT_NUMBER="$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')"
+          # This is the default service account for Cloud Run.
+          # If you use a custom service account, update this value.
+          SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+          echo "Granting roles/secretmanager.secretAccessor to ${SA}"
+          SECRETS=(
+            "nextauth-secret"
+            "auth-user-email"
+            "auth-user-password-hash"
+            "google-project-id"
+            "google-location"
+            "google-vertex-ai-model-id"
+            "google-client-id"
+            "google-client-secret"
+            "auth-user-email" # The allowlist is the same as the primary user for this template
+          )
+          for SECRET in "${SECRETS[@]}"; do
+            echo "Binding IAM policy for secret: $SECRET"
+            gcloud secrets add-iam-policy-binding "$SECRET" \
+              --member="serviceAccount:${SA}" \
+              --role="roles/secretmanager.secretAccessor" \
+              --project="$PROJECT_ID" || echo "Warning: Failed to bind secret '$SECRET'. It might not exist or permissions are missing."
+          done
+
+      - name: Build and push Docker image
+        id: docker-build
+        run: |
+          IMAGE_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }}"
+          LATEST_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:latest"
+
+          echo "Building Docker image with tags:"
+          echo "  - ${IMAGE_TAG}"
+          echo "  - ${LATEST_TAG}"
+
+          docker build \
+            --build-arg NODE_ENV=production \
+            --tag "${IMAGE_TAG}" \
+            --tag "${LATEST_TAG}" \
+            .
+
+          echo "Pushing Docker images to Artifact Registry..."
+          docker push "${IMAGE_TAG}"
+          docker push "${LATEST_TAG}"
+
+          echo "image_url=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+
+      # ------------------------------------------------------------------------
+      # TODO: CONFIGURE DEPLOYMENT FLAGS & SECRETS
+      # Adjust memory, CPU, and other flags as needed for your use case.
+      # The secret names here MUST match the names you created in Secret Manager.
+      # The format is 'ENV_VAR_NAME=secret-name-in-gcp:version'
+      # ------------------------------------------------------------------------
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v3
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ steps.docker-build.outputs.image_url }}
+          flags: >-
+            --allow-unauthenticated
+            --memory=1Gi
+            --cpu=1
+            --timeout=300
+            --max-instances=10
+            --min-instances=0
+            --concurrency=80
+            --port=3000
+            --set-env-vars="ENABLE_TEST_CREDENTIALS=false,NEXTAUTH_URL=https://${{ env.DOMAIN }}"
+          secrets: >-
+            NEXTAUTH_SECRET=nextauth-secret:latest,
+            AUTH_USER_EMAIL=auth-user-email:latest,
+            AUTH_USER_PASSWORD_HASH=auth-user-password-hash:latest,
+            GOOGLE_PROJECT_ID=google-project-id:latest,
+            GOOGLE_LOCATION=google-location:latest,
+            GOOGLE_VERTEX_AI_MODEL_ID=google-vertex-ai-model-id:latest,
+            GOOGLE_CLIENT_ID=google-client-id:latest,
+            GOOGLE_CLIENT_SECRET=google-client-secret:latest,
+            ALLOWED_EMAILS=auth-user-email:latest
+
+      # This step is optional. Remove if you are not using a custom domain.
+      - name: Map custom domain
+        if: env.DOMAIN != 'YOUR_CUSTOM_DOMAIN' # Only run if domain is configured
+        continue-on-error: true # The mapping might already exist
+        run: |
+          echo "Checking for existing domain mapping for ${{ env.DOMAIN }}..."
+          gcloud run domain-mappings describe \
+            --domain=${{ env.DOMAIN }} \
+            --region=${{ env.REGION }} \
+            --quiet || \
+          (echo "Creating new domain mapping..." && gcloud run domain-mappings create \
+            --service=${{ env.SERVICE_NAME }} \
+            --domain=${{ env.DOMAIN }} \
+            --region=${{ env.REGION }})
+
+      - name: Show deployment URL
+        run: |
+          echo "🚀 Deployment successful!"
+          echo "Service URL: ${{ steps.deploy.outputs.url }}"
+          if [ "${{ env.DOMAIN }}" != "YOUR_CUSTOM_DOMAIN" ]; then
+            echo "Custom Domain: https://${{ env.DOMAIN }}"
+          fi
+          echo "Commit: ${{ github.sha }}"
+
+      - name: Verify deployment
+        run: |
+          echo "Waiting for service to become available..."
+          sleep 15
+
+          SERVICE_URL="${{ steps.deploy.outputs.url }}"
+          echo "Pinging service at ${SERVICE_URL}"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${SERVICE_URL}")
+
+          # A successful deployment might return 200 (OK), 307 (redirect to login), or 401 (unauthorized).
+          # All indicate the service is up and running.
+          if [[ "$HTTP_STATUS" -eq 200 || "$HTTP_STATUS" -eq 307 || "$HTTP_STATUS" -eq 401 ]]; then
+            echo "✅ Service is responding with a valid status (HTTP $HTTP_STATUS)."
+          else
+            echo "::error::Service returned an unexpected status (HTTP $HTTP_STATUS). Please check the Cloud Run logs."
+            exit 1
+          fi
+
+  # This job is a safety net. It attempts to roll back to the last known good
+  # revision if the deployment fails.
+  rollback:
+    name: Rollback Deployment on Failure
+    runs-on: ubuntu-latest
+    if: failure() && github.event_name == 'push'
+    needs: [deploy]
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+          access_token_scopes: https://www.googleapis.com/auth/cloud-platform
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Rollback to previous revision
+        run: |
+          echo "::warning::Deployment failed. Attempting to roll back to the last stable revision..."
+
+          # Get the second-to-last revision, which was the last stable one.
+          PREVIOUS_REVISION=$(gcloud run revisions list \
+            --service="${{ env.SERVICE_NAME }}" \
+            --region="${{ env.REGION }}" \
+            --format='value(name)' \
+            --limit=2 | tail -n 1)
+
+          if [ -n "$PREVIOUS_REVISION" ]; then
+            echo "Found previous revision: $PREVIOUS_REVISION. Routing 100% of traffic to it."
+            gcloud run services update-traffic "${{ env.SERVICE_NAME }}" \
+              --region="${{ env.REGION }}" \
+              --to-revisions="$PREVIOUS_REVISION=100"
+            echo "✅ Rollback complete. The service is now running the previous stable revision."
+          else
+            echo "::error::No previous revision was found to roll back to. Manual intervention may be required."
+            exit 1
+          fi
